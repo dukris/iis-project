@@ -17,10 +17,12 @@ import java.util.Optional;
 public class UserRepositoryImpl implements UserRepository {
     private final DataSource dataSource;
     private static final String FIND_ALL_QUERY = """
-            SELECT users.id,  users.name, users.surname, users.email, users.password, users.role
-            FROM iis_schema.users;""";
+            SELECT users.id as user_id,  users.name as user_name, users.surname as user_surname,
+            users.email as user_email, users.password as user_password, users.role as user_role
+            FROM iis_schema.users""";
     private static final String FIND_BY_ID_QUERY = """
-            SELECT users.id, users.name, users.surname, users.email, users.password, users.role
+            SELECT users.id as user_id,  users.name as user_name, users.surname as user_surname,
+            users.email as user_email, users.password as user_password, users.role as user_role
             FROM iis_schema.users
             WHERE id = ?""";
     private static final String CREATE_QUERY = "INSERT INTO iis_schema.users (name, surname, email, password, role) VALUES(?, ?, ?, ?, ?)";
@@ -44,6 +46,7 @@ public class UserRepositoryImpl implements UserRepository {
              PreparedStatement statement = connection.prepareStatement(FIND_BY_ID_QUERY)) {
             statement.setLong(1, id);
             ResultSet rs = statement.executeQuery();
+            rs.next();
             return UserRowMapper.mapUser(rs);
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while finding user by id = " + id);

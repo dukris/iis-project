@@ -1,6 +1,7 @@
 package com.solvd.laba.iis.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.solvd.laba.iis.web.dto.validation.UpdateGroup;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -15,6 +16,7 @@ import java.time.LocalDate;
 @Setter
 @AllArgsConstructor
 @RequiredArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class MarkDto {
     @NotNull(groups = UpdateGroup.class, message = "Mark's id should be filled")
     private long id;

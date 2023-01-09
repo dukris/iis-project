@@ -1,6 +1,6 @@
 package com.solvd.laba.iis.persistence.impl;
 
-import com.solvd.laba.iis.domain.*;
+import com.solvd.laba.iis.domain.Lesson;
 import com.solvd.laba.iis.domain.exception.ResourceMappingException;
 import com.solvd.laba.iis.persistence.LessonRepository;
 import com.solvd.laba.iis.persistence.mapper.LessonRowMapper;
@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,22 +17,22 @@ import java.util.Optional;
 public class LessonRepositoryImpl implements LessonRepository {
     private final DataSource dataSource;
     private static final String FIND_ALL_QUERY = """
-            SELECT lessons.id, lessons.room, lessons.weekday, lessons.start_time, lessons.end_time,
-            subjects.id,  subjects.name,
-            groups.id, groups.number,
-            teachers_info.id,
-            users.id, users.name, users.surname, users.email, users.password, users.role
+            SELECT lessons.id as lesson_id, lessons.room as lesson_room, lessons.weekday as lesson_weekday, lessons.start_time as start_time, lessons.end_time as end_time,
+            subjects.id as subject_id,  subjects.name as subject_name,
+            groups.id as group_id, groups.number as group_number,
+            teachers_info.id as teacher_id,
+            users.id as user_id, users.name as user_name, users.surname as user_surname, users.email as user_email, users.password as user_password, users.role as user_role
             FROM iis_schema.lessons
             LEFT JOIN iis_schema.subjects ON (lessons.subject_id = subjects.id)
             LEFT JOIN iis_schema.groups ON (lessons.group_id = groups.id)
             LEFT JOIN iis_schema.teachers_info ON (lessons.teacher_id = teachers_info.id)
             LEFT JOIN iis_schema.users ON (teachers_info.user_id = users.id)""";
     private static final String FIND_BY_ID_QUERY = """
-            SELECT lessons.id, lessons.room, lessons.weekday, lessons.start_time, lessons.end_time,
-            subjects.id,  subjects.name,
-            groups.id, groups.number,
-            teachers_info.id,
-            users.id, users.name, users.surname, users.email, users.password, users.role
+            SELECT lessons.id as lesson_id, lessons.room as lesson_room, lessons.weekday as lesson_weekday, lessons.start_time as start_time, lessons.end_time as end_time,
+            subjects.id as subject_id,  subjects.name as subject_name,
+            groups.id as group_id, groups.number as group_number,
+            teachers_info.id as teacher_id,
+            users.id as user_id, users.name as user_name, users.surname as user_surname, users.email as user_email, users.password as user_password, users.role as user_role
             FROM iis_schema.lessons
             LEFT JOIN iis_schema.subjects ON (lessons.subject_id = subjects.id)
             LEFT JOIN iis_schema.groups ON (lessons.group_id = groups.id)
@@ -41,11 +40,11 @@ public class LessonRepositoryImpl implements LessonRepository {
             LEFT JOIN iis_schema.users ON (teachers_info.user_id = users.id)
             WHERE lessons.id = ?""";
     private static final String FIND_BY_GROUP_QUERY = """
-            SELECT lessons.id, lessons.room, lessons.weekday, lessons.start_time, lessons.end_time,
-            subjects.id,  subjects.name,
-            groups.id, groups.number,
-            teachers_info.id,
-            users.id, users.name, users.surname, users.email, users.password, users.role
+            SELECT lessons.id as lesson_id, lessons.room as lesson_room, lessons.weekday as lesson_weekday, lessons.start_time as start_time, lessons.end_time as end_time,
+            subjects.id as subject_id,  subjects.name as subject_name,
+            groups.id as group_id, groups.number as group_number,
+            teachers_info.id as teacher_id,
+            users.id as user_id, users.name as user_name, users.surname as user_surname, users.email as user_email, users.password as user_password, users.role as user_role
             FROM iis_schema.lessons
             LEFT JOIN iis_schema.subjects ON (lessons.subject_id = subjects.id)
             LEFT JOIN iis_schema.groups ON (lessons.group_id = groups.id)
@@ -53,11 +52,11 @@ public class LessonRepositoryImpl implements LessonRepository {
             LEFT JOIN iis_schema.users ON (teachers_info.user_id = users.id)
             WHERE groups.id = ?""";
     private static final String FIND_BY_GROUP_AND_DAY_QUERY = """
-            SELECT lessons.id, lessons.room, lessons.weekday, lessons.start_time, lessons.end_time,
-            subjects.id,  subjects.name,
-            groups.id, groups.number,
-            teachers_info.id,
-            users.id, users.name, users.surname, users.email, users.password, users.role
+            SELECT lessons.id as lesson_id, lessons.room as lesson_room, lessons.weekday as lesson_weekday, lessons.start_time as start_time, lessons.end_time as end_time,
+            subjects.id as subject_id,  subjects.name as subject_name,
+            groups.id as group_id, groups.number as group_number,
+            teachers_info.id as teacher_id,
+            users.id as user_id, users.name as user_name, users.surname as user_surname, users.email as user_email, users.password as user_password, users.role as user_role
             FROM iis_schema.lessons
             LEFT JOIN iis_schema.subjects ON (lessons.subject_id = subjects.id)
             LEFT JOIN iis_schema.groups ON (lessons.group_id = groups.id)
@@ -66,11 +65,11 @@ public class LessonRepositoryImpl implements LessonRepository {
             WHERE groups.id = ? AND lessons.weekday = ?""";
 
     private static final String FIND_BY_TEACHER_QUERY = """
-            SELECT lessons.id, lessons.room, lessons.weekday, lessons.start_time, lessons.end_time,
-            subjects.id,  subjects.name,
-            groups.id, groups.number,
-            teachers_info.id,
-            users.id, users.name, users.surname, users.email, users.password, users.role
+            SELECT lessons.id as lesson_id, lessons.room as lesson_room, lessons.weekday as lesson_weekday, lessons.start_time as start_time, lessons.end_time as end_time,
+            subjects.id as subject_id,  subjects.name as subject_name,
+            groups.id as group_id, groups.number as group_number,
+            teachers_info.id as teacher_id,
+            users.id as user_id, users.name as user_name, users.surname as user_surname, users.email as user_email, users.password as user_password, users.role as user_role
             FROM iis_schema.lessons
             LEFT JOIN iis_schema.subjects ON (lessons.subject_id = subjects.id)
             LEFT JOIN iis_schema.groups ON (lessons.group_id = groups.id)
@@ -79,11 +78,11 @@ public class LessonRepositoryImpl implements LessonRepository {
             WHERE teachers_info.id = ?""";
 
     private static final String FIND_BY_TEACHER_AND_DAY_QUERY = """
-            SELECT lessons.id, lessons.room, lessons.weekday, lessons.start_time, lessons.end_time,
-            subjects.id,  subjects.name,
-            groups.id, groups.number,
-            teachers_info.id,
-            users.id, users.name, users.surname, users.email, users.password, users.role
+            SELECT lessons.id as lesson_id, lessons.room as lesson_room, lessons.weekday as lesson_weekday, lessons.start_time as start_time, lessons.end_time as end_time,
+            subjects.id as subject_id,  subjects.name as subject_name,
+            groups.id as group_id, groups.number as group_number,
+            teachers_info.id as teacher_id,
+            users.id as user_id, users.name as user_name, users.surname as user_surname, users.email as user_email, users.password as user_password, users.role as user_role
             FROM iis_schema.lessons
             LEFT JOIN iis_schema.subjects ON (lessons.subject_id = subjects.id)
             LEFT JOIN iis_schema.groups ON (lessons.group_id = groups.id)
@@ -111,6 +110,7 @@ public class LessonRepositoryImpl implements LessonRepository {
              PreparedStatement statement = connection.prepareStatement(FIND_BY_ID_QUERY)) {
             statement.setLong(1, id);
             ResultSet rs = statement.executeQuery();
+            rs.next();
             return LessonRowMapper.mapLesson(rs);
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while finding lesson by lesson's id = " + id);

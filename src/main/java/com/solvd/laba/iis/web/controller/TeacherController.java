@@ -53,14 +53,14 @@ public class TeacherController {
     public ResponseEntity<TeacherInfoDto> create(@RequestBody @Valid TeacherInfoDto teacherInfoDto) {
         TeacherInfo teacherInfo = teacherInfoMapper.teacherInfoDtoToTeacherInfo(teacherInfoDto);
         teacherInfo = teacherService.create(teacherInfo);
-        return new ResponseEntity<>(teacherInfoMapper.teacherInfoToTeacherInfoDto(teacherInfo), HttpStatus.OK);
+        return new ResponseEntity<>(teacherInfoMapper.teacherInfoToTeacherInfoDto(teacherInfo), HttpStatus.CREATED);
     }
 
     @DeleteMapping
     public ResponseEntity<Void> delete(@RequestBody @Valid TeacherInfoDto teacherInfoDto) {
         TeacherInfo teacherInfo = teacherInfoMapper.teacherInfoDtoToTeacherInfo(teacherInfoDto);
         teacherService.delete(teacherInfo);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PutMapping
@@ -74,14 +74,14 @@ public class TeacherController {
     public ResponseEntity<Void> addSubject(@RequestParam long teacherId,
                            @RequestParam long subjectId) {
         teacherService.addSubject(teacherId, subjectId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @DeleteMapping("/subject")
     public ResponseEntity<Void> deleteSubject(@RequestParam long teacherId,
                               @RequestParam long subjectId) {
         teacherService.deleteSubject(teacherId, subjectId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
 

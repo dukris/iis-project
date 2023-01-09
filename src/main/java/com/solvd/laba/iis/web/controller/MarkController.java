@@ -60,14 +60,14 @@ public class MarkController {
     public ResponseEntity<MarkDto> create(@RequestBody @Valid MarkDto markDto) {
         Mark mark = markMapper.markDtoToMark(markDto);
         mark = markService.create(mark);
-        return new ResponseEntity<>(markMapper.markToMarkDto(mark), HttpStatus.OK);
+        return new ResponseEntity<>(markMapper.markToMarkDto(mark), HttpStatus.CREATED);
     }
 
     @DeleteMapping
     public ResponseEntity<Void> delete(@RequestBody @Valid MarkDto markDto) {
         Mark mark = markMapper.markDtoToMark(markDto);
         markService.delete(mark);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PutMapping

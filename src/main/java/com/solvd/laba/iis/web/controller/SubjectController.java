@@ -37,14 +37,14 @@ public class SubjectController {
     public ResponseEntity<SubjectDto> create(@RequestBody @Valid SubjectDto subjectDto) {
         Subject subject = subjectMapper.subjectDtoToSubject(subjectDto);
         subject = subjectService.create(subject);
-        return new ResponseEntity<>(subjectMapper.subjectToSubjectDto(subject), HttpStatus.OK);
+        return new ResponseEntity<>(subjectMapper.subjectToSubjectDto(subject), HttpStatus.CREATED);
     }
 
     @DeleteMapping
     public ResponseEntity<Void> delete(@RequestBody @Valid SubjectDto subjectDto) {
         Subject subject = subjectMapper.subjectDtoToSubject(subjectDto);
         subjectService.delete(subject);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PutMapping

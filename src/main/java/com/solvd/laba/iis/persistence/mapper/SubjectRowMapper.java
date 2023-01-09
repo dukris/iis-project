@@ -8,14 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class SubjectRowMapper {
+public abstract class SubjectRowMapper {
     @SneakyThrows
     public static Optional<Subject> mapSubject(ResultSet rs) {
         Subject subject = new Subject();
-        while (rs.next()) {
-            subject.setId(rs.getLong(1));
-            subject.setName(rs.getString(2));
-        }
+        subject.setId(rs.getLong("subject_id"));
+        subject.setName(rs.getString("subject_name"));
         return Optional.of(subject);
     }
 
@@ -23,9 +21,7 @@ public class SubjectRowMapper {
     public static List<Subject> mapSubjects(ResultSet rs) {
         List<Subject> subjects = new ArrayList<>();
         while (rs.next()) {
-            Subject subject = new Subject();
-            subject.setId(rs.getLong(1));
-            subject.setName(rs.getString(2));
+            Subject subject = mapSubject(rs).orElseThrow();
             subjects.add(subject);
         }
         return subjects;

@@ -17,8 +17,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class SubjectRepositoryImpl implements SubjectRepository {
     private final DataSource dataSource;
-    private static final String FIND_ALL_QUERY = "SELECT subjects.id, subjects.name FROM iis_schema.subjects";
-    private static final String FIND_BY_ID_QUERY = "SELECT subjects.id, subjects.name FROM iis_schema.subjects WHERE id = ?";
+    private static final String FIND_ALL_QUERY = "SELECT subjects.id as subject_id, subjects.name as subject_name FROM iis_schema.subjects";
+    private static final String FIND_BY_ID_QUERY = "SELECT subjects.id as subject_id, subjects.name as subject_name FROM iis_schema.subjects WHERE id = ?";
     private static final String CREATE_QUERY = "INSERT INTO iis_schema.subjects (name) VALUES(?)";
     private static final String DELETE_QUERY = "DELETE FROM iis_schema.subjects WHERE id = ?";
     private static final String SAVE_QUERY = "UPDATE iis_schema.subjects SET name = ? WHERE id = ?";
@@ -40,6 +40,7 @@ public class SubjectRepositoryImpl implements SubjectRepository {
              PreparedStatement statement = connection.prepareStatement(FIND_BY_ID_QUERY)) {
             statement.setLong(1, id);
             ResultSet rs = statement.executeQuery();
+            rs.next();
             return SubjectRowMapper.mapSubject(rs);
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while finding subject by id = " + id);

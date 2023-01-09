@@ -64,14 +64,14 @@ public class LessonController {
     public ResponseEntity<LessonDto> create(@RequestBody @Valid LessonDto lessonDto) {
         Lesson lesson = lessonMapper.lessonDtoToLesson(lessonDto);
         lesson = lessonService.create(lesson);
-        return new ResponseEntity<>(lessonMapper.lessonToLessonDto(lesson), HttpStatus.OK);
+        return new ResponseEntity<>(lessonMapper.lessonToLessonDto(lesson), HttpStatus.CREATED);
     }
 
     @DeleteMapping
     public ResponseEntity<Void> delete(@RequestBody @Valid LessonDto lessonDto) {
         Lesson lesson = lessonMapper.lessonDtoToLesson(lessonDto);
         lessonService.delete(lesson);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PutMapping

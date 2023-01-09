@@ -9,18 +9,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class UserRowMapper {
+public abstract class UserRowMapper {
     @SneakyThrows
     public static Optional<User> mapUser(ResultSet rs) {
         User user = new User();
-        while (rs.next()) {
-            user.setId(rs.getLong(1));
-            user.setName(rs.getString(2));
-            user.setSurname(rs.getString(3));
-            user.setEmail(rs.getString(4));
-            user.setPassword(rs.getString(5));
-            user.setRole(Role.valueOf(rs.getString(6).toUpperCase()));
-        }
+        user.setId(rs.getLong("user_id"));
+        user.setName(rs.getString("user_name"));
+        user.setSurname(rs.getString("user_surname"));
+        user.setEmail(rs.getString("user_email"));
+        user.setPassword(rs.getString("user_password"));
+        user.setRole(Role.valueOf(rs.getString("user_role").toUpperCase()));
         return Optional.of(user);
     }
 
@@ -28,13 +26,7 @@ public class UserRowMapper {
     public static List<User> mapUsers(ResultSet rs) {
         List<User> users = new ArrayList<>();
         while (rs.next()) {
-            User user = new User();
-            user.setId(rs.getLong(1));
-            user.setName(rs.getString(2));
-            user.setSurname(rs.getString(3));
-            user.setEmail(rs.getString(4));
-            user.setPassword(rs.getString(5));
-            user.setRole(Role.valueOf(rs.getString(6).toUpperCase()));
+            User user = mapUser(rs).orElseThrow();
             users.add(user);
         }
         return users;

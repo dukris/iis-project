@@ -1,6 +1,7 @@
 package com.solvd.laba.iis.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.solvd.laba.iis.domain.*;
 import com.solvd.laba.iis.web.dto.validation.UpdateGroup;
 import jakarta.validation.Valid;
@@ -16,6 +17,7 @@ import java.time.LocalTime;
 @Setter
 @AllArgsConstructor
 @RequiredArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class LessonDto {
     @NotNull(groups = UpdateGroup.class, message = "Lesson's id should be filled")
     private long id;

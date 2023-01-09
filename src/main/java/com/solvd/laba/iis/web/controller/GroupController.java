@@ -51,14 +51,14 @@ public class GroupController {
     public ResponseEntity<GroupDto> create(@RequestBody @Valid GroupDto groupDto) {
         Group group = groupMapper.groupDtoToGroup(groupDto);
         group = groupService.create(group);
-        return new ResponseEntity<>(groupMapper.groupToGroupDto(group), HttpStatus.OK);
+        return new ResponseEntity<>(groupMapper.groupToGroupDto(group), HttpStatus.CREATED);
     }
 
     @DeleteMapping
     public ResponseEntity<Void> delete(@RequestBody @Valid GroupDto groupDto) {
         Group group = groupMapper.groupDtoToGroup(groupDto);
         groupService.delete(group);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PutMapping

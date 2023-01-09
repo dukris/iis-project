@@ -17,51 +17,57 @@ import java.util.Optional;
 public class StudentRepositoryImpl implements StudentRepository {
     private final DataSource dataSource;
     private static final String FIND_ALL_QUERY = """
-            SELECT students_info.id, students_info.year, students_info.faculty, students_info.speciality,
-            users.id,  users.name, users.surname, users.email, users.password, users.role,
-            groups.id, groups.number
+            SELECT students_info.id as student_id, students_info.year as student_year, students_info.faculty as student_faculty, students_info.speciality as student_speciality,
+            users.id as user_id,  users.name as user_name, users.surname as user_surname,
+            users.email as user_email, users.password as user_password, users.role as user_role,
+            groups.id as group_id, groups.number as group_number
             FROM iis_schema.students_info
             LEFT JOIN iis_schema.users ON (students_info.user_id = users.id)
             LEFT JOIN iis_schema.groups ON (students_info.group_id = groups.id);""";
     private static final String FIND_BY_ID_QUERY = """
-            SELECT students_info.id, students_info.year, students_info.faculty, students_info.speciality,
-            users.id,  users.name, users.surname, users.email, users.password, users.role,
-            groups.id, groups.number
+            SELECT students_info.id as student_id, students_info.year as student_year, students_info.faculty as student_faculty, students_info.speciality as student_speciality,
+            users.id as user_id,  users.name as user_name, users.surname as user_surname,
+            users.email as user_email, users.password as user_password, users.role as user_role,
+            groups.id as group_id, groups.number as group_number
             FROM iis_schema.students_info
             LEFT JOIN iis_schema.users ON (students_info.user_id = users.id)
             LEFT JOIN iis_schema.groups ON (students_info.group_id = groups.id)
             WHERE students_info.id = ?""";
     private static final String FIND_BY_GROUP_QUERY = """
-            SELECT students_info.id, students_info.year, students_info.faculty, students_info.speciality,
-            users.id,  users.name, users.surname, users.email, users.password, users.role,
-            groups.id, groups.number
+            SELECT students_info.id as student_id, students_info.year as student_year, students_info.faculty as student_faculty, students_info.speciality as student_speciality,
+            users.id as user_id,  users.name as user_name, users.surname as user_surname,
+            users.email as user_email, users.password as user_password, users.role as user_role,
+            groups.id as group_id, groups.number as group_number
             FROM iis_schema.students_info
             LEFT JOIN iis_schema.users ON (students_info.user_id = users.id)
             LEFT JOIN iis_schema.groups ON (students_info.group_id = groups.id)
             WHERE students_info.group_id = ?""";
 
     private static final String FIND_BY_FACULTY_QUERY = """
-            SELECT students_info.id, students_info.year, students_info.faculty, students_info.speciality,
-            users.id,  users.name, users.surname, users.email, users.password, users.role,
-            groups.id, groups.number
+            SELECT students_info.id as student_id, students_info.year as student_year, students_info.faculty as student_faculty, students_info.speciality as student_speciality,
+            users.id as user_id,  users.name as user_name, users.surname as user_surname,
+            users.email as user_email, users.password as user_password, users.role as user_role,
+            groups.id as group_id, groups.number as group_number
             FROM iis_schema.students_info
             LEFT JOIN iis_schema.users ON (students_info.user_id = users.id)
             LEFT JOIN iis_schema.groups ON (students_info.group_id = groups.id)
             WHERE students_info.faculty = ?""";
 
     private static final String FIND_BY_SPECIALITY_QUERY = """
-            SELECT students_info.id, students_info.year, students_info.faculty, students_info.speciality,
-            users.id,  users.name, users.surname, users.email, users.password, users.role,
-            groups.id, groups.number
+            SELECT students_info.id as student_id, students_info.year as student_year, students_info.faculty as student_faculty, students_info.speciality as student_speciality,
+            users.id as user_id,  users.name as user_name, users.surname as user_surname,
+            users.email as user_email, users.password as user_password, users.role as user_role,
+            groups.id as group_id, groups.number as group_number
             FROM iis_schema.students_info
             LEFT JOIN iis_schema.users ON (students_info.user_id = users.id)
             LEFT JOIN iis_schema.groups ON (students_info.group_id = groups.id)
             WHERE students_info.speciality = ?""";
 
     private static final String FIND_BY_YEAR_QUERY = """
-            SELECT students_info.id, students_info.year, students_info.faculty, students_info.speciality,
-            users.id,  users.name, users.surname, users.email, users.password, users.role,
-            groups.id, groups.number
+            SELECT students_info.id as student_id, students_info.year as student_year, students_info.faculty as student_faculty, students_info.speciality as student_speciality,
+            users.id as user_id,  users.name as user_name, users.surname as user_surname,
+            users.email as user_email, users.password as user_password, users.role as user_role,
+            groups.id as group_id, groups.number as group_number
             FROM iis_schema.students_info
             LEFT JOIN iis_schema.users ON (students_info.user_id = users.id)
             LEFT JOIN iis_schema.groups ON (students_info.group_id = groups.id)
@@ -87,6 +93,7 @@ public class StudentRepositoryImpl implements StudentRepository {
              PreparedStatement statement = connection.prepareStatement(FIND_BY_ID_QUERY)) {
             statement.setLong(1, id);
             ResultSet rs = statement.executeQuery();
+            rs.next();
             return StudentRowMapper.mapStudent(rs);
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while finding student by id = " + id);

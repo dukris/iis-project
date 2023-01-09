@@ -16,15 +16,15 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class GroupRepositoryImpl implements GroupRepository {
     private final DataSource dataSource;
-    private static final String FIND_ALL_QUERY = "SELECT groups.id, groups.number FROM iis_schema.groups";
-    private static final String FIND_BY_ID_QUERY = "SELECT groups.id, groups.number FROM iis_schema.groups WHERE id = ?";
+    private static final String FIND_ALL_QUERY = "SELECT groups.id as group_id, groups.number as group_number FROM iis_schema.groups";
+    private static final String FIND_BY_ID_QUERY = "SELECT groups.id as group_id, groups.number as group_number FROM iis_schema.groups WHERE id = ?";
     private static final String FIND_BY_TEACHER_QUERY = """
-            SELECT groups.id, groups.number
+            SELECT groups.id as group_id, groups.number as group_number
             FROM iis_schema.lessons
             LEFT JOIN iis_schema.groups ON (lessons.group_id = groups.id)
             WHERE lessons.teacher_id = ?""";
     private static final String FIND_BY_TEACHER_AND_SUBJECT_QUERY = """
-            SELECT groups.id, groups.number
+            SELECT groups.id  as group_id, groups.number  as group_number
             FROM iis_schema.lessons
             LEFT JOIN iis_schema.groups ON (lessons.group_id = groups.id)
             WHERE lessons.teacher_id = ? AND lessons.subject_id = ?""";
@@ -49,6 +49,7 @@ public class GroupRepositoryImpl implements GroupRepository {
              PreparedStatement statement = connection.prepareStatement(FIND_BY_ID_QUERY)) {
             statement.setLong(1, id);
             ResultSet rs = statement.executeQuery();
+            rs.next();
             return GroupRowMapper.mapGroup(rs);
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while finding group by id = " + id);

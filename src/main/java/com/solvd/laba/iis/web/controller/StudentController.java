@@ -69,14 +69,14 @@ public class StudentController {
     public ResponseEntity<StudentInfoDto> create(@RequestBody @Valid StudentInfoDto studentInfoDto) {
         StudentInfo studentInfo = studentInfoMapper.studentInfoDtoToStudentInfo(studentInfoDto);
         studentInfo =studentService.create(studentInfo);
-        return new ResponseEntity<>(studentInfoMapper.studentInfoToStudentInfoDto(studentInfo), HttpStatus.OK);
+        return new ResponseEntity<>(studentInfoMapper.studentInfoToStudentInfoDto(studentInfo), HttpStatus.CREATED);
     }
 
     @DeleteMapping
     public ResponseEntity<Void> delete(@RequestBody @Valid StudentInfoDto studentInfoDto) {
         StudentInfo studentInfo = studentInfoMapper.studentInfoDtoToStudentInfo(studentInfoDto);
         studentService.delete(studentInfo);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PutMapping

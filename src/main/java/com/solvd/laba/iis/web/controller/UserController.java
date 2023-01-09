@@ -37,14 +37,14 @@ public class UserController {
     public ResponseEntity<UserDto> create(@RequestBody @Valid UserDto userDto) {
         User user = userMapper.userDtoToUser(userDto);
         user = userService.create(user);
-        return new ResponseEntity<>(userMapper.userToUserDto(user), HttpStatus.OK);
+        return new ResponseEntity<>(userMapper.userToUserDto(user), HttpStatus.CREATED);
     }
 
     @DeleteMapping
     public ResponseEntity<Void> delete(@RequestBody @Valid UserDto userDto) {
         User user = userMapper.userDtoToUser(userDto);
         userService.delete(user);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PutMapping

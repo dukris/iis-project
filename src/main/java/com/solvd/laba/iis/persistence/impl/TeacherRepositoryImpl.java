@@ -17,35 +17,39 @@ import java.util.Optional;
 public class TeacherRepositoryImpl implements TeacherRepository {
     private final DataSource dataSource;
     private static final String FIND_ALL_QUERY = """
-            SELECT teachers_info.id,
-            users.id, users.name, users.surname, users.email, users.password, users.role,
-            subjects.id, subjects.name
+            SELECT teachers_info.id as teacher_id,
+            users.id as user_id, users.name as user_name, users.surname as user_surname,
+            users.email as user_email, users.password as user_password, users.role as user_role,
+            subjects.id as subject_id, subjects.name as subject_name
             FROM iis_schema.teachers_info
             LEFT JOIN iis_schema.users ON (teachers_info.user_id = users.id)
             LEFT JOIN iis_schema.teachers_subjects ON (teachers_info.id = teachers_subjects.teacher_id)
-            LEFT JOIN iis_schema.subjects ON (teachers_subjects.subject_id = subjects.id);""";
+            LEFT JOIN iis_schema.subjects ON (teachers_subjects.subject_id = subjects.id)""";
     private static final String FIND_BY_ID_QUERY = """
-            SELECT teachers_info.id,
-            users.id, users.name, users.surname, users.email, users.password, users.role,
-            subjects.id, subjects.name
+            SELECT teachers_info.id as teacher_id,
+            users.id as user_id, users.name as user_name, users.surname as user_surname,
+            users.email as user_email, users.password as user_password, users.role as user_role,
+            subjects.id as subject_id, subjects.name as subject_name
             FROM iis_schema.teachers_info
             LEFT JOIN iis_schema.users ON (teachers_info.user_id = users.id)
             LEFT JOIN iis_schema.teachers_subjects ON (teachers_info.id = teachers_subjects.teacher_id)
             LEFT JOIN iis_schema.subjects ON (teachers_subjects.subject_id = subjects.id)
-            WHERE teachers_info.id = ?;""";
+            WHERE teachers_info.id = ?""";
     private static final String FIND_BY_GROUP_QUERY = """
-            SELECT teachers_info.id,
-            users.id, users.name, users.surname, users.email, users.password, users.role,
-            subjects.id, subjects.name
+            SELECT teachers_info.id as teacher_id,
+            users.id as user_id, users.name as user_name, users.surname as user_surname,
+            users.email as user_email, users.password as user_password, users.role as user_role,
+            subjects.id as subject_id, subjects.name as subject_name
             FROM iis_schema.teachers_info
-            INNER JOIN iis_schema.users ON (teachers_info.user_id = users.id)
-            INNER JOIN iis_schema.teachers_subjects ON (teachers_info.id = teachers_subjects.teacher_id)
-            INNER JOIN iis_schema.subjects ON (teachers_subjects.subject_id = subjects.id)
-            INNER JOIN iis_schema.lessons ON (teachers_info.id = lessons.teacher_id)
-            WHERE lessons.group_id = ?;""";
+            LEFT JOIN iis_schema.users ON (teachers_info.user_id = users.id)
+            LEFT JOIN iis_schema.teachers_subjects ON (teachers_info.id = teachers_subjects.teacher_id)
+            LEFT JOIN iis_schema.subjects ON (teachers_subjects.subject_id = subjects.id)
+            LEFT JOIN iis_schema.lessons ON (teachers_info.id = lessons.teacher_id)
+            WHERE lessons.group_id = ?""";
     private static final String FIND_BY_SUBJECT_QUERY = """
-            SELECT teachers_info.id,
-            users.id, users.name, users.surname, users.email, users.password, users.role
+            SELECT teachers_info.id as teacher_id,
+            users.id as user_id, users.name as user_name, users.surname as user_surname,
+            users.email as user_email, users.password as user_password, users.role as user_role
             FROM iis_schema.teachers_info
             LEFT JOIN iis_schema.users ON (teachers_info.user_id = users.id)
             LEFT JOIN iis_schema.teachers_subjects ON (teachers_info.id = teachers_subjects.teacher_id)
@@ -74,6 +78,7 @@ public class TeacherRepositoryImpl implements TeacherRepository {
              PreparedStatement statement = connection.prepareStatement(FIND_BY_ID_QUERY)) {
             statement.setLong(1, id);
             ResultSet rs = statement.executeQuery();
+            rs.next();
             return TeacherRowMapper.mapTeacher(rs);
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while finding teacher by teacher's id = " + id);
@@ -100,7 +105,8 @@ public class TeacherRepositoryImpl implements TeacherRepository {
             ResultSet rs = statement.executeQuery();
             return TeacherRowMapper.mapTeachersBySubject(rs);
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while finding teachers by subject's id = " + subjectId);
+//            throw new ResourceMappingException("Exception occurred while finding teachers by subject's id = " + subjectId);
+            throw new ResourceMappingException(ex.getMessage());
         }
     }
 

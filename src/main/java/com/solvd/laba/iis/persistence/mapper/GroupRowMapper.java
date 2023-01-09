@@ -8,25 +8,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class GroupRowMapper{
+public abstract class GroupRowMapper {
 
     @SneakyThrows
-    public static Optional<Group> mapGroup(ResultSet rs){
+    public static Optional<Group> mapGroup(ResultSet rs) {
         Group group = new Group();
-        while (rs.next()) {
-            group.setId(rs.getLong(1));
-            group.setNumber(rs.getInt(2));
-        }
+        group.setId(rs.getLong("group_id"));
+        group.setNumber(rs.getInt("group_number"));
         return Optional.of(group);
     }
 
     @SneakyThrows
-    public static List<Group> mapGroups(ResultSet rs){
+    public static List<Group> mapGroups(ResultSet rs) {
         List<Group> groups = new ArrayList<>();
         while (rs.next()) {
-            Group group = new Group();
-            group.setId(rs.getLong(1));
-            group.setNumber(rs.getInt(2));
+            Group group = mapGroup(rs).orElseThrow();
             groups.add(group);
         }
         return groups;
