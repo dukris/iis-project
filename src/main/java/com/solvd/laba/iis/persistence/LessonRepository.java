@@ -19,12 +19,9 @@ public interface LessonRepository {
 
     List<Lesson> findByTeacherAndDay(long teacherId, String weekday);
 
-    @Transactional
     Lesson create(Lesson lesson);
 
-    @Transactional
     Lesson save(Lesson lesson);
 
-    @Transactional
     void delete(Lesson lesson);
 }

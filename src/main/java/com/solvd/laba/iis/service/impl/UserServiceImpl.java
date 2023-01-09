@@ -1,7 +1,7 @@
 package com.solvd.laba.iis.service.impl;
 
 import com.solvd.laba.iis.domain.User;
-import com.solvd.laba.iis.domain.exception.ServiceException;
+import com.solvd.laba.iis.domain.exception.ResourceNotFoundException;
 import com.solvd.laba.iis.persistence.UserRepository;
 import com.solvd.laba.iis.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getById(long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new ServiceException("User with id = " + id + "not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User with id = " + id + "not found"));
     }
 
     @Override

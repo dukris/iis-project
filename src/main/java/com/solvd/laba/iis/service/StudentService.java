@@ -1,6 +1,7 @@
 package com.solvd.laba.iis.service;
 
 import com.solvd.laba.iis.domain.StudentInfo;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,9 +18,12 @@ public interface StudentService {
 
     List<StudentInfo> getByAdmissionYear(int year);
 
+    @Transactional
     StudentInfo create(StudentInfo studentInfo);
 
+    @Transactional
     StudentInfo save(StudentInfo studentInfo);
 
+    @Transactional
     void delete(StudentInfo studentInfo);
 }

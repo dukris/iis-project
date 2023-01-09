@@ -16,18 +16,13 @@ public interface TeacherRepository {
 
     List<TeacherInfo> findBySubject(long subjectId);
 
-    @Transactional
     TeacherInfo create(TeacherInfo teacherInfo);
 
-    @Transactional
     TeacherInfo save(TeacherInfo teacherInfo);
 
-    @Transactional
     void delete(TeacherInfo teacherInfo);
 
-    @Transactional
     void deleteSubject(long teacherId, long subjectId);
 
-    @Transactional
     void addSubject(long teacherId, long subjectId);
 }

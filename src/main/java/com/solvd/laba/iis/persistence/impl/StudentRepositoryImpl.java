@@ -1,18 +1,14 @@
 package com.solvd.laba.iis.persistence.impl;
 
-import com.solvd.laba.iis.domain.Group;
-import com.solvd.laba.iis.domain.Role;
 import com.solvd.laba.iis.domain.StudentInfo;
-import com.solvd.laba.iis.domain.User;
-import com.solvd.laba.iis.domain.exception.DaoException;
+import com.solvd.laba.iis.domain.exception.ResourceMappingException;
 import com.solvd.laba.iis.persistence.StudentRepository;
+import com.solvd.laba.iis.persistence.mapper.StudentRowMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -78,34 +74,10 @@ public class StudentRepositoryImpl implements StudentRepository {
     public List<StudentInfo> findAll() {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
-            List<StudentInfo> students = new ArrayList<>();
             ResultSet rs = statement.executeQuery(FIND_ALL_QUERY);
-            while (rs.next()) {
-                StudentInfo studentInfo = new StudentInfo();
-                studentInfo.setId(rs.getLong(1));
-                studentInfo.setAdmissionYear(rs.getInt(2));
-                studentInfo.setFaculty(rs.getString(3));
-                studentInfo.setSpeciality(rs.getString(4));
-
-                User user = new User();
-                user.setId(rs.getLong(5));
-                user.setName(rs.getString(6));
-                user.setSurname(rs.getString(7));
-                user.setEmail(rs.getString(8));
-                user.setPassword(rs.getString(9));
-                user.setRole(Role.valueOf(rs.getString(10).toUpperCase()));
-                studentInfo.setUser(user);
-
-                Group group = new Group();
-                group.setId(rs.getLong(11));
-                group.setNumber(rs.getInt(12));
-                studentInfo.setGroup(group);
-
-                students.add(studentInfo);
-            }
-            return students;
+            return StudentRowMapper.mapStudents(rs);
         } catch (SQLException ex) {
-            throw new DaoException("Exception occurred while finding all students");
+            throw new ResourceMappingException("Exception occurred while finding all students");
         }
     }
 
@@ -114,31 +86,10 @@ public class StudentRepositoryImpl implements StudentRepository {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_ID_QUERY)) {
             statement.setLong(1, id);
-            StudentInfo studentInfo = new StudentInfo();
             ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                studentInfo.setId(rs.getLong(1));
-                studentInfo.setAdmissionYear(rs.getInt(2));
-                studentInfo.setFaculty(rs.getString(3));
-                studentInfo.setSpeciality(rs.getString(4));
-
-                User user = new User();
-                user.setId(rs.getLong(5));
-                user.setName(rs.getString(6));
-                user.setSurname(rs.getString(7));
-                user.setEmail(rs.getString(8));
-                user.setPassword(rs.getString(9));
-                user.setRole(Role.valueOf(rs.getString(10).toUpperCase()));
-                studentInfo.setUser(user);
-
-                Group group = new Group();
-                group.setId(rs.getLong(11));
-                group.setNumber(rs.getInt(12));
-                studentInfo.setGroup(group);
-            }
-            return Optional.of(studentInfo);
+            return StudentRowMapper.mapStudent(rs);
         } catch (SQLException ex) {
-            throw new DaoException("Exception occurred while finding student by id = " + id);
+            throw new ResourceMappingException("Exception occurred while finding student by id = " + id);
         }
     }
 
@@ -147,34 +98,10 @@ public class StudentRepositoryImpl implements StudentRepository {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_GROUP_QUERY)) {
             statement.setLong(1, groupId);
-            List<StudentInfo> students = new ArrayList<>();
             ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                StudentInfo studentInfo = new StudentInfo();
-                studentInfo.setId(rs.getLong(1));
-                studentInfo.setAdmissionYear(rs.getInt(2));
-                studentInfo.setFaculty(rs.getString(3));
-                studentInfo.setSpeciality(rs.getString(4));
-
-                User user = new User();
-                user.setId(rs.getLong(5));
-                user.setName(rs.getString(6));
-                user.setSurname(rs.getString(7));
-                user.setEmail(rs.getString(8));
-                user.setPassword(rs.getString(9));
-                user.setRole(Role.valueOf(rs.getString(10).toUpperCase()));
-                studentInfo.setUser(user);
-
-                Group group = new Group();
-                group.setId(rs.getLong(11));
-                group.setNumber(rs.getInt(12));
-                studentInfo.setGroup(group);
-
-                students.add(studentInfo);
-            }
-            return students;
+            return StudentRowMapper.mapStudents(rs);
         } catch (SQLException ex) {
-            throw new DaoException("Exception occurred while finding students by group's id = " + groupId);
+            throw new ResourceMappingException("Exception occurred while finding students by group's id = " + groupId);
         }
     }
 
@@ -183,34 +110,10 @@ public class StudentRepositoryImpl implements StudentRepository {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_SPECIALITY_QUERY)) {
             statement.setString(1, speciality);
-            List<StudentInfo> students = new ArrayList<>();
             ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                StudentInfo studentInfo = new StudentInfo();
-                studentInfo.setId(rs.getLong(1));
-                studentInfo.setAdmissionYear(rs.getInt(2));
-                studentInfo.setFaculty(rs.getString(3));
-                studentInfo.setSpeciality(rs.getString(4));
-
-                User user = new User();
-                user.setId(rs.getLong(5));
-                user.setName(rs.getString(6));
-                user.setSurname(rs.getString(7));
-                user.setEmail(rs.getString(8));
-                user.setPassword(rs.getString(9));
-                user.setRole(Role.valueOf(rs.getString(10).toUpperCase()));
-                studentInfo.setUser(user);
-
-                Group group = new Group();
-                group.setId(rs.getLong(11));
-                group.setNumber(rs.getInt(12));
-                studentInfo.setGroup(group);
-
-                students.add(studentInfo);
-            }
-            return students;
+            return StudentRowMapper.mapStudents(rs);
         } catch (SQLException ex) {
-            throw new DaoException("Exception occurred while finding students by speciality = " + speciality);
+            throw new ResourceMappingException("Exception occurred while finding students by speciality = " + speciality);
         }
     }
 
@@ -219,34 +122,10 @@ public class StudentRepositoryImpl implements StudentRepository {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_FACULTY_QUERY)) {
             statement.setString(1, faculty);
-            List<StudentInfo> students = new ArrayList<>();
             ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                StudentInfo studentInfo = new StudentInfo();
-                studentInfo.setId(rs.getLong(1));
-                studentInfo.setAdmissionYear(rs.getInt(2));
-                studentInfo.setFaculty(rs.getString(3));
-                studentInfo.setSpeciality(rs.getString(4));
-
-                User user = new User();
-                user.setId(rs.getLong(5));
-                user.setName(rs.getString(6));
-                user.setSurname(rs.getString(7));
-                user.setEmail(rs.getString(8));
-                user.setPassword(rs.getString(9));
-                user.setRole(Role.valueOf(rs.getString(10).toUpperCase()));
-                studentInfo.setUser(user);
-
-                Group group = new Group();
-                group.setId(rs.getLong(11));
-                group.setNumber(rs.getInt(12));
-                studentInfo.setGroup(group);
-
-                students.add(studentInfo);
-            }
-            return students;
+            return StudentRowMapper.mapStudents(rs);
         } catch (SQLException ex) {
-            throw new DaoException("Exception occurred while finding students by faculty = " + faculty);
+            throw new ResourceMappingException("Exception occurred while finding students by faculty = " + faculty);
         }
     }
 
@@ -255,42 +134,18 @@ public class StudentRepositoryImpl implements StudentRepository {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_YEAR_QUERY)) {
             statement.setInt(1, year);
-            List<StudentInfo> students = new ArrayList<>();
             ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                StudentInfo studentInfo = new StudentInfo();
-                studentInfo.setId(rs.getLong(1));
-                studentInfo.setAdmissionYear(rs.getInt(2));
-                studentInfo.setFaculty(rs.getString(3));
-                studentInfo.setSpeciality(rs.getString(4));
-
-                User user = new User();
-                user.setId(rs.getLong(5));
-                user.setName(rs.getString(6));
-                user.setSurname(rs.getString(7));
-                user.setEmail(rs.getString(8));
-                user.setPassword(rs.getString(9));
-                user.setRole(Role.valueOf(rs.getString(10).toUpperCase()));
-                studentInfo.setUser(user);
-
-                Group group = new Group();
-                group.setId(rs.getLong(11));
-                group.setNumber(rs.getInt(12));
-                studentInfo.setGroup(group);
-
-                students.add(studentInfo);
-            }
-            return students;
+            return StudentRowMapper.mapStudents(rs);
         } catch (SQLException ex) {
-            throw new DaoException("Exception occurred while finding students by year = " + year);
+            throw new ResourceMappingException("Exception occurred while finding students by year = " + year);
         }
     }
 
     @Override
-    @Transactional
     public StudentInfo create(StudentInfo studentInfo) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(CREATE_QUERY)) {
+             PreparedStatement statement = connection.prepareStatement(CREATE_QUERY,
+                     Statement.RETURN_GENERATED_KEYS)) {
             statement.setInt(1, studentInfo.getAdmissionYear());
             statement.setString(2, studentInfo.getFaculty());
             statement.setString(3, studentInfo.getSpeciality());
@@ -303,12 +158,11 @@ public class StudentRepositoryImpl implements StudentRepository {
             }
             return studentInfo;
         } catch (SQLException ex) {
-            throw new DaoException("Exception occurred while creating student");
+            throw new ResourceMappingException("Exception occurred while creating student");
         }
     }
 
     @Override
-    @Transactional
     public StudentInfo save(StudentInfo studentInfo) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(SAVE_QUERY)) {
@@ -321,19 +175,18 @@ public class StudentRepositoryImpl implements StudentRepository {
             statement.executeUpdate();
             return studentInfo;
         } catch (SQLException ex) {
-            throw new DaoException("Exception occurred while saving student with id = " + studentInfo.getId());
+            throw new ResourceMappingException("Exception occurred while saving student with id = " + studentInfo.getId());
         }
     }
 
     @Override
-    @Transactional
     public void delete(StudentInfo studentInfo) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)) {
             statement.setLong(1, studentInfo.getId());
             statement.executeUpdate();
         } catch (SQLException ex) {
-            throw new DaoException("Exception occurred while deleting student with id = " + studentInfo.getId());
+            throw new ResourceMappingException("Exception occurred while deleting student with id = " + studentInfo.getId());
         }
     }
 }

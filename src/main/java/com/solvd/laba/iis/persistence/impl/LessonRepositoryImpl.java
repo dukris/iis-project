@@ -1,8 +1,9 @@
 package com.solvd.laba.iis.persistence.impl;
 
 import com.solvd.laba.iis.domain.*;
-import com.solvd.laba.iis.domain.exception.DaoException;
+import com.solvd.laba.iis.domain.exception.ResourceMappingException;
 import com.solvd.laba.iis.persistence.LessonRepository;
+import com.solvd.laba.iis.persistence.mapper.LessonRowMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -97,44 +98,10 @@ public class LessonRepositoryImpl implements LessonRepository {
     public List<Lesson> findAll() {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
-            List<Lesson> lessons = new ArrayList<>();
             ResultSet rs = statement.executeQuery(FIND_ALL_QUERY);
-            while (rs.next()) {
-                Lesson lesson = new Lesson();
-                lesson.setId(rs.getLong(1));
-                lesson.setRoom(rs.getInt(2));
-                lesson.setWeekday(Weekday.valueOf(rs.getString(3).toUpperCase()));
-                lesson.setStartTime(rs.getTime(4).toLocalTime());
-                lesson.setEndTime(rs.getTime(5).toLocalTime());
-
-                Subject subject = new Subject();
-                subject.setId(rs.getLong(6));
-                subject.setName(rs.getString(7));
-                lesson.setSubject(subject);
-
-                Group group = new Group();
-                group.setId(rs.getLong(8));
-                group.setNumber(rs.getInt(9));
-                lesson.setGroup(group);
-
-                TeacherInfo teacher = new TeacherInfo();
-                teacher.setId(rs.getLong(10));
-
-                User user = new User();
-                user.setId(rs.getLong(11));
-                user.setName(rs.getString(12));
-                user.setSurname(rs.getString(13));
-                user.setEmail(rs.getString(14));
-                user.setPassword(rs.getString(15));
-                user.setRole(Role.valueOf(rs.getString(16).toUpperCase()));
-                teacher.setUser(user);
-                lesson.setTeacher(teacher);
-
-                lessons.add(lesson);
-            }
-            return lessons;
+            return LessonRowMapper.mapLessons(rs);
         } catch (SQLException ex) {
-            throw new DaoException("Exception occurred while finding all lessons");
+            throw new ResourceMappingException("Exception occurred while finding all lessons");
         }
     }
 
@@ -144,40 +111,9 @@ public class LessonRepositoryImpl implements LessonRepository {
              PreparedStatement statement = connection.prepareStatement(FIND_BY_ID_QUERY)) {
             statement.setLong(1, id);
             ResultSet rs = statement.executeQuery();
-            Lesson lesson = new Lesson();
-            while (rs.next()) {
-                lesson.setId(rs.getLong(1));
-                lesson.setRoom(rs.getInt(2));
-                lesson.setWeekday(Weekday.valueOf(rs.getString(3).toUpperCase()));
-                lesson.setStartTime(rs.getTime(4).toLocalTime());
-                lesson.setEndTime(rs.getTime(5).toLocalTime());
-
-                Subject subject = new Subject();
-                subject.setId(rs.getLong(6));
-                subject.setName(rs.getString(7));
-                lesson.setSubject(subject);
-
-                Group group = new Group();
-                group.setId(rs.getLong(8));
-                group.setNumber(rs.getInt(9));
-                lesson.setGroup(group);
-
-                TeacherInfo teacher = new TeacherInfo();
-                teacher.setId(rs.getLong(10));
-
-                User user = new User();
-                user.setId(rs.getLong(11));
-                user.setName(rs.getString(12));
-                user.setSurname(rs.getString(13));
-                user.setEmail(rs.getString(14));
-                user.setPassword(rs.getString(15));
-                user.setRole(Role.valueOf(rs.getString(16).toUpperCase()));
-                teacher.setUser(user);
-                lesson.setTeacher(teacher);
-            }
-            return Optional.of(lesson);
+            return LessonRowMapper.mapLesson(rs);
         } catch (SQLException ex) {
-            throw new DaoException("Exception occurred while finding lesson by lesson's id = " + id);
+            throw new ResourceMappingException("Exception occurred while finding lesson by lesson's id = " + id);
         }
     }
 
@@ -187,43 +123,9 @@ public class LessonRepositoryImpl implements LessonRepository {
              PreparedStatement statement = connection.prepareStatement(FIND_BY_GROUP_QUERY)) {
             statement.setLong(1, groupId);
             ResultSet rs = statement.executeQuery();
-            List<Lesson> lessons = new ArrayList<>();
-            while (rs.next()) {
-                Lesson lesson = new Lesson();
-                lesson.setId(rs.getLong(1));
-                lesson.setRoom(rs.getInt(2));
-                lesson.setWeekday(Weekday.valueOf(rs.getString(3).toUpperCase()));
-                lesson.setStartTime(rs.getTime(4).toLocalTime());
-                lesson.setEndTime(rs.getTime(5).toLocalTime());
-
-                Subject subject = new Subject();
-                subject.setId(rs.getLong(6));
-                subject.setName(rs.getString(7));
-                lesson.setSubject(subject);
-
-                Group group = new Group();
-                group.setId(rs.getLong(8));
-                group.setNumber(rs.getInt(9));
-                lesson.setGroup(group);
-
-                TeacherInfo teacher = new TeacherInfo();
-                teacher.setId(rs.getLong(10));
-
-                User user = new User();
-                user.setId(rs.getLong(11));
-                user.setName(rs.getString(12));
-                user.setSurname(rs.getString(13));
-                user.setEmail(rs.getString(14));
-                user.setPassword(rs.getString(15));
-                user.setRole(Role.valueOf(rs.getString(16).toUpperCase()));
-                teacher.setUser(user);
-                lesson.setTeacher(teacher);
-
-                lessons.add(lesson);
-            }
-            return lessons;
+            return LessonRowMapper.mapLessons(rs);
         } catch (SQLException ex) {
-            throw new DaoException("Exception occurred while finding lessons by group's id = " + groupId);
+            throw new ResourceMappingException("Exception occurred while finding lessons by group's id = " + groupId);
         }
     }
 
@@ -234,43 +136,9 @@ public class LessonRepositoryImpl implements LessonRepository {
             statement.setLong(1, groupId);
             statement.setString(2, weekday);
             ResultSet rs = statement.executeQuery();
-            List<Lesson> lessons = new ArrayList<>();
-            while (rs.next()) {
-                Lesson lesson = new Lesson();
-                lesson.setId(rs.getLong(1));
-                lesson.setRoom(rs.getInt(2));
-                lesson.setWeekday(Weekday.valueOf(rs.getString(3).toUpperCase()));
-                lesson.setStartTime(rs.getTime(4).toLocalTime());
-                lesson.setEndTime(rs.getTime(5).toLocalTime());
-
-                Subject subject = new Subject();
-                subject.setId(rs.getLong(6));
-                subject.setName(rs.getString(7));
-                lesson.setSubject(subject);
-
-                Group group = new Group();
-                group.setId(rs.getLong(8));
-                group.setNumber(rs.getInt(9));
-                lesson.setGroup(group);
-
-                TeacherInfo teacher = new TeacherInfo();
-                teacher.setId(rs.getLong(10));
-
-                User user = new User();
-                user.setId(rs.getLong(11));
-                user.setName(rs.getString(12));
-                user.setSurname(rs.getString(13));
-                user.setEmail(rs.getString(14));
-                user.setPassword(rs.getString(15));
-                user.setRole(Role.valueOf(rs.getString(16).toUpperCase()));
-                teacher.setUser(user);
-                lesson.setTeacher(teacher);
-
-                lessons.add(lesson);
-            }
-            return lessons;
+            return LessonRowMapper.mapLessons(rs);
         } catch (SQLException ex) {
-            throw new DaoException("Exception occurred while finding lessons by group's id = " + groupId + " and day = " + weekday);
+            throw new ResourceMappingException("Exception occurred while finding lessons by group's id = " + groupId + " and day = " + weekday);
         }
     }
 
@@ -280,43 +148,9 @@ public class LessonRepositoryImpl implements LessonRepository {
              PreparedStatement statement = connection.prepareStatement(FIND_BY_TEACHER_QUERY)) {
             statement.setLong(1, teacherId);
             ResultSet rs = statement.executeQuery();
-            List<Lesson> lessons = new ArrayList<>();
-            while (rs.next()) {
-                Lesson lesson = new Lesson();
-                lesson.setId(rs.getLong(1));
-                lesson.setRoom(rs.getInt(2));
-                lesson.setWeekday(Weekday.valueOf(rs.getString(3).toUpperCase()));
-                lesson.setStartTime(rs.getTime(4).toLocalTime());
-                lesson.setEndTime(rs.getTime(5).toLocalTime());
-
-                Subject subject = new Subject();
-                subject.setId(rs.getLong(6));
-                subject.setName(rs.getString(7));
-                lesson.setSubject(subject);
-
-                Group group = new Group();
-                group.setId(rs.getLong(8));
-                group.setNumber(rs.getInt(9));
-                lesson.setGroup(group);
-
-                TeacherInfo teacher = new TeacherInfo();
-                teacher.setId(rs.getLong(10));
-
-                User user = new User();
-                user.setId(rs.getLong(11));
-                user.setName(rs.getString(12));
-                user.setSurname(rs.getString(13));
-                user.setEmail(rs.getString(14));
-                user.setPassword(rs.getString(15));
-                user.setRole(Role.valueOf(rs.getString(16).toUpperCase()));
-                teacher.setUser(user);
-                lesson.setTeacher(teacher);
-
-                lessons.add(lesson);
-            }
-            return lessons;
+            return LessonRowMapper.mapLessons(rs);
         } catch (SQLException ex) {
-            throw new DaoException("Exception occurred while finding lessons by teacher's id = " + teacherId);
+            throw new ResourceMappingException("Exception occurred while finding lessons by teacher's id = " + teacherId);
         }
     }
 
@@ -327,50 +161,17 @@ public class LessonRepositoryImpl implements LessonRepository {
             statement.setLong(1, teacherId);
             statement.setString(2, weekday);
             ResultSet rs = statement.executeQuery();
-            List<Lesson> lessons = new ArrayList<>();
-            while (rs.next()) {
-                Lesson lesson = new Lesson();
-                lesson.setId(rs.getLong(1));
-                lesson.setRoom(rs.getInt(2));
-                lesson.setWeekday(Weekday.valueOf(rs.getString(3).toUpperCase()));
-                lesson.setStartTime(rs.getTime(4).toLocalTime());
-                lesson.setEndTime(rs.getTime(5).toLocalTime());
-
-                Subject subject = new Subject();
-                subject.setId(rs.getLong(6));
-                subject.setName(rs.getString(7));
-                lesson.setSubject(subject);
-
-                Group group = new Group();
-                group.setId(rs.getLong(8));
-                group.setNumber(rs.getInt(9));
-                lesson.setGroup(group);
-
-                TeacherInfo teacher = new TeacherInfo();
-                teacher.setId(rs.getLong(10));
-
-                User user = new User();
-                user.setId(rs.getLong(11));
-                user.setName(rs.getString(12));
-                user.setSurname(rs.getString(13));
-                user.setEmail(rs.getString(14));
-                user.setPassword(rs.getString(15));
-                user.setRole(Role.valueOf(rs.getString(16).toUpperCase()));
-                teacher.setUser(user);
-                lesson.setTeacher(teacher);
-
-                lessons.add(lesson);
-            }
-            return lessons;
+            return LessonRowMapper.mapLessons(rs);
         } catch (SQLException ex) {
-            throw new DaoException("Exception occurred while finding lessons by teacher's id = " + teacherId + " and day = " + weekday);
+            throw new ResourceMappingException("Exception occurred while finding lessons by teacher's id = " + teacherId + " and day = " + weekday);
         }
     }
 
     @Override
     public Lesson create(Lesson lesson) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(CREATE_QUERY)) {
+             PreparedStatement statement = connection.prepareStatement(CREATE_QUERY,
+                     Statement.RETURN_GENERATED_KEYS)) {
             statement.setInt(1, lesson.getRoom());
             statement.setString(2, lesson.getWeekday().toString());
             statement.setTime(3, Time.valueOf(lesson.getStartTime()));
@@ -385,7 +186,7 @@ public class LessonRepositoryImpl implements LessonRepository {
             }
             return lesson;
         } catch (SQLException ex) {
-            throw new DaoException("Exception occurred while creating lesson");
+            throw new ResourceMappingException("Exception occurred while creating lesson");
         }
     }
 
@@ -404,7 +205,7 @@ public class LessonRepositoryImpl implements LessonRepository {
             statement.executeUpdate();
             return lesson;
         } catch (SQLException ex) {
-            throw new DaoException("Exception occurred while saving lesson with id = " + lesson.getId());
+            throw new ResourceMappingException("Exception occurred while saving lesson with id = " + lesson.getId());
         }
     }
 
@@ -415,7 +216,7 @@ public class LessonRepositoryImpl implements LessonRepository {
             statement.setLong(1, lesson.getId());
             statement.executeUpdate();
         } catch (SQLException ex) {
-            throw new DaoException("Exception occurred while deleting lesson with id = " + lesson.getId());
+            throw new ResourceMappingException("Exception occurred while deleting lesson with id = " + lesson.getId());
         }
     }
 }

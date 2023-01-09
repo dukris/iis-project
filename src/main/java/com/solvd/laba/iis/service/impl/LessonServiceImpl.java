@@ -1,7 +1,7 @@
 package com.solvd.laba.iis.service.impl;
 
 import com.solvd.laba.iis.domain.Lesson;
-import com.solvd.laba.iis.domain.exception.ServiceException;
+import com.solvd.laba.iis.domain.exception.ResourceNotFoundException;
 import com.solvd.laba.iis.persistence.LessonRepository;
 import com.solvd.laba.iis.service.LessonService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class LessonServiceImpl implements LessonService {
     @Override
     public Lesson getById(long id) {
         return lessonRepository.findById(id)
-                .orElseThrow(() -> new ServiceException("Lesson with id = " + id + "not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Lesson with id = " + id + "not found"));
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.solvd.laba.iis.service;
 
 import com.solvd.laba.iis.domain.Group;
 import com.solvd.laba.iis.domain.Lesson;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,9 +19,12 @@ public interface LessonService {
 
     List<Lesson> getByTeacherAndDay(long teacherId, String weekday);
 
+    @Transactional
     Lesson create(Lesson lesson);
 
+    @Transactional
     Lesson save(Lesson lesson);
 
+    @Transactional
     void delete(Lesson lesson);
 }

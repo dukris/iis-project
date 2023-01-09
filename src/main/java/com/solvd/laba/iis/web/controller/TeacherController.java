@@ -4,7 +4,10 @@ import com.solvd.laba.iis.domain.TeacherInfo;
 import com.solvd.laba.iis.service.TeacherService;
 import com.solvd.laba.iis.web.dto.TeacherInfoDto;
 import com.solvd.laba.iis.web.mapper.TeacherInfoMapper;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,65 +20,68 @@ public class TeacherController {
     private final TeacherInfoMapper teacherInfoMapper;
 
     @GetMapping
-    public List<TeacherInfoDto> getAll() {
+    public ResponseEntity<List<TeacherInfoDto>> getAll() {
         List<TeacherInfoDto> teachers = teacherService.getAll().stream()
                 .map(teacherInfoMapper::teacherInfoToTeacherInfoDto)
                 .toList();
-        return teachers;
+        return new ResponseEntity<>(teachers, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public TeacherInfoDto getById(@PathVariable long id) {
+    public ResponseEntity<TeacherInfoDto> getById(@PathVariable long id) {
         TeacherInfoDto teacher = teacherInfoMapper.teacherInfoToTeacherInfoDto(teacherService.getById(id));
-        return teacher;
+        return new ResponseEntity<>(teacher, HttpStatus.OK);
     }
 
     @GetMapping("/group/{id}")
-    public List<TeacherInfoDto> getByGroup(@PathVariable long id) {
+    public ResponseEntity<List<TeacherInfoDto>> getByGroup(@PathVariable long id) {
         List<TeacherInfoDto> teachers = teacherService.getByGroup(id).stream()
                 .map(teacherInfoMapper::teacherInfoToTeacherInfoDto)
                 .toList();
-        return teachers;
+        return new ResponseEntity<>(teachers, HttpStatus.OK);
     }
 
     @GetMapping("/subject/{id}")
-    public List<TeacherInfoDto> getBySubject(@PathVariable long id) {
+    public ResponseEntity<List<TeacherInfoDto>> getBySubject(@PathVariable long id) {
         List<TeacherInfoDto> teachers = teacherService.getBySubject(id).stream()
                 .map(teacherInfoMapper::teacherInfoToTeacherInfoDto)
                 .toList();
-        return teachers;
+        return new ResponseEntity<>(teachers, HttpStatus.OK);
     }
 
     @PostMapping
-    public TeacherInfoDto create(@RequestBody TeacherInfoDto teacherInfoDto) {
+    public ResponseEntity<TeacherInfoDto> create(@RequestBody @Valid TeacherInfoDto teacherInfoDto) {
         TeacherInfo teacherInfo = teacherInfoMapper.teacherInfoDtoToTeacherInfo(teacherInfoDto);
         teacherInfo = teacherService.create(teacherInfo);
-        return teacherInfoMapper.teacherInfoToTeacherInfoDto(teacherInfo);
+        return new ResponseEntity<>(teacherInfoMapper.teacherInfoToTeacherInfoDto(teacherInfo), HttpStatus.OK);
     }
 
     @DeleteMapping
-    public void delete(@RequestBody TeacherInfoDto teacherInfoDto) {
+    public ResponseEntity<Void> delete(@RequestBody @Valid TeacherInfoDto teacherInfoDto) {
         TeacherInfo teacherInfo = teacherInfoMapper.teacherInfoDtoToTeacherInfo(teacherInfoDto);
         teacherService.delete(teacherInfo);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping
-    public TeacherInfoDto update(@RequestBody TeacherInfoDto teacherInfoDto) {
+    public ResponseEntity<TeacherInfoDto> update(@RequestBody @Valid TeacherInfoDto teacherInfoDto) {
         TeacherInfo teacherInfo = teacherInfoMapper.teacherInfoDtoToTeacherInfo(teacherInfoDto);
         teacherInfo = teacherService.save(teacherInfo);
-        return teacherInfoMapper.teacherInfoToTeacherInfoDto(teacherInfo);
+        return new ResponseEntity<>(teacherInfoMapper.teacherInfoToTeacherInfoDto(teacherInfo), HttpStatus.OK);
     }
 
     @PostMapping("/subject")
-    public void addSubject(@RequestParam long teacherId,
+    public ResponseEntity<Void> addSubject(@RequestParam long teacherId,
                            @RequestParam long subjectId) {
         teacherService.addSubject(teacherId, subjectId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/subject")
-    public void deleteSubject(@RequestParam long teacherId,
+    public ResponseEntity<Void> deleteSubject(@RequestParam long teacherId,
                               @RequestParam long subjectId) {
         teacherService.deleteSubject(teacherId, subjectId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
 

@@ -1,6 +1,7 @@
 package com.solvd.laba.iis.service.impl;
 
 import com.solvd.laba.iis.domain.Mark;
+import com.solvd.laba.iis.domain.exception.ResourceNotFoundException;
 import com.solvd.laba.iis.persistence.MarkRepository;
 import com.solvd.laba.iis.service.MarkService;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,17 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MarkServiceImpl implements MarkService {
     private final MarkRepository markRepository;
+
+    @Override
+    public List<Mark> getAll() {
+        return markRepository.findAll();
+    }
+
+    @Override
+    public Mark getById(long id) {
+        return markRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Mark with id = " + id + "not found"));
+    }
 
     @Override
     public List<Mark> getBySubjectAndTeacher(long subjectId, long teacherId) {

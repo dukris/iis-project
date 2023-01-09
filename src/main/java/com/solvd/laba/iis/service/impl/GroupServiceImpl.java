@@ -1,7 +1,7 @@
 package com.solvd.laba.iis.service.impl;
 
 import com.solvd.laba.iis.domain.Group;
-import com.solvd.laba.iis.domain.exception.ServiceException;
+import com.solvd.laba.iis.domain.exception.ResourceNotFoundException;
 import com.solvd.laba.iis.persistence.GroupRepository;
 import com.solvd.laba.iis.service.GroupService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public Group getById(long id) {
         return groupRepository.findById(id)
-                .orElseThrow(() -> new ServiceException("Group with id = " + id + "not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Group with id = " + id + "not found"));
     }
 
     @Override

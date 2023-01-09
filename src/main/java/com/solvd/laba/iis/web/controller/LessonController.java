@@ -4,7 +4,10 @@ import com.solvd.laba.iis.domain.Lesson;
 import com.solvd.laba.iis.service.LessonService;
 import com.solvd.laba.iis.web.dto.LessonDto;
 import com.solvd.laba.iis.web.mapper.LessonMapper;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,21 +21,21 @@ public class LessonController {
     private final LessonMapper lessonMapper;
 
     @GetMapping
-    public List<LessonDto> getAll() {
+    public ResponseEntity<List<LessonDto>> getAll() {
         List<LessonDto> lessons = lessonService.getAll().stream()
                 .map(lessonMapper::lessonToLessonDto)
                 .toList();
-        return lessons;
+        return new ResponseEntity<>(lessons, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public LessonDto getById(@PathVariable long id) {
+    public ResponseEntity<LessonDto> getById(@PathVariable long id) {
         LessonDto lesson = lessonMapper.lessonToLessonDto(lessonService.getById(id));
-        return lesson;
+        return new ResponseEntity<>(lesson, HttpStatus.OK);
     }
 
     @GetMapping("/teacher")
-    public List<LessonDto> getByTeacherAndDay(@RequestParam(name = "teacherId") long teacherId,
+    public ResponseEntity<List<LessonDto>> getByTeacherAndDay(@RequestParam(name = "teacherId") long teacherId,
                                               @RequestParam(name = "weekday", required = false) String weekday) {
         List<LessonDto> lessons = Objects.nonNull(weekday) ?
                 lessonService.getByTeacherAndDay(teacherId, weekday).stream()
@@ -41,11 +44,11 @@ public class LessonController {
                 lessonService.getByTeacher(teacherId).stream()
                         .map(lessonMapper::lessonToLessonDto)
                         .toList();
-        return lessons;
+        return new ResponseEntity<>(lessons, HttpStatus.OK);
     }
 
     @GetMapping("/group")
-    public List<LessonDto> getByGroupAndDay(@RequestParam(name = "groupId") long groupId,
+    public ResponseEntity<List<LessonDto>> getByGroupAndDay(@RequestParam(name = "groupId") long groupId,
                                             @RequestParam(name = "weekday", required = false) String weekday) {
         List<LessonDto> lessons = Objects.nonNull(weekday) ?
                 lessonService.getByGroupAndDay(groupId, weekday).stream()
@@ -54,26 +57,27 @@ public class LessonController {
                 lessonService.getByGroup(groupId).stream()
                         .map(lessonMapper::lessonToLessonDto)
                         .toList();
-        return lessons;
+        return new ResponseEntity<>(lessons, HttpStatus.OK);
     }
 
     @PostMapping
-    public LessonDto create(@RequestBody LessonDto lessonDto) {
+    public ResponseEntity<LessonDto> create(@RequestBody @Valid LessonDto lessonDto) {
         Lesson lesson = lessonMapper.lessonDtoToLesson(lessonDto);
         lesson = lessonService.create(lesson);
-        return lessonMapper.lessonToLessonDto(lesson);
+        return new ResponseEntity<>(lessonMapper.lessonToLessonDto(lesson), HttpStatus.OK);
     }
 
     @DeleteMapping
-    public void delete(@RequestBody LessonDto lessonDto) {
+    public ResponseEntity<Void> delete(@RequestBody @Valid LessonDto lessonDto) {
         Lesson lesson = lessonMapper.lessonDtoToLesson(lessonDto);
         lessonService.delete(lesson);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping
-    public LessonDto update(@RequestBody LessonDto lessonDto) {
+    public ResponseEntity<LessonDto> update(@RequestBody @Valid LessonDto lessonDto) {
         Lesson lesson = lessonMapper.lessonDtoToLesson(lessonDto);
         lesson = lessonService.save(lesson);
-        return lessonMapper.lessonToLessonDto(lesson);
+        return new ResponseEntity<>(lessonMapper.lessonToLessonDto(lesson), HttpStatus.OK);
     }
 }

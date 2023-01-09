@@ -1,16 +1,14 @@
 package com.solvd.laba.iis.persistence.impl;
 
-import com.solvd.laba.iis.domain.Role;
 import com.solvd.laba.iis.domain.User;
-import com.solvd.laba.iis.domain.exception.DaoException;
+import com.solvd.laba.iis.domain.exception.ResourceMappingException;
 import com.solvd.laba.iis.persistence.UserRepository;
+import com.solvd.laba.iis.persistence.mapper.UserRowMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,21 +31,10 @@ public class UserRepositoryImpl implements UserRepository {
     public List<User> findAll() {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
-            List<User> users = new ArrayList<>();
             ResultSet rs = statement.executeQuery(FIND_ALL_QUERY);
-            while (rs.next()) {
-                    User user = new User();
-                    user.setId(rs.getLong(1));
-                    user.setName(rs.getString(2));
-                    user.setSurname(rs.getString(3));
-                    user.setEmail(rs.getString(4));
-                    user.setPassword(rs.getString(5));
-                    user.setRole(Role.valueOf(rs.getString(6).toUpperCase()));
-                    users.add(user);
-            }
-            return users;
+            return UserRowMapper.mapUsers(rs);
         } catch (SQLException ex) {
-            throw new DaoException("Exception occurred while finding all users");
+            throw new ResourceMappingException("Exception occurred while finding all users");
         }
     }
 
@@ -56,27 +43,18 @@ public class UserRepositoryImpl implements UserRepository {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_ID_QUERY)) {
             statement.setLong(1, id);
-            User user = new User();
             ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                user.setId(rs.getLong(1));
-                user.setName(rs.getString(2));
-                user.setSurname(rs.getString(3));
-                user.setEmail(rs.getString(4));
-                user.setPassword(rs.getString(5));
-                user.setRole(Role.valueOf(rs.getString(6).toUpperCase()));
-            }
-            return Optional.of(user);
+            return UserRowMapper.mapUser(rs);
         } catch (SQLException ex) {
-            throw new DaoException("Exception occurred while finding user by id = " + id);
+            throw new ResourceMappingException("Exception occurred while finding user by id = " + id);
         }
     }
 
     @Override
-    @Transactional
     public User create(User user) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(CREATE_QUERY)) {
+             PreparedStatement statement = connection.prepareStatement(CREATE_QUERY,
+                     Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, user.getName());
             statement.setString(2, user.getSurname());
             statement.setString(3, user.getEmail());
@@ -84,17 +62,16 @@ public class UserRepositoryImpl implements UserRepository {
             statement.setString(5, user.getRole().toString());
             statement.executeUpdate();
             ResultSet key = statement.getGeneratedKeys();
-            if(key.next()){
+            if (key.next()) {
                 user.setId(key.getLong(1));
             }
             return user;
         } catch (SQLException ex) {
-            throw new DaoException("Exception occurred while creating user");
+            throw new ResourceMappingException("Exception occurred while creating user");
         }
     }
 
     @Override
-    @Transactional
     public User save(User user) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(SAVE_QUERY)) {
@@ -107,19 +84,18 @@ public class UserRepositoryImpl implements UserRepository {
             statement.executeUpdate();
             return user;
         } catch (SQLException ex) {
-            throw new DaoException("Exception occurred while saving user with id = " + user.getId());
+            throw new ResourceMappingException("Exception occurred while saving user with id = " + user.getId());
         }
     }
 
     @Override
-    @Transactional
     public void delete(User user) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)) {
             statement.setLong(1, user.getId());
             statement.executeUpdate();
         } catch (SQLException ex) {
-            throw new DaoException("Exception occurred while deleting user with id = " + user.getId());
+            throw new ResourceMappingException("Exception occurred while deleting user with id = " + user.getId());
         }
     }
 }

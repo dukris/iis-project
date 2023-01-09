@@ -19,12 +19,9 @@ public interface StudentRepository {
 
     List<StudentInfo> findByAdmissionYear(int year);
 
-    @Transactional
     StudentInfo create(StudentInfo studentInfo);
 
-    @Transactional
     StudentInfo save(StudentInfo studentInfo);
 
-    @Transactional
     void delete(StudentInfo studentInfo);
 }

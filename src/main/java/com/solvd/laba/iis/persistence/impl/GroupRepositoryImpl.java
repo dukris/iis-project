@@ -1,14 +1,14 @@
 package com.solvd.laba.iis.persistence.impl;
 
 import com.solvd.laba.iis.domain.Group;
-import com.solvd.laba.iis.domain.exception.DaoException;
+import com.solvd.laba.iis.domain.exception.ResourceMappingException;
 import com.solvd.laba.iis.persistence.GroupRepository;
+import com.solvd.laba.iis.persistence.mapper.GroupRowMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,17 +36,10 @@ public class GroupRepositoryImpl implements GroupRepository {
     public List<Group> findAll() {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
-            List<Group> groups = new ArrayList<>();
             ResultSet rs = statement.executeQuery(FIND_ALL_QUERY);
-            while (rs.next()) {
-                Group group = new Group();
-                group.setId(rs.getLong(1));
-                group.setNumber(rs.getInt(2));
-                groups.add(group);
-            }
-            return groups;
+            return GroupRowMapper.mapGroups(rs);
         } catch (SQLException ex) {
-            throw new DaoException("Exception occurred while finding all groups");
+            throw new ResourceMappingException("Exception occurred while finding all groups");
         }
     }
 
@@ -55,15 +48,10 @@ public class GroupRepositoryImpl implements GroupRepository {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_ID_QUERY)) {
             statement.setLong(1, id);
-            Group group = new Group();
             ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                group.setId(rs.getLong(1));
-                group.setNumber(rs.getInt(2));
-            }
-            return Optional.of(group);
+            return GroupRowMapper.mapGroup(rs);
         } catch (SQLException ex) {
-            throw new DaoException("Exception occurred while finding group by id = " + id);
+            throw new ResourceMappingException("Exception occurred while finding group by id = " + id);
         }
     }
 
@@ -72,17 +60,10 @@ public class GroupRepositoryImpl implements GroupRepository {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_TEACHER_QUERY)) {
             statement.setLong(1, teacherId);
-            List<Group> groups = new ArrayList<>();
             ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                Group group = new Group();
-                group.setId(rs.getLong(1));
-                group.setNumber(rs.getInt(2));
-                groups.add(group);
-            }
-            return groups;
+            return GroupRowMapper.mapGroups(rs);
         } catch (SQLException ex) {
-            throw new DaoException("Exception occurred while finding groups by teacher's id = " + teacherId);
+            throw new ResourceMappingException("Exception occurred while finding groups by teacher's id = " + teacherId);
         }
     }
 
@@ -92,24 +73,18 @@ public class GroupRepositoryImpl implements GroupRepository {
              PreparedStatement statement = connection.prepareStatement(FIND_BY_TEACHER_AND_SUBJECT_QUERY)) {
             statement.setLong(1, teacherId);
             statement.setLong(2, subjectId);
-            List<Group> groups = new ArrayList<>();
             ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                Group group = new Group();
-                group.setId(rs.getLong(1));
-                group.setNumber(rs.getInt(2));
-                groups.add(group);
-            }
-            return groups;
+            return GroupRowMapper.mapGroups(rs);
         } catch (SQLException ex) {
-            throw new DaoException("Exception occurred while finding groups by teacher's id = " + teacherId + " and subject's id = " + subjectId);
+            throw new ResourceMappingException("Exception occurred while finding groups by teacher's id = " + teacherId + " and subject's id = " + subjectId);
         }
     }
 
     @Override
     public Group create(Group group) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(CREATE_QUERY)) {
+             PreparedStatement statement = connection.prepareStatement(CREATE_QUERY,
+                     Statement.RETURN_GENERATED_KEYS)) {
             statement.setInt(1, group.getNumber());
             statement.executeUpdate();
             ResultSet key = statement.getGeneratedKeys();
@@ -118,7 +93,7 @@ public class GroupRepositoryImpl implements GroupRepository {
             }
             return group;
         } catch (SQLException ex) {
-            throw new DaoException("Exception occurred while creating group");
+            throw new ResourceMappingException("Exception occurred while creating group");
         }
     }
 
@@ -131,7 +106,7 @@ public class GroupRepositoryImpl implements GroupRepository {
             statement.executeUpdate();
             return group;
         } catch (SQLException ex) {
-            throw new DaoException("Exception occurred while saving group with id = " + group.getId());
+            throw new ResourceMappingException("Exception occurred while saving group with id = " + group.getId());
         }
     }
 
@@ -142,7 +117,7 @@ public class GroupRepositoryImpl implements GroupRepository {
             statement.setLong(1, group.getId());
             statement.executeUpdate();
         } catch (SQLException ex) {
-            throw new DaoException("Exception occurred while deleting group with id = " + group.getId());
+            throw new ResourceMappingException("Exception occurred while deleting group with id = " + group.getId());
         }
     }
 }

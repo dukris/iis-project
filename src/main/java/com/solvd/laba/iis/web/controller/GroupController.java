@@ -4,7 +4,10 @@ import com.solvd.laba.iis.domain.Group;
 import com.solvd.laba.iis.service.GroupService;
 import com.solvd.laba.iis.web.dto.GroupDto;
 import com.solvd.laba.iis.web.mapper.GroupMapper;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,22 +21,22 @@ public class GroupController {
     private final GroupMapper groupMapper;
 
     @GetMapping
-    public List<GroupDto> getAll() {
+    public ResponseEntity<List<GroupDto>> getAll() {
         List<GroupDto> groups = groupService.getAll().stream()
                 .map(groupMapper::groupToGroupDto)
                 .toList();
-        return groups;
+        return new ResponseEntity<>(groups, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public GroupDto getById(@PathVariable long id) {
+    public ResponseEntity<GroupDto> getById(@PathVariable long id) {
         GroupDto group = groupMapper.groupToGroupDto(groupService.getById(id));
-        return group;
+        return new ResponseEntity<>(group, HttpStatus.OK);
     }
 
     @GetMapping("/teacher")
-    public List<GroupDto> getByTeacherAndSubject(@RequestParam(name = "teacherId") long teacherId,
-                                                 @RequestParam(name = "subjectId", required = false) Long subjectId) {
+    public ResponseEntity<List<GroupDto>> getByTeacherAndSubject(@RequestParam(name = "teacherId") long teacherId,
+                                                                 @RequestParam(name = "subjectId", required = false) Long subjectId) {
         List<GroupDto> groups = Objects.nonNull(subjectId) ?
                 groupService.getByTeacherAndSubject(teacherId, subjectId).stream()
                         .map(groupMapper::groupToGroupDto)
@@ -41,26 +44,27 @@ public class GroupController {
                 groupService.getByTeacher(teacherId).stream()
                         .map(groupMapper::groupToGroupDto)
                         .toList();
-        return groups;
+        return new ResponseEntity<>(groups, HttpStatus.OK);
     }
 
     @PostMapping
-    public GroupDto create(@RequestBody GroupDto groupDto) {
+    public ResponseEntity<GroupDto> create(@RequestBody @Valid GroupDto groupDto) {
         Group group = groupMapper.groupDtoToGroup(groupDto);
         group = groupService.create(group);
-        return groupMapper.groupToGroupDto(group);
+        return new ResponseEntity<>(groupMapper.groupToGroupDto(group), HttpStatus.OK);
     }
 
     @DeleteMapping
-    public void delete(@RequestBody GroupDto groupDto) {
+    public ResponseEntity<Void> delete(@RequestBody @Valid GroupDto groupDto) {
         Group group = groupMapper.groupDtoToGroup(groupDto);
         groupService.delete(group);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping
-    public GroupDto update(@RequestBody GroupDto groupDto) {
+    public ResponseEntity<GroupDto> update(@RequestBody @Valid GroupDto groupDto) {
         Group group = groupMapper.groupDtoToGroup(groupDto);
         group = groupService.save(group);
-        return groupMapper.groupToGroupDto(group);
+        return new ResponseEntity<>(groupMapper.groupToGroupDto(group), HttpStatus.OK);
     }
 }

@@ -11,13 +11,10 @@ public interface UserRepository {
 
     Optional<User> findById(long id);
 
-    @Transactional
     User create(User user);
 
-    @Transactional
     User save(User user);
 
-    @Transactional
     void delete(User user);
 
 }

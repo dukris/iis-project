@@ -15,12 +15,9 @@ public interface GroupRepository {
 
     List<Group> findByTeacherAndSubject(long teacherId, long subjectId);
 
-    @Transactional
     Group create(Group group);
 
-    @Transactional
     Group save(Group group);
 
-    @Transactional
     void delete(Group group);
 }
