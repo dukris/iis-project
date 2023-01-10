@@ -10,18 +10,18 @@ import java.util.Optional;
 
 public abstract class SubjectRowMapper {
     @SneakyThrows
-    public static Optional<Subject> mapSubject(ResultSet rs) {
+    public static Subject mapSubject(ResultSet rs) {
         Subject subject = new Subject();
         subject.setId(rs.getLong("subject_id"));
         subject.setName(rs.getString("subject_name"));
-        return Optional.of(subject);
+        return subject;
     }
 
     @SneakyThrows
     public static List<Subject> mapSubjects(ResultSet rs) {
         List<Subject> subjects = new ArrayList<>();
         while (rs.next()) {
-            Subject subject = mapSubject(rs).orElseThrow();
+            Subject subject = mapSubject(rs);
             subjects.add(subject);
         }
         return subjects;

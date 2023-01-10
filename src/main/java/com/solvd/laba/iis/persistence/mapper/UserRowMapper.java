@@ -7,11 +7,10 @@ import lombok.SneakyThrows;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public abstract class UserRowMapper {
     @SneakyThrows
-    public static Optional<User> mapUser(ResultSet rs) {
+    public static User mapUser(ResultSet rs) {
         User user = new User();
         user.setId(rs.getLong("user_id"));
         user.setName(rs.getString("user_name"));
@@ -19,14 +18,14 @@ public abstract class UserRowMapper {
         user.setEmail(rs.getString("user_email"));
         user.setPassword(rs.getString("user_password"));
         user.setRole(Role.valueOf(rs.getString("user_role").toUpperCase()));
-        return Optional.of(user);
+        return user;
     }
 
     @SneakyThrows
     public static List<User> mapUsers(ResultSet rs) {
         List<User> users = new ArrayList<>();
         while (rs.next()) {
-            User user = mapUser(rs).orElseThrow();
+            User user = mapUser(rs);
             users.add(user);
         }
         return users;

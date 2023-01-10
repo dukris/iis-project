@@ -2,6 +2,7 @@ package com.solvd.laba.iis.service;
 
 import com.solvd.laba.iis.domain.Group;
 import com.solvd.laba.iis.domain.Lesson;
+import com.solvd.laba.iis.persistence.criteria.LessonSearchCriteria;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -11,9 +12,11 @@ public interface LessonService {
 
     Lesson getById(long id);
 
-    List<Lesson> getByGroup(long groupId);
+//    List<Lesson> getByGroup(long groupId);
+//
+//    List<Lesson> getByGroupAndDay(long groupId, String weekday);
 
-    List<Lesson> getByGroupAndDay(long groupId, String weekday);
+    List<Lesson> getByCriteria(long groupId, LessonSearchCriteria lessonSearchCriteria);
 
     List<Lesson> getByTeacher(long teacherId);
 

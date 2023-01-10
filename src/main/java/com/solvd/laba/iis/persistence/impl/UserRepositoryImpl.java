@@ -15,7 +15,7 @@ import java.util.Optional;
 @Repository
 @RequiredArgsConstructor
 public class UserRepositoryImpl implements UserRepository {
-    private final DataSource dataSource;
+
     private static final String FIND_ALL_QUERY = """
             SELECT users.id as user_id,  users.name as user_name, users.surname as user_surname,
             users.email as user_email, users.password as user_password, users.role as user_role
@@ -28,13 +28,15 @@ public class UserRepositoryImpl implements UserRepository {
     private static final String CREATE_QUERY = "INSERT INTO iis_schema.users (name, surname, email, password, role) VALUES(?, ?, ?, ?, ?)";
     private static final String DELETE_QUERY = "DELETE FROM iis_schema.users WHERE id = ?";
     private static final String SAVE_QUERY = "UPDATE iis_schema.users SET name = ?, surname = ?, email = ?, password = ?, role = ? WHERE id = ?";
+    private final DataSource dataSource;
 
     @Override
     public List<User> findAll() {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
-            ResultSet rs = statement.executeQuery(FIND_ALL_QUERY);
-            return UserRowMapper.mapUsers(rs);
+            try (ResultSet rs = statement.executeQuery(FIND_ALL_QUERY)) {
+                return UserRowMapper.mapUsers(rs);
+            }
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while finding all users");
         }
@@ -45,9 +47,9 @@ public class UserRepositoryImpl implements UserRepository {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_ID_QUERY)) {
             statement.setLong(1, id);
-            ResultSet rs = statement.executeQuery();
-            rs.next();
-            return UserRowMapper.mapUser(rs);
+            try (ResultSet rs = statement.executeQuery()) {
+                return rs.next() ? Optional.of(UserRowMapper.mapUser(rs)) : Optional.empty();
+            }
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while finding user by id = " + id);
         }
@@ -64,11 +66,12 @@ public class UserRepositoryImpl implements UserRepository {
             statement.setString(4, user.getPassword());
             statement.setString(5, user.getRole().toString());
             statement.executeUpdate();
-            ResultSet key = statement.getGeneratedKeys();
-            if (key.next()) {
-                user.setId(key.getLong(1));
+            try (ResultSet key = statement.getGeneratedKeys()) {
+                if (key.next()) {
+                    user.setId(key.getLong(1));
+                }
+                return user;
             }
-            return user;
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while creating user");
         }

@@ -15,7 +15,7 @@ import java.util.Optional;
 @Repository
 @RequiredArgsConstructor
 public class LessonRepositoryImpl implements LessonRepository {
-    private final DataSource dataSource;
+
     private static final String FIND_ALL_QUERY = """
             SELECT lessons.id as lesson_id, lessons.room as lesson_room, lessons.weekday as lesson_weekday, lessons.start_time as start_time, lessons.end_time as end_time,
             subjects.id as subject_id,  subjects.name as subject_name,
@@ -92,13 +92,15 @@ public class LessonRepositoryImpl implements LessonRepository {
     private static final String CREATE_QUERY = "INSERT INTO iis_schema.lessons (room, weekday, start_time, end_time, subject_id, group_id, teacher_id) VALUES(?, ?, ?, ?, ?, ?, ?)";
     private static final String DELETE_QUERY = "DELETE FROM iis_schema.lessons WHERE id = ?";
     private static final String SAVE_QUERY = "UPDATE iis_schema.lessons SET room = ?, weekday = ?, start_time = ?, end_time = ?, subject_id = ?, group_id = ?, teacher_id = ? WHERE id = ?";
+    private final DataSource dataSource;
 
     @Override
     public List<Lesson> findAll() {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
-            ResultSet rs = statement.executeQuery(FIND_ALL_QUERY);
-            return LessonRowMapper.mapLessons(rs);
+            try (ResultSet rs = statement.executeQuery(FIND_ALL_QUERY)) {
+                return LessonRowMapper.mapLessons(rs);
+            }
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while finding all lessons");
         }
@@ -109,9 +111,9 @@ public class LessonRepositoryImpl implements LessonRepository {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_ID_QUERY)) {
             statement.setLong(1, id);
-            ResultSet rs = statement.executeQuery();
-            rs.next();
-            return LessonRowMapper.mapLesson(rs);
+            try (ResultSet rs = statement.executeQuery()) {
+                return rs.next() ? Optional.of(LessonRowMapper.mapLesson(rs)) : Optional.empty();
+            }
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while finding lesson by lesson's id = " + id);
         }
@@ -122,8 +124,9 @@ public class LessonRepositoryImpl implements LessonRepository {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_GROUP_QUERY)) {
             statement.setLong(1, groupId);
-            ResultSet rs = statement.executeQuery();
-            return LessonRowMapper.mapLessons(rs);
+            try (ResultSet rs = statement.executeQuery()) {
+                return LessonRowMapper.mapLessons(rs);
+            }
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while finding lessons by group's id = " + groupId);
         }
@@ -135,8 +138,9 @@ public class LessonRepositoryImpl implements LessonRepository {
              PreparedStatement statement = connection.prepareStatement(FIND_BY_GROUP_AND_DAY_QUERY)) {
             statement.setLong(1, groupId);
             statement.setString(2, weekday);
-            ResultSet rs = statement.executeQuery();
-            return LessonRowMapper.mapLessons(rs);
+            try (ResultSet rs = statement.executeQuery()) {
+                return LessonRowMapper.mapLessons(rs);
+            }
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while finding lessons by group's id = " + groupId + " and day = " + weekday);
         }
@@ -147,8 +151,9 @@ public class LessonRepositoryImpl implements LessonRepository {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_TEACHER_QUERY)) {
             statement.setLong(1, teacherId);
-            ResultSet rs = statement.executeQuery();
-            return LessonRowMapper.mapLessons(rs);
+            try (ResultSet rs = statement.executeQuery()) {
+                return LessonRowMapper.mapLessons(rs);
+            }
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while finding lessons by teacher's id = " + teacherId);
         }
@@ -160,8 +165,9 @@ public class LessonRepositoryImpl implements LessonRepository {
              PreparedStatement statement = connection.prepareStatement(FIND_BY_TEACHER_AND_DAY_QUERY)) {
             statement.setLong(1, teacherId);
             statement.setString(2, weekday);
-            ResultSet rs = statement.executeQuery();
-            return LessonRowMapper.mapLessons(rs);
+            try (ResultSet rs = statement.executeQuery()) {
+                return LessonRowMapper.mapLessons(rs);
+            }
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while finding lessons by teacher's id = " + teacherId + " and day = " + weekday);
         }
@@ -180,11 +186,12 @@ public class LessonRepositoryImpl implements LessonRepository {
             statement.setLong(6, lesson.getGroup().getId());
             statement.setLong(7, lesson.getTeacher().getId());
             statement.executeUpdate();
-            ResultSet key = statement.getGeneratedKeys();
-            if (key.next()) {
-                lesson.setId(key.getLong(1));
+            try (ResultSet key = statement.getGeneratedKeys()) {
+                if (key.next()) {
+                    lesson.setId(key.getLong(1));
+                }
+                return lesson;
             }
-            return lesson;
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while creating lesson");
         }

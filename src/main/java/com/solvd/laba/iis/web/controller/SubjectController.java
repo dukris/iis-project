@@ -2,12 +2,14 @@ package com.solvd.laba.iis.web.controller;
 
 import com.solvd.laba.iis.domain.Subject;
 import com.solvd.laba.iis.service.SubjectService;
+import com.solvd.laba.iis.service.TeacherService;
 import com.solvd.laba.iis.web.dto.SubjectDto;
+import com.solvd.laba.iis.web.dto.TeacherInfoDto;
 import com.solvd.laba.iis.web.mapper.SubjectMapper;
+import com.solvd.laba.iis.web.mapper.TeacherInfoMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,39 +20,50 @@ import java.util.List;
 public class SubjectController {
     private final SubjectService subjectService;
     private final SubjectMapper subjectMapper;
+    private final TeacherService teacherService;
+    private final TeacherInfoMapper teacherInfoMapper;
 
     @GetMapping
-    public ResponseEntity<List<SubjectDto>> getAll() {
+    public List<SubjectDto> getAll() {
         List<SubjectDto> subjects = subjectService.getAll().stream()
                 .map(subjectMapper::subjectToSubjectDto)
                 .toList();
-        return new ResponseEntity<>(subjects, HttpStatus.OK);
+        return subjects;
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<SubjectDto> getById(@PathVariable long id) {
+    public SubjectDto getById(@PathVariable long id) {
         SubjectDto subject = subjectMapper.subjectToSubjectDto(subjectService.getById(id));
-        return new ResponseEntity<>(subject, HttpStatus.OK);
+        return subject;
+    }
+
+    @GetMapping("/{id}/teachers")
+    public List<TeacherInfoDto> getTeachers(@PathVariable long id) {
+        List<TeacherInfoDto> teachers = teacherService.getBySubject(id).stream()
+                .map(teacherInfoMapper::teacherInfoToTeacherInfoDto)
+                .toList();
+        return teachers;
     }
 
     @PostMapping
-    public ResponseEntity<SubjectDto> create(@RequestBody @Valid SubjectDto subjectDto) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public SubjectDto create(@RequestBody @Valid SubjectDto subjectDto) {
         Subject subject = subjectMapper.subjectDtoToSubject(subjectDto);
         subject = subjectService.create(subject);
-        return new ResponseEntity<>(subjectMapper.subjectToSubjectDto(subject), HttpStatus.CREATED);
+        return subjectMapper.subjectToSubjectDto(subject);
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> delete(@RequestBody @Valid SubjectDto subjectDto) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@RequestBody @Valid SubjectDto subjectDto) {
         Subject subject = subjectMapper.subjectDtoToSubject(subjectDto);
         subjectService.delete(subject);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PutMapping
-    public ResponseEntity<SubjectDto> update(@RequestBody @Valid SubjectDto subjectDto) {
+    public SubjectDto update(@RequestBody @Valid SubjectDto subjectDto) {
         Subject subject = subjectMapper.subjectDtoToSubject(subjectDto);
         subject = subjectService.save(subject);
-        return new ResponseEntity<>(subjectMapper.subjectToSubjectDto(subject), HttpStatus.OK);
+        return subjectMapper.subjectToSubjectDto(subject);
     }
 }

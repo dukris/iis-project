@@ -1,13 +1,17 @@
 package com.solvd.laba.iis.web.controller;
 
 import com.solvd.laba.iis.domain.StudentInfo;
+import com.solvd.laba.iis.persistence.criteria.MarkSearchCriteria;
+import com.solvd.laba.iis.persistence.criteria.StudentSearchCriteria;
+import com.solvd.laba.iis.service.MarkService;
 import com.solvd.laba.iis.service.StudentService;
+import com.solvd.laba.iis.web.dto.MarkDto;
 import com.solvd.laba.iis.web.dto.StudentInfoDto;
+import com.solvd.laba.iis.web.mapper.MarkMapper;
 import com.solvd.laba.iis.web.mapper.StudentInfoMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,71 +22,83 @@ import java.util.List;
 public class StudentController {
     private final StudentService studentService;
     private final StudentInfoMapper studentInfoMapper;
+    private final MarkService markService;
+    private final MarkMapper markMapper;
 
     @GetMapping
-    public ResponseEntity<List<StudentInfoDto>> getAll() {
+    public List<StudentInfoDto> getAll() {
         List<StudentInfoDto> students = studentService.getAll().stream()
                 .map(studentInfoMapper::studentInfoToStudentInfoDto)
                 .toList();
-        return new ResponseEntity<>(students, HttpStatus.OK);
+        return students;
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<StudentInfoDto> getById(@PathVariable long id) {
+    public StudentInfoDto getById(@PathVariable long id) {
         StudentInfoDto student = studentInfoMapper.studentInfoToStudentInfoDto(studentService.getById(id));
-        return new ResponseEntity<>(student, HttpStatus.OK);
+        return student;
     }
 
-    @GetMapping("/group/{id}")
-    public ResponseEntity<List<StudentInfoDto>> getByGroup(@PathVariable long id) {
-        List<StudentInfoDto> students = studentService.getByGroup(id).stream()
+    @GetMapping("/search") //?????????????????????????
+    public List<StudentInfoDto> getByCriteria(StudentSearchCriteria studentSearchCriteria) {
+        List<StudentInfoDto> students = studentService.getByCriteria(studentSearchCriteria).stream()
                 .map(studentInfoMapper::studentInfoToStudentInfoDto)
                 .toList();
-        return new ResponseEntity<>(students, HttpStatus.OK);
+        return students;
     }
 
-    @GetMapping("/speciality/{name}")
-    public ResponseEntity<List<StudentInfoDto>> getBySpeciality(@PathVariable String name) {
-        List<StudentInfoDto> students = studentService.getBySpeciality(name).stream()
-                .map(studentInfoMapper::studentInfoToStudentInfoDto)
-                .toList();
-        return new ResponseEntity<>(students, HttpStatus.OK);
+    @GetMapping("/{id}/marks")
+    public List<MarkDto> getMarks(@PathVariable long id,
+                                  MarkSearchCriteria markSearchCriteria) {
+        List<MarkDto> marks = markService.getByCriteria(id, markSearchCriteria).stream()
+                        .map(markMapper::markToMarkDto)
+                        .toList();
+        return marks;
     }
 
-    @GetMapping("/faculty/{name}")
-    public ResponseEntity<List<StudentInfoDto>> getByFaculty(@PathVariable String name) {
-        List<StudentInfoDto> students = studentService.getByFaculty(name).stream()
-                .map(studentInfoMapper::studentInfoToStudentInfoDto)
-                .toList();
-        return new ResponseEntity<>(students, HttpStatus.OK);
-    }
-
-    @GetMapping("/year/{year}")
-    public ResponseEntity<List<StudentInfoDto>> getByAdmissionYear(@PathVariable int year) {
-        List<StudentInfoDto> students = studentService.getByAdmissionYear(year).stream()
-                .map(studentInfoMapper::studentInfoToStudentInfoDto)
-                .toList();
-        return new ResponseEntity<>(students, HttpStatus.OK);
-    }
+//    @GetMapping("/speciality/{name}")
+//    public List<StudentInfoDto> getBySpeciality(@PathVariable String name) {
+//        List<StudentInfoDto> students = studentService.getBySpeciality(name).stream()
+//                .map(studentInfoMapper::studentInfoToStudentInfoDto)
+//                .toList();
+//        return students;
+//    }
+//
+//    @GetMapping("/faculty/{name}")
+//    public List<StudentInfoDto> getByFaculty(@PathVariable String name) {
+//        List<StudentInfoDto> students = studentService.getByFaculty(name).stream()
+//                .map(studentInfoMapper::studentInfoToStudentInfoDto)
+//                .toList();
+//        return students;
+//    }
+//
+//    @GetMapping("/year/{year}")
+//    public List<StudentInfoDto> getByAdmissionYear(@PathVariable int year) {
+//        List<StudentInfoDto> students = studentService.getByAdmissionYear(year).stream()
+//                .map(studentInfoMapper::studentInfoToStudentInfoDto)
+//                .toList();
+//        return students;
+//    }
 
     @PostMapping
-    public ResponseEntity<StudentInfoDto> create(@RequestBody @Valid StudentInfoDto studentInfoDto) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public StudentInfoDto create(@RequestBody @Valid StudentInfoDto studentInfoDto) {
         StudentInfo studentInfo = studentInfoMapper.studentInfoDtoToStudentInfo(studentInfoDto);
         studentInfo =studentService.create(studentInfo);
-        return new ResponseEntity<>(studentInfoMapper.studentInfoToStudentInfoDto(studentInfo), HttpStatus.CREATED);
+        return studentInfoMapper.studentInfoToStudentInfoDto(studentInfo);
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> delete(@RequestBody @Valid StudentInfoDto studentInfoDto) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@RequestBody @Valid StudentInfoDto studentInfoDto) {
         StudentInfo studentInfo = studentInfoMapper.studentInfoDtoToStudentInfo(studentInfoDto);
         studentService.delete(studentInfo);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PutMapping
-    public ResponseEntity<StudentInfoDto> update(@RequestBody @Valid StudentInfoDto studentInfoDto) {
+    public StudentInfoDto update(@RequestBody @Valid StudentInfoDto studentInfoDto) {
         StudentInfo studentInfo = studentInfoMapper.studentInfoDtoToStudentInfo(studentInfoDto);
         studentInfo =studentService.save(studentInfo);
-        return new ResponseEntity<>(studentInfoMapper.studentInfoToStudentInfoDto(studentInfo), HttpStatus.OK);
+        return studentInfoMapper.studentInfoToStudentInfoDto(studentInfo);
     }
 }

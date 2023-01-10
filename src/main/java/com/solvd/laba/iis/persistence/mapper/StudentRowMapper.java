@@ -8,28 +8,27 @@ import lombok.SneakyThrows;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public abstract class StudentRowMapper {
     @SneakyThrows
-    public static Optional<StudentInfo> mapStudent(ResultSet rs) {
+    public static StudentInfo mapStudent(ResultSet rs) {
         StudentInfo studentInfo = new StudentInfo();
         studentInfo.setId(rs.getLong("student_id"));
         studentInfo.setAdmissionYear(rs.getInt("student_year"));
         studentInfo.setFaculty(rs.getString("student_faculty"));
         studentInfo.setSpeciality(rs.getString("student_speciality"));
-        User student = UserRowMapper.mapUser(rs).orElseThrow();
+        User student = UserRowMapper.mapUser(rs);
         studentInfo.setUser(student);
-        Group group = GroupRowMapper.mapGroup(rs).orElseThrow();
+        Group group = GroupRowMapper.mapGroup(rs);
         studentInfo.setGroup(group);
-        return Optional.of(studentInfo);
+        return studentInfo;
     }
 
     @SneakyThrows
     public static List<StudentInfo> mapStudents(ResultSet rs) {
         List<StudentInfo> students = new ArrayList<>();
         while (rs.next()) {
-            StudentInfo studentInfo = mapStudent(rs).orElseThrow();
+            StudentInfo studentInfo = mapStudent(rs);
             students.add(studentInfo);
         }
         return students;

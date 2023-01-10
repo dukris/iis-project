@@ -15,7 +15,7 @@ import java.util.Optional;
 @Repository
 @RequiredArgsConstructor
 public class MarkRepositoryImpl implements MarkRepository {
-    private final DataSource dataSource;
+
     private static final String FIND_ALL_QUERY = """
             SELECT marks.id as mark_id, marks.date as mark_date, marks.value as mark_value, marks.student_id as student_id,
             students_info.year as student_year, students_info.faculty as student_faculty, students_info.speciality as student_speciality,
@@ -94,13 +94,15 @@ public class MarkRepositoryImpl implements MarkRepository {
     private static final String CREATE_QUERY = "INSERT INTO iis_schema.marks (date, value, student_id, teacher_id, subject_id) VALUES(?, ?, ?, ?, ?)";
     private static final String DELETE_QUERY = "DELETE FROM iis_schema.marks WHERE id = ?";
     private static final String SAVE_QUERY = "UPDATE iis_schema.marks SET date = ?, value = ?, student_id = ?, teacher_id = ?, subject_id = ? WHERE id = ?";
+    private final DataSource dataSource;
 
     @Override
     public List<Mark> findAll() {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
-            ResultSet rs = statement.executeQuery(FIND_ALL_QUERY);
-            return MarkRowMapper.mapMarks(rs);
+            try (ResultSet rs = statement.executeQuery(FIND_ALL_QUERY)) {
+                return MarkRowMapper.mapMarks(rs);
+            }
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while finding all marks");
         }
@@ -111,9 +113,9 @@ public class MarkRepositoryImpl implements MarkRepository {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_ID_QUERY)) {
             statement.setLong(1, id);
-            ResultSet rs = statement.executeQuery();
-            rs.next();
-            return MarkRowMapper.mapMark(rs);
+            try (ResultSet rs = statement.executeQuery()) {
+                return rs.next() ? Optional.of(MarkRowMapper.mapMark(rs)) : Optional.empty();
+            }
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while finding mark by mark's id = " + id);
         }
@@ -125,8 +127,9 @@ public class MarkRepositoryImpl implements MarkRepository {
              PreparedStatement statement = connection.prepareStatement(FIND_BY_SUBJECT_AND_TEACHER_QUERY)) {
             statement.setLong(1, subjectId);
             statement.setLong(2, teacherId);
-            ResultSet rs = statement.executeQuery();
-            return  MarkRowMapper.mapMarksBySubjectAndTeacher(rs);
+            try (ResultSet rs = statement.executeQuery()) {
+                return MarkRowMapper.mapMarksBySubjectAndTeacher(rs);
+            }
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while finding marks by teacher's id = " + teacherId + " and subject's id = " + subjectId);
         }
@@ -137,8 +140,9 @@ public class MarkRepositoryImpl implements MarkRepository {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_STUDENT_QUERY)) {
             statement.setLong(1, studentId);
-            ResultSet rs = statement.executeQuery();
-            return MarkRowMapper.mapMarksByStudent(rs);
+            try (ResultSet rs = statement.executeQuery()) {
+                return MarkRowMapper.mapMarksByStudent(rs);
+            }
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while finding marks by student's id = " + studentId);
         }
@@ -150,8 +154,9 @@ public class MarkRepositoryImpl implements MarkRepository {
              PreparedStatement statement = connection.prepareStatement(FIND_BY_STUDENT_AND_SUBJECT_QUERY)) {
             statement.setLong(1, studentId);
             statement.setLong(2, subjectId);
-            ResultSet rs = statement.executeQuery();
-            return MarkRowMapper.mapMarksByStudent(rs);
+            try (ResultSet rs = statement.executeQuery()) {
+                return MarkRowMapper.mapMarksByStudent(rs);
+            }
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while finding marks by student's id = " + studentId + " and subject's id = " + subjectId);
         }
@@ -162,17 +167,18 @@ public class MarkRepositoryImpl implements MarkRepository {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(CREATE_QUERY,
                      Statement.RETURN_GENERATED_KEYS)) {
-            statement.setDate(1,Date.valueOf(mark.getDate()));
+            statement.setDate(1, Date.valueOf(mark.getDate()));
             statement.setInt(2, mark.getValue());
             statement.setLong(3, mark.getStudent().getId());
             statement.setLong(4, mark.getTeacher().getId());
             statement.setLong(5, mark.getSubject().getId());
             statement.executeUpdate();
-            ResultSet key = statement.getGeneratedKeys();
-            if (key.next()) {
-                mark.setId(key.getLong(1));
+            try (ResultSet key = statement.getGeneratedKeys()) {
+                if (key.next()) {
+                    mark.setId(key.getLong(1));
+                }
+                return mark;
             }
-            return mark;
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while creating mark");
         }
@@ -182,7 +188,7 @@ public class MarkRepositoryImpl implements MarkRepository {
     public Mark save(Mark mark) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(SAVE_QUERY)) {
-            statement.setDate(1,Date.valueOf(mark.getDate()));
+            statement.setDate(1, Date.valueOf(mark.getDate()));
             statement.setInt(2, mark.getValue());
             statement.setLong(3, mark.getStudent().getId());
             statement.setLong(4, mark.getTeacher().getId());

@@ -6,11 +6,10 @@ import lombok.SneakyThrows;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public abstract class MarkRowMapper {
     @SneakyThrows
-    public static Optional<Mark> mapMark(ResultSet rs) {
+    public static Mark mapMark(ResultSet rs) {
         Mark mark = new Mark();
         mark.setId(rs.getLong("mark_id"));
         mark.setDate(rs.getDate("mark_date").toLocalDate());
@@ -29,7 +28,7 @@ public abstract class MarkRowMapper {
         student.setPassword(rs.getString("student_user_password"));
         student.setRole(Role.valueOf(rs.getString("student_user_role").toUpperCase()));
         studentInfo.setUser(student);
-        Group group = GroupRowMapper.mapGroup(rs).orElseThrow();
+        Group group = GroupRowMapper.mapGroup(rs);
         studentInfo.setGroup(group);
         mark.setStudent(studentInfo);
 
@@ -45,16 +44,16 @@ public abstract class MarkRowMapper {
         teacherInfo.setUser(teacher);
         mark.setTeacher(teacherInfo);
 
-        Subject subject = SubjectRowMapper.mapSubject(rs).orElseThrow();
+        Subject subject = SubjectRowMapper.mapSubject(rs);
         mark.setSubject(subject);
-        return Optional.of(mark);
+        return mark;
     }
 
     @SneakyThrows
     public static List<Mark> mapMarks(ResultSet rs) {
         List<Mark> marks = new ArrayList<>();
         while (rs.next()) {
-            Mark mark = mapMark(rs).orElseThrow();
+            Mark mark = mapMark(rs);
             marks.add(mark);
         }
         return marks;
@@ -82,11 +81,11 @@ public abstract class MarkRowMapper {
             student.setPassword(rs.getString("student_user_password"));
             student.setRole(Role.valueOf(rs.getString("student_user_role").toUpperCase()));
             studentInfo.setUser(student);
-            Group group = GroupRowMapper.mapGroup(rs).orElseThrow();
+            Group group = GroupRowMapper.mapGroup(rs);
             studentInfo.setGroup(group);
             mark.setStudent(studentInfo);
 
-            Subject subject = SubjectRowMapper.mapSubject(rs).orElseThrow();
+            Subject subject = SubjectRowMapper.mapSubject(rs);
             mark.setSubject(subject);
 
             TeacherInfo teacherInfo = new TeacherInfo();
@@ -119,7 +118,7 @@ public abstract class MarkRowMapper {
             teacherInfo.setUser(teacher);
             mark.setTeacher(teacherInfo);
 
-            Subject subject = SubjectRowMapper.mapSubject(rs).orElseThrow();
+            Subject subject = SubjectRowMapper.mapSubject(rs);
             mark.setSubject(subject);
 
             StudentInfo studentInfo = new StudentInfo();

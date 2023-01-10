@@ -15,7 +15,7 @@ import java.util.Optional;
 @Repository
 @RequiredArgsConstructor
 public class StudentRepositoryImpl implements StudentRepository {
-    private final DataSource dataSource;
+
     private static final String FIND_ALL_QUERY = """
             SELECT students_info.id as student_id, students_info.year as student_year, students_info.faculty as student_faculty, students_info.speciality as student_speciality,
             users.id as user_id,  users.name as user_name, users.surname as user_surname,
@@ -23,7 +23,7 @@ public class StudentRepositoryImpl implements StudentRepository {
             groups.id as group_id, groups.number as group_number
             FROM iis_schema.students_info
             LEFT JOIN iis_schema.users ON (students_info.user_id = users.id)
-            LEFT JOIN iis_schema.groups ON (students_info.group_id = groups.id);""";
+            LEFT JOIN iis_schema.groups ON (students_info.group_id = groups.id)""";
     private static final String FIND_BY_ID_QUERY = """
             SELECT students_info.id as student_id, students_info.year as student_year, students_info.faculty as student_faculty, students_info.speciality as student_speciality,
             users.id as user_id,  users.name as user_name, users.surname as user_surname,
@@ -75,13 +75,15 @@ public class StudentRepositoryImpl implements StudentRepository {
     private static final String CREATE_QUERY = "INSERT INTO iis_schema.students_info (year, faculty, speciality, user_id, group_id) VALUES(?, ?, ?, ?, ?)";
     private static final String DELETE_QUERY = "DELETE FROM iis_schema.students_info WHERE id = ?";
     private static final String SAVE_QUERY = "UPDATE iis_schema.students_info SET year = ?, faculty = ?, speciality = ?, user_id = ?, group_id = ? WHERE id = ?";
+    private final DataSource dataSource;
 
     @Override
     public List<StudentInfo> findAll() {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
-            ResultSet rs = statement.executeQuery(FIND_ALL_QUERY);
-            return StudentRowMapper.mapStudents(rs);
+            try (ResultSet rs = statement.executeQuery(FIND_ALL_QUERY)) {
+                return StudentRowMapper.mapStudents(rs);
+            }
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while finding all students");
         }
@@ -92,9 +94,9 @@ public class StudentRepositoryImpl implements StudentRepository {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_ID_QUERY)) {
             statement.setLong(1, id);
-            ResultSet rs = statement.executeQuery();
-            rs.next();
-            return StudentRowMapper.mapStudent(rs);
+            try (ResultSet rs = statement.executeQuery()) {
+                return rs.next() ? Optional.of(StudentRowMapper.mapStudent(rs)) : Optional.empty();
+            }
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while finding student by id = " + id);
         }
@@ -105,8 +107,9 @@ public class StudentRepositoryImpl implements StudentRepository {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_GROUP_QUERY)) {
             statement.setLong(1, groupId);
-            ResultSet rs = statement.executeQuery();
-            return StudentRowMapper.mapStudents(rs);
+            try (ResultSet rs = statement.executeQuery()) {
+                return StudentRowMapper.mapStudents(rs);
+            }
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while finding students by group's id = " + groupId);
         }
@@ -117,8 +120,9 @@ public class StudentRepositoryImpl implements StudentRepository {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_SPECIALITY_QUERY)) {
             statement.setString(1, speciality);
-            ResultSet rs = statement.executeQuery();
-            return StudentRowMapper.mapStudents(rs);
+            try (ResultSet rs = statement.executeQuery()) {
+                return StudentRowMapper.mapStudents(rs);
+            }
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while finding students by speciality = " + speciality);
         }
@@ -129,8 +133,9 @@ public class StudentRepositoryImpl implements StudentRepository {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_FACULTY_QUERY)) {
             statement.setString(1, faculty);
-            ResultSet rs = statement.executeQuery();
-            return StudentRowMapper.mapStudents(rs);
+            try (ResultSet rs = statement.executeQuery()) {
+                return StudentRowMapper.mapStudents(rs);
+            }
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while finding students by faculty = " + faculty);
         }
@@ -141,8 +146,9 @@ public class StudentRepositoryImpl implements StudentRepository {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_YEAR_QUERY)) {
             statement.setInt(1, year);
-            ResultSet rs = statement.executeQuery();
-            return StudentRowMapper.mapStudents(rs);
+            try (ResultSet rs = statement.executeQuery()) {
+                return StudentRowMapper.mapStudents(rs);
+            }
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while finding students by year = " + year);
         }
@@ -159,11 +165,12 @@ public class StudentRepositoryImpl implements StudentRepository {
             statement.setLong(4, studentInfo.getUser().getId());
             statement.setLong(5, studentInfo.getGroup().getId());
             statement.executeUpdate();
-            ResultSet key = statement.getGeneratedKeys();
-            if (key.next()) {
-                studentInfo.setId(key.getLong(1));
+            try (ResultSet key = statement.getGeneratedKeys()) {
+                if (key.next()) {
+                    studentInfo.setId(key.getLong(1));
+                }
+                return studentInfo;
             }
-            return studentInfo;
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while creating student");
         }

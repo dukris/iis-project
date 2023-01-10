@@ -1,4 +1,4 @@
-package com.solvd.laba.iis.web.dto.exception;
+package com.solvd.laba.iis.persistence.criteria;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class ErrorDto {
-    private String field;
-    private String message;
+public class StudentSearchCriteria {
+    private String speciality;
+    private String faculty;
+    private int year;
 }

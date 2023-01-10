@@ -3,11 +3,13 @@ package com.solvd.laba.iis.service.impl;
 import com.solvd.laba.iis.domain.Lesson;
 import com.solvd.laba.iis.domain.exception.ResourceNotFoundException;
 import com.solvd.laba.iis.persistence.LessonRepository;
+import com.solvd.laba.iis.persistence.criteria.LessonSearchCriteria;
 import com.solvd.laba.iis.service.LessonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -26,14 +28,21 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
-    public List<Lesson> getByGroup(long groupId) {
-        return lessonRepository.findByGroup(groupId);
+    public List<Lesson> getByCriteria(long groupId, LessonSearchCriteria lessonSearchCriteria) {
+        return Objects.nonNull(lessonSearchCriteria.getWeekday()) ?
+                lessonRepository.findByGroupAndDay(groupId, lessonSearchCriteria.getWeekday()) :
+                lessonRepository.findByGroup(groupId);
     }
 
-    @Override
-    public List<Lesson> getByGroupAndDay(long groupId, String weekday) {
-        return lessonRepository.findByGroupAndDay(groupId, weekday);
-    }
+//    @Override
+//    public List<Lesson> getByGroup(long groupId) {
+//        return lessonRepository.findByGroup(groupId);
+//    }
+//
+//    @Override
+//    public List<Lesson> getByGroupAndDay(long groupId, String weekday) {
+//        return lessonRepository.findByGroupAndDay(groupId, weekday);
+//    }
 
     @Override
     public List<Lesson> getByTeacher(long teacherId) {

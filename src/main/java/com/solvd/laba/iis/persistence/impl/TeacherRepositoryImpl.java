@@ -15,7 +15,7 @@ import java.util.Optional;
 @Repository
 @RequiredArgsConstructor
 public class TeacherRepositoryImpl implements TeacherRepository {
-    private final DataSource dataSource;
+
     private static final String FIND_ALL_QUERY = """
             SELECT teachers_info.id as teacher_id,
             users.id as user_id, users.name as user_name, users.surname as user_surname,
@@ -60,13 +60,15 @@ public class TeacherRepositoryImpl implements TeacherRepository {
     private static final String SAVE_QUERY = "UPDATE iis_schema.teachers_info SET user_id = ? WHERE id = ?";
     private static final String ADD_SUBJECT_QUERY = "INSERT INTO iis_schema.teachers_subjects (teacher_id, subject_id) VALUES(?,?)";
     private static final String DELETE_SUBJECT_QUERY = "DELETE FROM iis_schema.teachers_subjects WHERE teacher_id = ? AND subject_id = ?";
+    private final DataSource dataSource;
 
     @Override
     public List<TeacherInfo> findAll() {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
-            ResultSet rs = statement.executeQuery(FIND_ALL_QUERY);
-            return TeacherRowMapper.mapTeachers(rs);
+            try (ResultSet rs = statement.executeQuery(FIND_ALL_QUERY)) {
+                return TeacherRowMapper.mapTeachers(rs);
+            }
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while finding all teachers");
         }
@@ -77,9 +79,9 @@ public class TeacherRepositoryImpl implements TeacherRepository {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_ID_QUERY)) {
             statement.setLong(1, id);
-            ResultSet rs = statement.executeQuery();
-            rs.next();
-            return TeacherRowMapper.mapTeacher(rs);
+            try (ResultSet rs = statement.executeQuery()) {
+                return rs.next() ? Optional.of(TeacherRowMapper.mapTeacher(rs)) : Optional.empty();
+            }
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while finding teacher by teacher's id = " + id);
         }
@@ -90,8 +92,9 @@ public class TeacherRepositoryImpl implements TeacherRepository {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_GROUP_QUERY)) {
             statement.setLong(1, groupId);
-            ResultSet rs = statement.executeQuery();
-            return TeacherRowMapper.mapTeachers(rs);
+            try (ResultSet rs = statement.executeQuery()) {
+                return TeacherRowMapper.mapTeachers(rs);
+            }
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while finding teachers by group's id = " + groupId);
         }
@@ -102,11 +105,11 @@ public class TeacherRepositoryImpl implements TeacherRepository {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_SUBJECT_QUERY)) {
             statement.setLong(1, subjectId);
-            ResultSet rs = statement.executeQuery();
-            return TeacherRowMapper.mapTeachersBySubject(rs);
+            try (ResultSet rs = statement.executeQuery()) {
+                return TeacherRowMapper.mapTeachersBySubject(rs);
+            }
         } catch (SQLException ex) {
-//            throw new ResourceMappingException("Exception occurred while finding teachers by subject's id = " + subjectId);
-            throw new ResourceMappingException(ex.getMessage());
+            throw new ResourceMappingException("Exception occurred while finding teachers by subject's id = " + subjectId);
         }
     }
 
@@ -117,11 +120,12 @@ public class TeacherRepositoryImpl implements TeacherRepository {
                      Statement.RETURN_GENERATED_KEYS)) {
             statement.setLong(1, teacherInfo.getUser().getId());
             statement.executeUpdate();
-            ResultSet key = statement.getGeneratedKeys();
-            if (key.next()) {
-                teacherInfo.setId(key.getLong(1));
+            try (ResultSet key = statement.getGeneratedKeys()) {
+                if (key.next()) {
+                    teacherInfo.setId(key.getLong(1));
+                }
+                return teacherInfo;
             }
-            return teacherInfo;
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while creating teacher");
         }

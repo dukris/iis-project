@@ -3,11 +3,13 @@ package com.solvd.laba.iis.service.impl;
 import com.solvd.laba.iis.domain.Mark;
 import com.solvd.laba.iis.domain.exception.ResourceNotFoundException;
 import com.solvd.laba.iis.persistence.MarkRepository;
+import com.solvd.laba.iis.persistence.criteria.MarkSearchCriteria;
 import com.solvd.laba.iis.service.MarkService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -26,19 +28,26 @@ public class MarkServiceImpl implements MarkService {
     }
 
     @Override
-    public List<Mark> getBySubjectAndTeacher(long subjectId, long teacherId) {
+    public List<Mark> getByCriteria(long studentId, MarkSearchCriteria markSearchCriteria) {
+        return markSearchCriteria.getSubjectId()!= 0 ?
+                markRepository.findByStudentAndSubject(studentId, markSearchCriteria.getSubjectId()) :
+                markRepository.findByStudent(studentId);
+    }
+
+    @Override
+    public List<Mark> getByTeacher(long subjectId, long teacherId) {
         return markRepository.findBySubjectAndTeacher(subjectId, teacherId);
     }
 
-    @Override
-    public List<Mark> getByStudent(long studentId) {
-        return markRepository.findByStudent(studentId);
-    }
-
-    @Override
-    public List<Mark> getByStudentAndSubject(long studentId, long subjectId) {
-        return markRepository.findByStudentAndSubject(studentId, subjectId);
-    }
+//    @Override
+//    public List<Mark> getByStudent(long studentId) {
+//        return markRepository.findByStudent(studentId);
+//    }
+//
+//    @Override
+//    public List<Mark> getByStudentAndSubject(long studentId, long subjectId) {
+//        return markRepository.findByStudentAndSubject(studentId, subjectId);
+//    }
 
     @Override
     public Mark create(Mark mark) {
