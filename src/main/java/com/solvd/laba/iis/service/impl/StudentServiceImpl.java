@@ -3,17 +3,17 @@ package com.solvd.laba.iis.service.impl;
 import com.solvd.laba.iis.domain.StudentInfo;
 import com.solvd.laba.iis.domain.exception.ResourceNotFoundException;
 import com.solvd.laba.iis.persistence.StudentRepository;
-import com.solvd.laba.iis.persistence.criteria.StudentSearchCriteria;
+import com.solvd.laba.iis.domain.criteria.StudentSearchCriteria;
 import com.solvd.laba.iis.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService {
+
     private final StudentRepository studentRepository;
 
     @Override
@@ -24,7 +24,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public StudentInfo getById(long id) {
         return studentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Student with id = " + id + "not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Student with id = " + id + " not found"));
     }
 
     @Override
@@ -34,40 +34,25 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<StudentInfo> getByCriteria(StudentSearchCriteria studentSearchCriteria) {
-        return Objects.nonNull(studentSearchCriteria.getSpeciality()) ?
-                studentRepository.findBySpeciality(studentSearchCriteria.getSpeciality()) :
-                Objects.nonNull(studentSearchCriteria.getFaculty()) ?
-                        studentRepository.findByFaculty(studentSearchCriteria.getFaculty()) :
-                        studentRepository.findByAdmissionYear(studentSearchCriteria.getYear());
+        return studentRepository.findByCriteria(studentSearchCriteria);
     }
-
-//    @Override
-//    public List<StudentInfo> getBySpeciality(String speciality) {
-//        return studentRepository.findBySpeciality(speciality);
-//    }
-//
-//    @Override
-//    public List<StudentInfo> getByFaculty(String faculty) {
-//        return studentRepository.findByFaculty(faculty);
-//    }
-//
-//    @Override
-//    public List<StudentInfo> getByAdmissionYear(int year) {
-//        return studentRepository.findByAdmissionYear(year);
-//    }
 
     @Override
     public StudentInfo create(StudentInfo studentInfo) {
-        return studentRepository.create(studentInfo);
+        studentRepository.create(studentInfo);
+        return studentInfo;
     }
 
     @Override
     public StudentInfo save(StudentInfo studentInfo) {
-        return studentRepository.save(studentInfo);
+        getById(studentInfo.getId());
+        studentRepository.save(studentInfo);
+        return studentInfo;
     }
 
     @Override
     public void delete(StudentInfo studentInfo) {
         studentRepository.delete(studentInfo);
     }
+
 }

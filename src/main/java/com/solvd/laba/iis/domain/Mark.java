@@ -12,10 +12,12 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class Mark {
-    private long id;
+
+    private Long id;
     private LocalDate date;
-    private int value;
+    private Integer value;
     private StudentInfo student;
     private TeacherInfo teacher;
     private Subject subject;
+
 }

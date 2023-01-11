@@ -12,8 +12,9 @@ import java.util.List;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class TeacherInfo {
-    private long id;
-    private User user;
+
+    private Long id;
+    private UserInfo userInfo;
     private List<Subject> subjects;
 
 }

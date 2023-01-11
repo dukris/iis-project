@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class LessonRowMapper {
+
     @SneakyThrows
     public static Lesson mapLesson(ResultSet rs) {
         Lesson lesson = new Lesson();
@@ -25,8 +26,8 @@ public abstract class LessonRowMapper {
 
         TeacherInfo teacher = new TeacherInfo();
         teacher.setId(rs.getLong("teacher_id"));
-        User user = UserRowMapper.mapUser(rs);
-        teacher.setUser(user);
+        UserInfo userInfo = UserRowMapper.mapUser(rs);
+        teacher.setUserInfo(userInfo);
 
         lesson.setTeacher(teacher);
         return lesson;
@@ -41,4 +42,5 @@ public abstract class LessonRowMapper {
         }
         return lessons;
     }
+
 }

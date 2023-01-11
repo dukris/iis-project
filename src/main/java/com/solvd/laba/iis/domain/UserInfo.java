@@ -1,19 +1,18 @@
 package com.solvd.laba.iis.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @AllArgsConstructor
-@RequiredArgsConstructor
-public class User {
-    private long id;
+public class UserInfo {
+
+    private Long id;
     private String name;
     private String surname;
     private String email;
     private String password;
     private Role role;
+
 }

@@ -6,9 +6,9 @@ import lombok.SneakyThrows;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public abstract class SubjectRowMapper {
+
     @SneakyThrows
     public static Subject mapSubject(ResultSet rs) {
         Subject subject = new Subject();
@@ -26,4 +26,5 @@ public abstract class SubjectRowMapper {
         }
         return subjects;
     }
+
 }

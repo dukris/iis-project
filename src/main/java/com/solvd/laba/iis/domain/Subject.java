@@ -10,6 +10,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class Subject {
-    private long id;
+
+    private Long id;
     private String name;
+
 }

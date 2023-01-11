@@ -1,20 +1,23 @@
 package com.solvd.laba.iis.persistence;
 
-import com.solvd.laba.iis.domain.User;
-import org.springframework.transaction.annotation.Transactional;
+import com.solvd.laba.iis.domain.UserInfo;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository {
-    List<User> findAll();
 
-    Optional<User> findById(long id);
+    List<UserInfo> findAll();
 
-    User create(User user);
+    Optional<UserInfo> findById(long id);
 
-    User save(User user);
+    Optional<UserInfo> findByEmail(String email);
 
-    void delete(User user);
+    void create(UserInfo userInfo);
+
+    void save(UserInfo userInfo);
+
+    void delete(UserInfo userInfo);
+
 
 }

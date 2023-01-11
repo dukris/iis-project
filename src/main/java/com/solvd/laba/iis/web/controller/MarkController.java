@@ -3,26 +3,27 @@ package com.solvd.laba.iis.web.controller;
 import com.solvd.laba.iis.domain.Mark;
 import com.solvd.laba.iis.service.MarkService;
 import com.solvd.laba.iis.web.dto.MarkDto;
+import com.solvd.laba.iis.web.dto.validation.OnCreateMarkGroup;
+import com.solvd.laba.iis.web.dto.validation.OnUpdateAndDeleteGroup;
 import com.solvd.laba.iis.web.mapper.MarkMapper;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/marks")
+@RequestMapping("/api/v1/marks")
 public class MarkController {
+
     private final MarkService markService;
     private final MarkMapper markMapper;
 
     @GetMapping()
     public List<MarkDto> getAll() {
-        List<MarkDto> marks = markService.getAll().stream()
-                .map(markMapper::markToMarkDto)
-                .toList();
+        List<MarkDto> marks = markMapper.listToListDto(markService.getAll());
         return marks;
     }
 
@@ -34,7 +35,7 @@ public class MarkController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public MarkDto create(@RequestBody @Valid MarkDto markDto) {
+    public MarkDto create(@RequestBody @Validated(OnCreateMarkGroup.class) MarkDto markDto) {
         Mark mark = markMapper.markDtoToMark(markDto);
         mark = markService.create(mark);
         return markMapper.markToMarkDto(mark);
@@ -42,15 +43,16 @@ public class MarkController {
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@RequestBody @Valid MarkDto markDto) {
+    public void delete(@RequestBody @Validated(OnUpdateAndDeleteGroup.class) MarkDto markDto) {
         Mark mark = markMapper.markDtoToMark(markDto);
         markService.delete(mark);
     }
 
     @PutMapping
-    public MarkDto update(@RequestBody @Valid MarkDto markDto) {
+    public MarkDto update(@RequestBody @Validated(OnUpdateAndDeleteGroup.class) MarkDto markDto) {
         Mark mark = markMapper.markDtoToMark(markDto);
         mark = markService.save(mark);
         return markMapper.markToMarkDto(mark);
     }
+
 }

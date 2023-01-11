@@ -4,8 +4,17 @@ import com.solvd.laba.iis.domain.StudentInfo;
 import com.solvd.laba.iis.web.dto.StudentInfoDto;
 import org.mapstruct.Mapper;
 
-@Mapper(componentModel = "spring", uses = {UserMapper.class, GroupMapper.class})
+import java.util.List;
+
+@Mapper(componentModel = "spring", uses = {UserInfoMapper.class, GroupMapper.class})
 public interface StudentInfoMapper {
+
     StudentInfoDto studentInfoToStudentInfoDto(StudentInfo studentInfo);
+
     StudentInfo studentInfoDtoToStudentInfo(StudentInfoDto studentInfoDto);
+
+    List<StudentInfoDto> listToListDto(List<StudentInfo> studentInfos);
+
+    List<StudentInfo> listDtoToList(List<StudentInfoDto> studentInfoDtos);
+
 }

@@ -18,6 +18,7 @@ public class SubjectRepositoryImpl implements SubjectRepository {
 
     private static final String FIND_ALL_QUERY = "SELECT subjects.id as subject_id, subjects.name as subject_name FROM iis_schema.subjects";
     private static final String FIND_BY_ID_QUERY = "SELECT subjects.id as subject_id, subjects.name as subject_name FROM iis_schema.subjects WHERE id = ?";
+    private static final String FIND_BY_NAME_QUERY = "SELECT subjects.id as subject_id, subjects.name as subject_name FROM iis_schema.subjects WHERE name = ?";
     private static final String CREATE_QUERY = "INSERT INTO iis_schema.subjects (name) VALUES(?)";
     private static final String DELETE_QUERY = "DELETE FROM iis_schema.subjects WHERE id = ?";
     private static final String SAVE_QUERY = "UPDATE iis_schema.subjects SET name = ? WHERE id = ?";
@@ -49,7 +50,20 @@ public class SubjectRepositoryImpl implements SubjectRepository {
     }
 
     @Override
-    public Subject create(Subject subject) {
+    public Optional<Subject> findByName(String name) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(FIND_BY_NAME_QUERY)) {
+            statement.setString(1, name);
+            try (ResultSet rs = statement.executeQuery()) {
+                return rs.next() ? Optional.of(SubjectRowMapper.mapSubject(rs)) : Optional.empty();
+            }
+        } catch (SQLException ex) {
+            throw new ResourceMappingException("Exception occurred while finding subject by name = " + name);
+        }
+    }
+
+    @Override
+    public void create(Subject subject) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(CREATE_QUERY,
                      Statement.RETURN_GENERATED_KEYS)) {
@@ -59,7 +73,6 @@ public class SubjectRepositoryImpl implements SubjectRepository {
                 if (key.next()) {
                     subject.setId(key.getLong(1));
                 }
-                return subject;
             }
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while creating subject");
@@ -67,13 +80,12 @@ public class SubjectRepositoryImpl implements SubjectRepository {
     }
 
     @Override
-    public Subject save(Subject subject) {
+    public void save(Subject subject) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(SAVE_QUERY)) {
             statement.setString(1, subject.getName());
             statement.setLong(2, subject.getId());
             statement.executeUpdate();
-            return subject;
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while saving subject with id = " + subject.getId());
         }
@@ -89,4 +101,5 @@ public class SubjectRepositoryImpl implements SubjectRepository {
             throw new ResourceMappingException("Exception occurred while deleting subject with id = " + subject.getId());
         }
     }
+
 }

@@ -1,6 +1,7 @@
 package com.solvd.laba.iis.domain;
 
 public enum Weekday {
+
     SUNDAY,
     MONDAY,
     TUESDAY,
@@ -8,4 +9,5 @@ public enum Weekday {
     THURSDAY,
     FRIDAY,
     SATURDAY
+
 }

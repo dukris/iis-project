@@ -1,7 +1,7 @@
 package com.solvd.laba.iis.persistence.mapper;
 
 import com.solvd.laba.iis.domain.Role;
-import com.solvd.laba.iis.domain.User;
+import com.solvd.laba.iis.domain.UserInfo;
 import lombok.SneakyThrows;
 
 import java.sql.ResultSet;
@@ -9,25 +9,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class UserRowMapper {
+
     @SneakyThrows
-    public static User mapUser(ResultSet rs) {
-        User user = new User();
-        user.setId(rs.getLong("user_id"));
-        user.setName(rs.getString("user_name"));
-        user.setSurname(rs.getString("user_surname"));
-        user.setEmail(rs.getString("user_email"));
-        user.setPassword(rs.getString("user_password"));
-        user.setRole(Role.valueOf(rs.getString("user_role").toUpperCase()));
-        return user;
+    public static UserInfo mapUser(ResultSet rs) {
+        UserInfo userInfo = new UserInfo();
+        userInfo.setId(rs.getLong("user_id"));
+        userInfo.setName(rs.getString("user_name"));
+        userInfo.setSurname(rs.getString("user_surname"));
+        userInfo.setEmail(rs.getString("user_email"));
+        userInfo.setPassword(rs.getString("user_password"));
+        userInfo.setRole(Role.valueOf(rs.getString("user_role").toUpperCase()));
+        return userInfo;
     }
 
     @SneakyThrows
-    public static List<User> mapUsers(ResultSet rs) {
-        List<User> users = new ArrayList<>();
+    public static List<UserInfo> mapUsers(ResultSet rs) {
+        List<UserInfo> userInfos = new ArrayList<>();
         while (rs.next()) {
-            User user = mapUser(rs);
-            users.add(user);
+            UserInfo userInfo = mapUser(rs);
+            userInfos.add(userInfo);
         }
-        return users;
+        return userInfos;
     }
+
 }

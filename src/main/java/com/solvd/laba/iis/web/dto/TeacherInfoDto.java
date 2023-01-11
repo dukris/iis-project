@@ -1,10 +1,10 @@
 package com.solvd.laba.iis.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.solvd.laba.iis.web.dto.validation.UpdateGroup;
+import com.solvd.laba.iis.web.dto.validation.*;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -18,12 +18,14 @@ import java.util.List;
 @RequiredArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TeacherInfoDto {
-    @NotNull(groups = UpdateGroup.class, message = "Teacher's id should be filled")
-    private long id;
+
+    @Null(groups = OnCreateTeacherGroup.class, message = "Teacher's id should be empty")
+    @NotNull(groups = {OnUpdateAndDeleteGroup.class, OnCreateLessonGroup.class, OnCreateMarkGroup.class}, message = "Teacher's id should be filled")
+    private Long id;
+
     @NotNull(message = "Teacher should contain user")
     @Valid
     private UserDto user;
-    @Valid
     private List<SubjectDto> subjects;
 
 }

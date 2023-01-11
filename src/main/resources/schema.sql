@@ -1,6 +1,6 @@
 CREATE SCHEMA IF NOT EXISTS iis_schema;
 
-CREATE TABLE IF NOT EXISTS iis_schema.users
+CREATE TABLE IF NOT EXISTS iis_schema.users_info
 (
     id       bigserial    NOT NULL,
     name     varchar(50)  NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS iis_schema.teachers_info
     id      bigserial NOT NULL,
     user_id bigserial NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (user_id) REFERENCES iis_schema.users (id) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES iis_schema.users_info (id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS iis_schema.groups
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS iis_schema.students_info
     user_id  bigserial NOT NULL,
     group_id bigserial NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (user_id) REFERENCES iis_schema.users (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES iis_schema.users_info (id) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (group_id) REFERENCES iis_schema.groups (id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 

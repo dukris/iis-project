@@ -3,17 +3,17 @@ package com.solvd.laba.iis.service.impl;
 import com.solvd.laba.iis.domain.Lesson;
 import com.solvd.laba.iis.domain.exception.ResourceNotFoundException;
 import com.solvd.laba.iis.persistence.LessonRepository;
-import com.solvd.laba.iis.persistence.criteria.LessonSearchCriteria;
+import com.solvd.laba.iis.domain.criteria.LessonSearchCriteria;
 import com.solvd.laba.iis.service.LessonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 public class LessonServiceImpl implements LessonService {
+
     private final LessonRepository lessonRepository;
 
     @Override
@@ -24,48 +24,35 @@ public class LessonServiceImpl implements LessonService {
     @Override
     public Lesson getById(long id) {
         return lessonRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Lesson with id = " + id + "not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Lesson with id = " + id + " not found"));
     }
 
     @Override
-    public List<Lesson> getByCriteria(long groupId, LessonSearchCriteria lessonSearchCriteria) {
-        return Objects.nonNull(lessonSearchCriteria.getWeekday()) ?
-                lessonRepository.findByGroupAndDay(groupId, lessonSearchCriteria.getWeekday()) :
-                lessonRepository.findByGroup(groupId);
-    }
-
-//    @Override
-//    public List<Lesson> getByGroup(long groupId) {
-//        return lessonRepository.findByGroup(groupId);
-//    }
-//
-//    @Override
-//    public List<Lesson> getByGroupAndDay(long groupId, String weekday) {
-//        return lessonRepository.findByGroupAndDay(groupId, weekday);
-//    }
-
-    @Override
-    public List<Lesson> getByTeacher(long teacherId) {
-        return  lessonRepository.findByTeacher(teacherId);
+    public List<Lesson> getByStudentCriteria(long groupId, LessonSearchCriteria lessonSearchCriteria) {
+        return lessonRepository.findByStudentCriteria(groupId, lessonSearchCriteria);
     }
 
     @Override
-    public List<Lesson> getByTeacherAndDay(long teacherId, String weekday) {
-        return lessonRepository.findByTeacherAndDay(teacherId, weekday);
+    public List<Lesson> getByTeacherCriteria(long teacherId, LessonSearchCriteria lessonSearchCriteria) {
+        return lessonRepository.findByTeacherCriteria(teacherId, lessonSearchCriteria);
     }
 
     @Override
     public Lesson create(Lesson lesson) {
-        return lessonRepository.create(lesson);
+        lessonRepository.create(lesson);
+        return lesson;
     }
 
     @Override
     public Lesson save(Lesson lesson) {
-        return lessonRepository.save(lesson);
+        getById(lesson.getId());
+        lessonRepository.save(lesson);
+        return lesson;
     }
 
     @Override
     public void delete(Lesson lesson) {
         lessonRepository.delete(lesson);
     }
+
 }

@@ -1,19 +1,23 @@
 package com.solvd.laba.iis.web.controller;
 
+import com.solvd.laba.iis.domain.exception.ResourceAlreadyExistsException;
 import com.solvd.laba.iis.domain.exception.ResourceMappingException;
 import com.solvd.laba.iis.domain.exception.ResourceNotFoundException;
-import com.solvd.laba.iis.web.dto.exception.ErrorDto;
+import com.solvd.laba.iis.web.dto.ErrorDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.List;
 
+@Slf4j
 @RestControllerAdvice
-public class ControllerAdviceClass {
+public class ControllerAdvice {
+
     @ExceptionHandler(ResourceMappingException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorDto handleResourceMappingException(ResourceMappingException ex) {
@@ -30,9 +34,9 @@ public class ControllerAdviceClass {
         return errorDto;
     }
 
-    @ExceptionHandler(UnsupportedOperationException.class)
-    @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
-    public ErrorDto handleUnsupportedOperationException(UnsupportedOperationException ex) {
+    @ExceptionHandler(ResourceAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorDto handleResourceAlreadyExistsException(ResourceAlreadyExistsException ex) {
         ErrorDto errorDto = new ErrorDto();
         errorDto.setMessage(ex.getMessage());
         return errorDto;
@@ -42,7 +46,7 @@ public class ControllerAdviceClass {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public List<ErrorDto> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         List<ErrorDto> errors = ex.getBindingResult().getFieldErrors().stream()
-                .map(error->new ErrorDto(error.getField(), error.getDefaultMessage()))
+                .map(error -> new ErrorDto(error.getObjectName() + "." + error.getField(), error.getDefaultMessage()))
                 .toList();
         return errors;
     }
@@ -55,11 +59,15 @@ public class ControllerAdviceClass {
         return errorDto;
     }
 
+
+
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorDto handleException(Exception ex) {
         ErrorDto errorDto = new ErrorDto();
         errorDto.setMessage(ex.getMessage());
+        log.error(ex.getMessage(), ex);
         return errorDto;
     }
+
 }

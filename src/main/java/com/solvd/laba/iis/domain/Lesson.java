@@ -12,12 +12,14 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class Lesson {
-    private long id;
-    private int room;
+
+    private Long id;
+    private Integer room;
     private Weekday weekday;
     private LocalTime startTime;
     private LocalTime endTime;
     private Subject subject;
     private Group group;
     private TeacherInfo teacher;
+
 }

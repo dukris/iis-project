@@ -2,9 +2,11 @@ package com.solvd.laba.iis.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.solvd.laba.iis.web.dto.validation.UpdateGroup;
+import com.solvd.laba.iis.web.dto.validation.OnCreateMarkGroup;
+import com.solvd.laba.iis.web.dto.validation.OnUpdateAndDeleteGroup;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -18,21 +20,29 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MarkDto {
-    @NotNull(groups = UpdateGroup.class, message = "Mark's id should be filled")
-    private long id;
+
+    @Null(groups = OnCreateMarkGroup.class, message = "Mark's id should be empty")
+    @NotNull(groups = OnUpdateAndDeleteGroup.class, message = "Mark's id should be filled")
+    private Long id;
+
     @NotNull(message = "Date of mark should be filled")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate date;
+
     @NotNull(message = "Value of mark should be filled")
-    private int value;
+    private Integer value;
+
     @NotNull(message = "Mark should contain student")
     @Valid
     private StudentInfoDto student;
+
     @NotNull(message = "Mark should contain teacher")
     @Valid
     private TeacherInfoDto teacher;
+
     @NotNull(message = "Mark should contain subject")
     @Valid
     private SubjectDto subject;
+
 }
 

@@ -12,6 +12,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class TeacherServiceImpl implements TeacherService {
+
     private final TeacherRepository teacherRepository;
 
     @Override
@@ -22,7 +23,7 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public TeacherInfo getById(long id) {
         return teacherRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Teacher with id = " + id + "not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Teacher with id = " + id + " not found"));
     }
 
     @Override
@@ -37,12 +38,15 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public TeacherInfo create(TeacherInfo teacherInfo) {
-        return teacherRepository.create(teacherInfo);
+        teacherRepository.create(teacherInfo);
+        return teacherInfo;
     }
 
     @Override
     public TeacherInfo save(TeacherInfo teacherInfo) {
-        return teacherRepository.save(teacherInfo);
+        getById(teacherInfo.getId());
+        teacherRepository.save(teacherInfo);
+        return teacherInfo;
     }
 
     @Override
@@ -59,4 +63,5 @@ public class TeacherServiceImpl implements TeacherService {
     public void addSubject(long teacherId, long subjectId) {
         teacherRepository.addSubject(teacherId, subjectId);
     }
+
 }

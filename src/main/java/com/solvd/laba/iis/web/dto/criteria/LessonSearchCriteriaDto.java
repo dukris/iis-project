@@ -1,4 +1,4 @@
-package com.solvd.laba.iis.persistence.criteria;
+package com.solvd.laba.iis.web.dto.criteria;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +9,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class GroupSearchCriteria {
-    private long subjectId;
+public class LessonSearchCriteriaDto {
+
+    private String weekday;
+
 }

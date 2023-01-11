@@ -1,4 +1,4 @@
-package com.solvd.laba.iis.persistence.criteria;
+package com.solvd.laba.iis.domain.criteria;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +9,10 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class LessonSearchCriteria {
-    private String weekday;
+public class StudentSearchCriteria {
+
+    private String speciality;
+    private String faculty;
+    private int year;
+
 }

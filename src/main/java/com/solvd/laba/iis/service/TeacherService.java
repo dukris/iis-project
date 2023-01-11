@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 public interface TeacherService {
+
     List<TeacherInfo> getAll();
 
     TeacherInfo getById(long id);
@@ -28,4 +29,5 @@ public interface TeacherService {
 
     @Transactional
     void addSubject(long teacherId, long subjectId);
+
 }

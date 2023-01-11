@@ -4,9 +4,9 @@ import com.solvd.laba.iis.domain.Subject;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface SubjectService {
+
     List<Subject> getAll();
 
     Subject getById(long id);
@@ -19,4 +19,5 @@ public interface SubjectService {
 
     @Transactional
     void delete(Subject subject);
+
 }

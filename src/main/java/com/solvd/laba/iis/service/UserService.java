@@ -1,21 +1,23 @@
 package com.solvd.laba.iis.service;
 
-import com.solvd.laba.iis.domain.User;
+import com.solvd.laba.iis.domain.UserInfo;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 public interface UserService {
-    List<User> getAll();
 
-    User getById(long id);
+    List<UserInfo> getAll();
 
-    @Transactional
-    User create(User user);
+    UserInfo getById(long id);
 
     @Transactional
-    User save(User user);
+    UserInfo create(UserInfo userInfo);
 
     @Transactional
-    void delete(User user);
+    UserInfo save(UserInfo userInfo);
+
+    @Transactional
+    void delete(UserInfo userInfo);
+
 }

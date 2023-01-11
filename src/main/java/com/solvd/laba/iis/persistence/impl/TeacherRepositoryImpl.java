@@ -18,40 +18,40 @@ public class TeacherRepositoryImpl implements TeacherRepository {
 
     private static final String FIND_ALL_QUERY = """
             SELECT teachers_info.id as teacher_id,
-            users.id as user_id, users.name as user_name, users.surname as user_surname,
-            users.email as user_email, users.password as user_password, users.role as user_role,
+            users_info.id as user_id, users_info.name as user_name, users_info.surname as user_surname,
+            users_info.email as user_email, users_info.password as user_password, users_info.role as user_role,
             subjects.id as subject_id, subjects.name as subject_name
             FROM iis_schema.teachers_info
-            LEFT JOIN iis_schema.users ON (teachers_info.user_id = users.id)
+            LEFT JOIN iis_schema.users_info ON (teachers_info.user_id = users_info.id)
             LEFT JOIN iis_schema.teachers_subjects ON (teachers_info.id = teachers_subjects.teacher_id)
             LEFT JOIN iis_schema.subjects ON (teachers_subjects.subject_id = subjects.id)""";
     private static final String FIND_BY_ID_QUERY = """
             SELECT teachers_info.id as teacher_id,
-            users.id as user_id, users.name as user_name, users.surname as user_surname,
-            users.email as user_email, users.password as user_password, users.role as user_role,
+            users_info.id as user_id, users_info.name as user_name, users_info.surname as user_surname,
+            users_info.email as user_email, users_info.password as user_password, users_info.role as user_role,
             subjects.id as subject_id, subjects.name as subject_name
             FROM iis_schema.teachers_info
-            LEFT JOIN iis_schema.users ON (teachers_info.user_id = users.id)
+            LEFT JOIN iis_schema.users_info ON (teachers_info.user_id = users_info.id)
             LEFT JOIN iis_schema.teachers_subjects ON (teachers_info.id = teachers_subjects.teacher_id)
             LEFT JOIN iis_schema.subjects ON (teachers_subjects.subject_id = subjects.id)
             WHERE teachers_info.id = ?""";
     private static final String FIND_BY_GROUP_QUERY = """
             SELECT teachers_info.id as teacher_id,
-            users.id as user_id, users.name as user_name, users.surname as user_surname,
-            users.email as user_email, users.password as user_password, users.role as user_role,
+            users_info.id as user_id, users_info.name as user_name, users_info.surname as user_surname,
+            users_info.email as user_email, users_info.password as user_password, users_info.role as user_role,
             subjects.id as subject_id, subjects.name as subject_name
             FROM iis_schema.teachers_info
-            LEFT JOIN iis_schema.users ON (teachers_info.user_id = users.id)
+            LEFT JOIN iis_schema.users_info ON (teachers_info.user_id = users_info.id)
             LEFT JOIN iis_schema.teachers_subjects ON (teachers_info.id = teachers_subjects.teacher_id)
             LEFT JOIN iis_schema.subjects ON (teachers_subjects.subject_id = subjects.id)
             LEFT JOIN iis_schema.lessons ON (teachers_info.id = lessons.teacher_id)
             WHERE lessons.group_id = ?""";
     private static final String FIND_BY_SUBJECT_QUERY = """
             SELECT teachers_info.id as teacher_id,
-            users.id as user_id, users.name as user_name, users.surname as user_surname,
-            users.email as user_email, users.password as user_password, users.role as user_role
+            users_info.id as user_id, users_info.name as user_name, users_info.surname as user_surname,
+            users_info.email as user_email, users_info.password as user_password, users_info.role as user_role
             FROM iis_schema.teachers_info
-            LEFT JOIN iis_schema.users ON (teachers_info.user_id = users.id)
+            LEFT JOIN iis_schema.users_info ON (teachers_info.user_id = users_info.id)
             LEFT JOIN iis_schema.teachers_subjects ON (teachers_info.id = teachers_subjects.teacher_id)
             LEFT JOIN iis_schema.subjects ON (teachers_subjects.subject_id = subjects.id)
             WHERE subjects.id = ?""";
@@ -114,17 +114,16 @@ public class TeacherRepositoryImpl implements TeacherRepository {
     }
 
     @Override
-    public TeacherInfo create(TeacherInfo teacherInfo) {
+    public void create(TeacherInfo teacherInfo) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(CREATE_QUERY,
                      Statement.RETURN_GENERATED_KEYS)) {
-            statement.setLong(1, teacherInfo.getUser().getId());
+            statement.setLong(1, teacherInfo.getUserInfo().getId());
             statement.executeUpdate();
             try (ResultSet key = statement.getGeneratedKeys()) {
                 if (key.next()) {
                     teacherInfo.setId(key.getLong(1));
                 }
-                return teacherInfo;
             }
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while creating teacher");
@@ -132,13 +131,12 @@ public class TeacherRepositoryImpl implements TeacherRepository {
     }
 
     @Override
-    public TeacherInfo save(TeacherInfo teacherInfo) {
+    public void save(TeacherInfo teacherInfo) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(SAVE_QUERY)) {
-            statement.setLong(1, teacherInfo.getUser().getId());
+            statement.setLong(1, teacherInfo.getUserInfo().getId());
             statement.setLong(2, teacherInfo.getId());
             statement.executeUpdate();
-            return teacherInfo;
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while saving teacher with id = " + teacherInfo.getId());
         }
@@ -178,4 +176,5 @@ public class TeacherRepositoryImpl implements TeacherRepository {
             throw new ResourceMappingException("Exception occurred while adding subject with id = " + subjectId);
         }
     }
+
 }

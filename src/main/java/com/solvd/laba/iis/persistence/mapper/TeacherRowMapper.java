@@ -2,7 +2,7 @@ package com.solvd.laba.iis.persistence.mapper;
 
 import com.solvd.laba.iis.domain.Subject;
 import com.solvd.laba.iis.domain.TeacherInfo;
-import com.solvd.laba.iis.domain.User;
+import com.solvd.laba.iis.domain.UserInfo;
 import lombok.SneakyThrows;
 
 import java.sql.ResultSet;
@@ -11,14 +11,15 @@ import java.util.List;
 import java.util.Objects;
 
 public abstract class TeacherRowMapper {
+
     @SneakyThrows
     public static TeacherInfo mapTeacher(ResultSet rs) {
         TeacherInfo teacher = new TeacherInfo();
         List<Subject> subjects = new ArrayList<>();
 
         teacher.setId(rs.getLong("teacher_id"));
-        User user = UserRowMapper.mapUser(rs);
-        teacher.setUser(user);
+        UserInfo userInfo = UserRowMapper.mapUser(rs);
+        teacher.setUserInfo(userInfo);
 
         Subject subject = SubjectRowMapper.mapSubject(rs);
         subjects.add(subject);
@@ -48,8 +49,8 @@ public abstract class TeacherRowMapper {
                 }
                 TeacherInfo teacher = new TeacherInfo();
                 teacher.setId(currentId);
-                User user = UserRowMapper.mapUser(rs);
-                teacher.setUser(user);
+                UserInfo userInfo = UserRowMapper.mapUser(rs);
+                teacher.setUserInfo(userInfo);
 
                 Subject subject = SubjectRowMapper.mapSubject(rs);
                 List<Subject> subjects = new ArrayList<>();
@@ -66,13 +67,14 @@ public abstract class TeacherRowMapper {
     @SneakyThrows
     public static List<TeacherInfo> mapTeachersBySubject(ResultSet rs) {
         List<TeacherInfo> teachers = new ArrayList<>();
-        while(rs.next()){
+        while (rs.next()) {
             TeacherInfo teacher = new TeacherInfo();
             teacher.setId(rs.getLong("teacher_id"));
-            User user = UserRowMapper.mapUser(rs);
-            teacher.setUser(user);
+            UserInfo userInfo = UserRowMapper.mapUser(rs);
+            teacher.setUserInfo(userInfo);
             teachers.add(teacher);
         }
         return teachers;
     }
+
 }

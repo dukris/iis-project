@@ -1,6 +1,6 @@
 package com.solvd.laba.iis.persistence.impl;
 
-import com.solvd.laba.iis.domain.User;
+import com.solvd.laba.iis.domain.UserInfo;
 import com.solvd.laba.iis.domain.exception.ResourceMappingException;
 import com.solvd.laba.iis.persistence.UserRepository;
 import com.solvd.laba.iis.persistence.mapper.UserRowMapper;
@@ -17,33 +17,38 @@ import java.util.Optional;
 public class UserRepositoryImpl implements UserRepository {
 
     private static final String FIND_ALL_QUERY = """
-            SELECT users.id as user_id,  users.name as user_name, users.surname as user_surname,
-            users.email as user_email, users.password as user_password, users.role as user_role
-            FROM iis_schema.users""";
+            SELECT users_info.id as user_id,  users_info.name as user_name, users_info.surname as user_surname,
+            users_info.email as user_email, users_info.password as user_password, users_info.role as user_role
+            FROM iis_schema.users_info""";
     private static final String FIND_BY_ID_QUERY = """
-            SELECT users.id as user_id,  users.name as user_name, users.surname as user_surname,
-            users.email as user_email, users.password as user_password, users.role as user_role
-            FROM iis_schema.users
+            SELECT users_info.id as user_id,  users_info.name as user_name, users_info.surname as user_surname,
+            users_info.email as user_email, users_info.password as user_password, users_info.role as user_role
+            FROM iis_schema.users_info
             WHERE id = ?""";
-    private static final String CREATE_QUERY = "INSERT INTO iis_schema.users (name, surname, email, password, role) VALUES(?, ?, ?, ?, ?)";
-    private static final String DELETE_QUERY = "DELETE FROM iis_schema.users WHERE id = ?";
-    private static final String SAVE_QUERY = "UPDATE iis_schema.users SET name = ?, surname = ?, email = ?, password = ?, role = ? WHERE id = ?";
+    private static final String FIND_BY_EMAIL_QUERY = """
+            SELECT users_info.id as user_id,  users_info.name as user_name, users_info.surname as user_surname,
+            users_info.email as user_email, users_info.password as user_password, users_info.role as user_role
+            FROM iis_schema.users_info
+            WHERE email = ?""";
+    private static final String CREATE_QUERY = "INSERT INTO iis_schema.users_info (name, surname, email, password, role) VALUES(?, ?, ?, ?, ?)";
+    private static final String DELETE_QUERY = "DELETE FROM iis_schema.users_info WHERE id = ?";
+    private static final String SAVE_QUERY = "UPDATE iis_schema.users_info SET name = ?, surname = ?, email = ?, password = ?, role = ? WHERE id = ?";
     private final DataSource dataSource;
 
     @Override
-    public List<User> findAll() {
+    public List<UserInfo> findAll() {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             try (ResultSet rs = statement.executeQuery(FIND_ALL_QUERY)) {
                 return UserRowMapper.mapUsers(rs);
             }
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while finding all users");
+            throw new ResourceMappingException("Exception occurred while finding all userInfos");
         }
     }
 
     @Override
-    public Optional<User> findById(long id) {
+    public Optional<UserInfo> findById(long id) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_BY_ID_QUERY)) {
             statement.setLong(1, id);
@@ -56,21 +61,33 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User create(User user) {
+    public Optional<UserInfo> findByEmail(String email) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(FIND_BY_EMAIL_QUERY)) {
+            statement.setString(1, email);
+            try (ResultSet rs = statement.executeQuery()) {
+                return rs.next() ? Optional.of(UserRowMapper.mapUser(rs)) : Optional.empty();
+            }
+        } catch (SQLException ex) {
+            throw new ResourceMappingException("Exception occurred while finding user by email = " + email);
+        }
+    }
+
+    @Override
+    public void create(UserInfo userInfo) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(CREATE_QUERY,
                      Statement.RETURN_GENERATED_KEYS)) {
-            statement.setString(1, user.getName());
-            statement.setString(2, user.getSurname());
-            statement.setString(3, user.getEmail());
-            statement.setString(4, user.getPassword());
-            statement.setString(5, user.getRole().toString());
+            statement.setString(1, userInfo.getName());
+            statement.setString(2, userInfo.getSurname());
+            statement.setString(3, userInfo.getEmail());
+            statement.setString(4, userInfo.getPassword());
+            statement.setString(5, userInfo.getRole().toString());
             statement.executeUpdate();
             try (ResultSet key = statement.getGeneratedKeys()) {
                 if (key.next()) {
-                    user.setId(key.getLong(1));
+                    userInfo.setId(key.getLong(1));
                 }
-                return user;
             }
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while creating user");
@@ -78,30 +95,30 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User save(User user) {
+    public void save(UserInfo userInfo) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(SAVE_QUERY)) {
-            statement.setString(1, user.getName());
-            statement.setString(2, user.getSurname());
-            statement.setString(3, user.getEmail());
-            statement.setString(4, user.getPassword());
-            statement.setString(5, user.getRole().toString());
-            statement.setLong(6, user.getId());
+            statement.setString(1, userInfo.getName());
+            statement.setString(2, userInfo.getSurname());
+            statement.setString(3, userInfo.getEmail());
+            statement.setString(4, userInfo.getPassword());
+            statement.setString(5, userInfo.getRole().toString());
+            statement.setLong(6, userInfo.getId());
             statement.executeUpdate();
-            return user;
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while saving user with id = " + user.getId());
+            throw new ResourceMappingException("Exception occurred while saving user with id = " + userInfo.getId());
         }
     }
 
     @Override
-    public void delete(User user) {
+    public void delete(UserInfo userInfo) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)) {
-            statement.setLong(1, user.getId());
+            statement.setLong(1, userInfo.getId());
             statement.executeUpdate();
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while deleting user with id = " + user.getId());
+            throw new ResourceMappingException("Exception occurred while deleting user with id = " + userInfo.getId());
         }
     }
+
 }

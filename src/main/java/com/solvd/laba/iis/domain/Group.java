@@ -10,6 +10,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class Group {
-    private long id;
-    private int number;
+
+    private Long id;
+    private Integer number;
+
 }

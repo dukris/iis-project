@@ -3,17 +3,17 @@ package com.solvd.laba.iis.service.impl;
 import com.solvd.laba.iis.domain.Mark;
 import com.solvd.laba.iis.domain.exception.ResourceNotFoundException;
 import com.solvd.laba.iis.persistence.MarkRepository;
-import com.solvd.laba.iis.persistence.criteria.MarkSearchCriteria;
+import com.solvd.laba.iis.domain.criteria.MarkSearchCriteria;
 import com.solvd.laba.iis.service.MarkService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 public class MarkServiceImpl implements MarkService {
+
     private final MarkRepository markRepository;
 
     @Override
@@ -24,14 +24,12 @@ public class MarkServiceImpl implements MarkService {
     @Override
     public Mark getById(long id) {
         return markRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Mark with id = " + id + "not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Mark with id = " + id + " not found"));
     }
 
     @Override
     public List<Mark> getByCriteria(long studentId, MarkSearchCriteria markSearchCriteria) {
-        return markSearchCriteria.getSubjectId()!= 0 ?
-                markRepository.findByStudentAndSubject(studentId, markSearchCriteria.getSubjectId()) :
-                markRepository.findByStudent(studentId);
+        return markRepository.findByCriteria(studentId, markSearchCriteria);
     }
 
     @Override
@@ -39,28 +37,22 @@ public class MarkServiceImpl implements MarkService {
         return markRepository.findBySubjectAndTeacher(subjectId, teacherId);
     }
 
-//    @Override
-//    public List<Mark> getByStudent(long studentId) {
-//        return markRepository.findByStudent(studentId);
-//    }
-//
-//    @Override
-//    public List<Mark> getByStudentAndSubject(long studentId, long subjectId) {
-//        return markRepository.findByStudentAndSubject(studentId, subjectId);
-//    }
-
     @Override
     public Mark create(Mark mark) {
-        return markRepository.create(mark);
+        markRepository.create(mark);
+        return mark;
     }
 
     @Override
     public Mark save(Mark mark) {
-        return markRepository.save(mark);
+        getById(mark.getId());
+        markRepository.save(mark);
+        return mark;
     }
 
     @Override
     public void delete(Mark mark) {
         markRepository.delete(mark);
     }
+
 }

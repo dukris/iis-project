@@ -10,10 +10,12 @@ import lombok.Setter;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class StudentInfo {
-    private long id;
-    private int admissionYear;
+
+    private Long id;
+    private Integer admissionYear;
     private String faculty;
     private String speciality;
-    private User user;
+    private UserInfo userInfo;
     private Group group;
+
 }
