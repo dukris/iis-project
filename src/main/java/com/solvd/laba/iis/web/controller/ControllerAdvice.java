@@ -6,6 +6,7 @@ import com.solvd.laba.iis.domain.exception.ResourceNotFoundException;
 import com.solvd.laba.iis.web.dto.ErrorDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -56,6 +57,15 @@ public class ControllerAdvice {
     public ErrorDto handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
         ErrorDto errorDto = new ErrorDto();
         errorDto.setMessage(ex.getMessage());
+        return errorDto;
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorDto handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+        ErrorDto errorDto = new ErrorDto();
+        errorDto.setMessage("The format of date or time is incorrect (pattern for date: yyyy-MM-dd, pattern for time: HH:mm)");
+        log.error(ex.getMessage(), ex);
         return errorDto;
     }
 

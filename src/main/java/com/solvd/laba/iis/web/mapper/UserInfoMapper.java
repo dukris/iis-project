@@ -1,7 +1,7 @@
 package com.solvd.laba.iis.web.mapper;
 
 import com.solvd.laba.iis.domain.UserInfo;
-import com.solvd.laba.iis.web.dto.UserDto;
+import com.solvd.laba.iis.web.dto.UserInfoDto;
 import org.mapstruct.Mapper;
 
 import java.util.List;
@@ -9,12 +9,12 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface UserInfoMapper {
 
-    UserDto userToUserDto(UserInfo userInfo);
+    UserInfoDto userToUserDto(UserInfo userInfo);
 
-    UserInfo userDtoToUser(UserDto userDto);
+    UserInfo userDtoToUser(UserInfoDto userInfoDto);
 
-    List<UserDto> listToListDto(List<UserInfo> userInfos);
+    List<UserInfoDto> listToListDto(List<UserInfo> userInfos);
 
-    List<UserInfo> listDtoToList(List<UserDto> userDtos);
+    List<UserInfo> listDtoToList(List<UserInfoDto> userInfoDtos);
 
 }

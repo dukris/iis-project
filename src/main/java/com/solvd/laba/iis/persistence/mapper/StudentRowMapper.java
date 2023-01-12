@@ -19,7 +19,7 @@ public abstract class StudentRowMapper {
         studentInfo.setFaculty(rs.getString("student_faculty"));
         studentInfo.setSpeciality(rs.getString("student_speciality"));
         UserInfo student = UserRowMapper.mapUser(rs);
-        studentInfo.setUserInfo(student);
+        studentInfo.setUser(student);
         Group group = GroupRowMapper.mapGroup(rs);
         studentInfo.setGroup(group);
         return studentInfo;

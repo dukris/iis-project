@@ -26,7 +26,7 @@ public class TeacherInfoDto {
 
     @NotNull(message = "Teacher should contain user")
     @Valid
-    private UserDto user;
+    private UserInfoDto user;
     private List<SubjectDto> subjects;
 
 }

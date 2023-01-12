@@ -28,7 +28,7 @@ public abstract class MarkRowMapper {
         student.setEmail(rs.getString("student_user_email"));
         student.setPassword(rs.getString("student_user_password"));
         student.setRole(Role.valueOf(rs.getString("student_user_role").toUpperCase()));
-        studentInfo.setUserInfo(student);
+        studentInfo.setUser(student);
         Group group = GroupRowMapper.mapGroup(rs);
         studentInfo.setGroup(group);
         mark.setStudent(studentInfo);
@@ -42,7 +42,7 @@ public abstract class MarkRowMapper {
         teacher.setEmail(rs.getString("teacher_user_email"));
         teacher.setPassword(rs.getString("teacher_user_password"));
         teacher.setRole(Role.valueOf(rs.getString("teacher_user_role").toUpperCase()));
-        teacherInfo.setUserInfo(teacher);
+        teacherInfo.setUser(teacher);
         mark.setTeacher(teacherInfo);
 
         Subject subject = SubjectRowMapper.mapSubject(rs);
@@ -55,77 +55,6 @@ public abstract class MarkRowMapper {
         List<Mark> marks = new ArrayList<>();
         while (rs.next()) {
             Mark mark = mapMark(rs);
-            marks.add(mark);
-        }
-        return marks;
-    }
-
-    @SneakyThrows
-    public static List<Mark> mapMarksBySubjectAndTeacher(ResultSet rs) {
-        List<Mark> marks = new ArrayList<>();
-        while (rs.next()) {
-            Mark mark = new Mark();
-            mark.setId(rs.getLong("mark_id"));
-            mark.setDate(rs.getDate("mark_date").toLocalDate());
-            mark.setValue(rs.getInt("mark_value"));
-
-            StudentInfo studentInfo = new StudentInfo();
-            studentInfo.setId(rs.getLong("student_id"));
-            studentInfo.setAdmissionYear(rs.getInt("student_year"));
-            studentInfo.setFaculty(rs.getString("student_faculty"));
-            studentInfo.setSpeciality(rs.getString("student_speciality"));
-            UserInfo student = new UserInfo();
-            student.setId(rs.getLong("student_user_id"));
-            student.setName(rs.getString("student_user_name"));
-            student.setSurname(rs.getString("student_user_surname"));
-            student.setEmail(rs.getString("student_user_email"));
-            student.setPassword(rs.getString("student_user_password"));
-            student.setRole(Role.valueOf(rs.getString("student_user_role").toUpperCase()));
-            studentInfo.setUserInfo(student);
-            Group group = GroupRowMapper.mapGroup(rs);
-            studentInfo.setGroup(group);
-            mark.setStudent(studentInfo);
-
-            Subject subject = SubjectRowMapper.mapSubject(rs);
-            mark.setSubject(subject);
-
-            TeacherInfo teacherInfo = new TeacherInfo();
-            teacherInfo.setId(rs.getLong("teacher_id"));
-            mark.setTeacher(teacherInfo);
-
-            marks.add(mark);
-        }
-        return marks;
-    }
-
-    @SneakyThrows
-    public static List<Mark> mapMarksByStudent(ResultSet rs) {
-        List<Mark> marks = new ArrayList<>();
-        while (rs.next()) {
-            Mark mark = new Mark();
-            mark.setId(rs.getLong("mark_id"));
-            mark.setDate(rs.getDate("mark_date").toLocalDate());
-            mark.setValue(rs.getInt("mark_value"));
-
-            TeacherInfo teacherInfo = new TeacherInfo();
-            teacherInfo.setId(rs.getLong("teacher_id"));
-            UserInfo teacher = new UserInfo();
-            teacher.setId(rs.getLong("teacher_user_id"));
-            teacher.setName(rs.getString("teacher_user_name"));
-            teacher.setSurname(rs.getString("teacher_user_surname"));
-            teacher.setEmail(rs.getString("teacher_user_email"));
-            teacher.setPassword(rs.getString("teacher_user_password"));
-            teacher.setRole(Role.valueOf(rs.getString("teacher_user_role").toUpperCase()));
-            teacherInfo.setUserInfo(teacher);
-            mark.setTeacher(teacherInfo);
-
-            Subject subject = SubjectRowMapper.mapSubject(rs);
-            mark.setSubject(subject);
-
-            StudentInfo studentInfo = new StudentInfo();
-            studentInfo.setId(rs.getLong("student_id"));
-            mark.setStudent(studentInfo);
-
             marks.add(mark);
         }
         return marks;

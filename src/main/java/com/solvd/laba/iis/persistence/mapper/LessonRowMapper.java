@@ -27,7 +27,7 @@ public abstract class LessonRowMapper {
         TeacherInfo teacher = new TeacherInfo();
         teacher.setId(rs.getLong("teacher_id"));
         UserInfo userInfo = UserRowMapper.mapUser(rs);
-        teacher.setUserInfo(userInfo);
+        teacher.setUser(userInfo);
 
         lesson.setTeacher(teacher);
         return lesson;

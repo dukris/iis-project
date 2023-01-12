@@ -14,7 +14,7 @@ import java.util.List;
 public class TeacherInfo {
 
     private Long id;
-    private UserInfo userInfo;
+    private UserInfo user;
     private List<Subject> subjects;
 
 }

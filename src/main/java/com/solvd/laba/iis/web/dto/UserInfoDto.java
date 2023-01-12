@@ -15,7 +15,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDto {
+public class UserInfoDto {
 
     @Null(groups = OnCreateGroup.class, message = "User's id should be empty")
     @NotNull(groups = {OnUpdateAndDeleteGroup.class, OnCreateTeacherGroup.class, OnCreateStudentGroup.class}, message = "User's id should be filled")

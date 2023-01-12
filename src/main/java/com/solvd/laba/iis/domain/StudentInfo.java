@@ -15,7 +15,7 @@ public class StudentInfo {
     private Integer admissionYear;
     private String faculty;
     private String speciality;
-    private UserInfo userInfo;
+    private UserInfo user;
     private Group group;
 
 }

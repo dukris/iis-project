@@ -1,6 +1,5 @@
 package com.solvd.laba.iis.web.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.solvd.laba.iis.web.dto.validation.OnCreateMarkGroup;
 import com.solvd.laba.iis.web.dto.validation.OnUpdateAndDeleteGroup;
 import jakarta.validation.Valid;
@@ -24,7 +23,7 @@ public class MarkDto {
     private Long id;
 
     @NotNull(message = "Date of mark should be filled")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate date;
 
     @NotNull(message = "Value of mark should be filled")

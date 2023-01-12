@@ -118,7 +118,7 @@ public class TeacherRepositoryImpl implements TeacherRepository {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(CREATE_QUERY,
                      Statement.RETURN_GENERATED_KEYS)) {
-            statement.setLong(1, teacherInfo.getUserInfo().getId());
+            statement.setLong(1, teacherInfo.getUser().getId());
             statement.executeUpdate();
             try (ResultSet key = statement.getGeneratedKeys()) {
                 if (key.next()) {
@@ -134,7 +134,7 @@ public class TeacherRepositoryImpl implements TeacherRepository {
     public void save(TeacherInfo teacherInfo) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(SAVE_QUERY)) {
-            statement.setLong(1, teacherInfo.getUserInfo().getId());
+            statement.setLong(1, teacherInfo.getUser().getId());
             statement.setLong(2, teacherInfo.getId());
             statement.executeUpdate();
         } catch (SQLException ex) {

@@ -124,7 +124,7 @@ public class StudentRepositoryImpl implements StudentRepository {
             statement.setInt(1, studentInfo.getAdmissionYear());
             statement.setString(2, studentInfo.getFaculty());
             statement.setString(3, studentInfo.getSpeciality());
-            statement.setLong(4, studentInfo.getUserInfo().getId());
+            statement.setLong(4, studentInfo.getUser().getId());
             statement.setLong(5, studentInfo.getGroup().getId());
             statement.executeUpdate();
             try (ResultSet key = statement.getGeneratedKeys()) {
@@ -144,7 +144,7 @@ public class StudentRepositoryImpl implements StudentRepository {
             statement.setInt(1, studentInfo.getAdmissionYear());
             statement.setString(2, studentInfo.getFaculty());
             statement.setString(3, studentInfo.getSpeciality());
-            statement.setLong(4, studentInfo.getUserInfo().getId());
+            statement.setLong(4, studentInfo.getUser().getId());
             statement.setLong(5, studentInfo.getGroup().getId());
             statement.setLong(6, studentInfo.getId());
             statement.executeUpdate();

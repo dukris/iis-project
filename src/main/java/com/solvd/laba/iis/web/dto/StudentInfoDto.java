@@ -36,7 +36,7 @@ public class StudentInfoDto {
 
     @NotNull(message = "Student should contain user")
     @Valid
-    private UserDto user;
+    private UserInfoDto user;
 
     @NotNull(message = "Student should contain group")
     @Valid

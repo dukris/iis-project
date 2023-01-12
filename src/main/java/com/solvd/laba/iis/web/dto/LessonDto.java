@@ -1,6 +1,5 @@
 package com.solvd.laba.iis.web.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.solvd.laba.iis.domain.Weekday;
 import com.solvd.laba.iis.web.dto.validation.OnCreateLessonGroup;
 import com.solvd.laba.iis.web.dto.validation.OnUpdateAndDeleteGroup;
@@ -31,11 +30,11 @@ public class LessonDto {
     private Weekday weekday;
 
     @NotNull(message = "Start time should be filled")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     private LocalTime startTime;
 
     @NotNull(message = "End time should be filled")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     private LocalTime endTime;
 
     @NotNull(message = "Lesson should contain subject")

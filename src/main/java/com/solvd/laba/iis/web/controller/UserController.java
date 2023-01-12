@@ -2,7 +2,7 @@ package com.solvd.laba.iis.web.controller;
 
 import com.solvd.laba.iis.domain.UserInfo;
 import com.solvd.laba.iis.service.UserService;
-import com.solvd.laba.iis.web.dto.UserDto;
+import com.solvd.laba.iis.web.dto.UserInfoDto;
 import com.solvd.laba.iis.web.dto.validation.OnCreateGroup;
 import com.solvd.laba.iis.web.dto.validation.OnUpdateAndDeleteGroup;
 import com.solvd.laba.iis.web.mapper.UserInfoMapper;
@@ -22,35 +22,35 @@ public class UserController {
     private final UserInfoMapper userInfoMapper;
 
     @GetMapping
-    public List<UserDto> getAll() {
-        List<UserDto> users = userInfoMapper.listToListDto(userService.getAll());
+    public List<UserInfoDto> getAll() {
+        List<UserInfoDto> users = userInfoMapper.listToListDto(userService.getAll());
         return users;
     }
 
     @GetMapping("/{id}")
-    public UserDto getById(@PathVariable long id) {
-        UserDto user = userInfoMapper.userToUserDto(userService.getById(id));
+    public UserInfoDto getById(@PathVariable long id) {
+        UserInfoDto user = userInfoMapper.userToUserDto(userService.getById(id));
         return user;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDto create(@RequestBody @Validated(OnCreateGroup.class) UserDto userDto) {
-        UserInfo userInfo = userInfoMapper.userDtoToUser(userDto);
+    public UserInfoDto create(@RequestBody @Validated(OnCreateGroup.class) UserInfoDto userInfoDto) {
+        UserInfo userInfo = userInfoMapper.userDtoToUser(userInfoDto);
         userInfo = userService.create(userInfo);
         return userInfoMapper.userToUserDto(userInfo);
     }
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@RequestBody @Validated(OnUpdateAndDeleteGroup.class) UserDto userDto) {
-        UserInfo userInfo = userInfoMapper.userDtoToUser(userDto);
+    public void delete(@RequestBody @Validated(OnUpdateAndDeleteGroup.class) UserInfoDto userInfoDto) {
+        UserInfo userInfo = userInfoMapper.userDtoToUser(userInfoDto);
         userService.delete(userInfo);
     }
 
     @PutMapping
-    public UserDto update(@RequestBody @Validated(OnUpdateAndDeleteGroup.class) UserDto userDto) {
-        UserInfo userInfo = userInfoMapper.userDtoToUser(userDto);
+    public UserInfoDto update(@RequestBody @Validated(OnUpdateAndDeleteGroup.class) UserInfoDto userInfoDto) {
+        UserInfo userInfo = userInfoMapper.userDtoToUser(userInfoDto);
         userInfo = userService.save(userInfo);
         return userInfoMapper.userToUserDto(userInfo);
     }

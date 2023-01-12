@@ -19,7 +19,7 @@ public abstract class TeacherRowMapper {
 
         teacher.setId(rs.getLong("teacher_id"));
         UserInfo userInfo = UserRowMapper.mapUser(rs);
-        teacher.setUserInfo(userInfo);
+        teacher.setUser(userInfo);
 
         Subject subject = SubjectRowMapper.mapSubject(rs);
         subjects.add(subject);
@@ -50,7 +50,7 @@ public abstract class TeacherRowMapper {
                 TeacherInfo teacher = new TeacherInfo();
                 teacher.setId(currentId);
                 UserInfo userInfo = UserRowMapper.mapUser(rs);
-                teacher.setUserInfo(userInfo);
+                teacher.setUser(userInfo);
 
                 Subject subject = SubjectRowMapper.mapSubject(rs);
                 List<Subject> subjects = new ArrayList<>();
@@ -71,7 +71,7 @@ public abstract class TeacherRowMapper {
             TeacherInfo teacher = new TeacherInfo();
             teacher.setId(rs.getLong("teacher_id"));
             UserInfo userInfo = UserRowMapper.mapUser(rs);
-            teacher.setUserInfo(userInfo);
+            teacher.setUser(userInfo);
             teachers.add(teacher);
         }
         return teachers;
