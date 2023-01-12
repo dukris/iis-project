@@ -1,6 +1,7 @@
 package com.solvd.laba.iis;
 
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import org.springframework.boot.SpringApplication;
@@ -32,7 +33,7 @@ public class IisApplication {
                 .serializerByType(LocalTime.class,
                         new LocalTimeSerializer(DateTimeFormatter.ofPattern(TIME_FORMAT)))
                 .deserializerByType(LocalTime.class,
-                        new LocalDateDeserializer(DateTimeFormatter.ofPattern(TIME_FORMAT)));
+                        new LocalTimeDeserializer(DateTimeFormatter.ofPattern(TIME_FORMAT)));
     }
 
 }

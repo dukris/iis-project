@@ -16,9 +16,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class SubjectRepositoryImpl implements SubjectRepository {
 
-    private static final String FIND_ALL_QUERY = "SELECT subjects.id as subject_id, subjects.name as subject_name FROM iis_schema.subjects";
-    private static final String FIND_BY_ID_QUERY = "SELECT subjects.id as subject_id, subjects.name as subject_name FROM iis_schema.subjects WHERE id = ?";
-    private static final String FIND_BY_NAME_QUERY = "SELECT subjects.id as subject_id, subjects.name as subject_name FROM iis_schema.subjects WHERE name = ?";
+    private static final String FIND_ALL_QUERY = "SELECT subjects.id as subject_id, subjects.name as subject_name FROM iis_schema.subjects ";
     private static final String CREATE_QUERY = "INSERT INTO iis_schema.subjects (name) VALUES(?)";
     private static final String DELETE_QUERY = "DELETE FROM iis_schema.subjects WHERE id = ?";
     private static final String SAVE_QUERY = "UPDATE iis_schema.subjects SET name = ? WHERE id = ?";
@@ -39,7 +37,7 @@ public class SubjectRepositoryImpl implements SubjectRepository {
     @Override
     public Optional<Subject> findById(long id) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(FIND_BY_ID_QUERY)) {
+             PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + "WHERE id = ?")) {
             statement.setLong(1, id);
             try (ResultSet rs = statement.executeQuery()) {
                 return rs.next() ? Optional.of(SubjectRowMapper.mapSubject(rs)) : Optional.empty();
@@ -52,7 +50,7 @@ public class SubjectRepositoryImpl implements SubjectRepository {
     @Override
     public Optional<Subject> findByName(String name) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(FIND_BY_NAME_QUERY)) {
+             PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + "WHERE name = ?")) {
             statement.setString(1, name);
             try (ResultSet rs = statement.executeQuery()) {
                 return rs.next() ? Optional.of(SubjectRowMapper.mapSubject(rs)) : Optional.empty();
@@ -65,8 +63,7 @@ public class SubjectRepositoryImpl implements SubjectRepository {
     @Override
     public void create(Subject subject) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(CREATE_QUERY,
-                     Statement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement statement = connection.prepareStatement(CREATE_QUERY, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, subject.getName());
             statement.executeUpdate();
             try (ResultSet key = statement.getGeneratedKeys()) {

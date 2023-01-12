@@ -17,13 +17,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class GroupRepositoryImpl implements GroupRepository {
 
-    private static final String FIND_ALL_QUERY = "SELECT groups.id as group_id, groups.number as group_number FROM iis_schema.groups";
-    private static final String FIND_BY_ID_QUERY = "SELECT groups.id as group_id, groups.number as group_number FROM iis_schema.groups WHERE id = ?";
-    private static final String FIND_BY_NUMBER_QUERY = "SELECT groups.id as group_id, groups.number as group_number FROM iis_schema.groups WHERE number = ?";
-    private static final String FIND_BY_CRITERIA_QUERY = """
-            SELECT groups.id as group_id, groups.number as group_number
-            FROM iis_schema.lessons
-            LEFT JOIN iis_schema.groups ON (lessons.group_id = groups.id) """;
+    private static final String FIND_ALL_QUERY = "SELECT DISTINCT groups.id as group_id, groups.number as group_number FROM iis_schema.groups ";
     private static final String CREATE_QUERY = "INSERT INTO iis_schema.groups (number) VALUES(?)";
     private static final String DELETE_QUERY = "DELETE FROM iis_schema.groups WHERE id = ?";
     private static final String SAVE_QUERY = "UPDATE iis_schema.groups SET number = ? WHERE id = ?";
@@ -44,7 +38,7 @@ public class GroupRepositoryImpl implements GroupRepository {
     @Override
     public Optional<Group> findById(long id) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(FIND_BY_ID_QUERY)) {
+             PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + "WHERE id = ?")) {
             statement.setLong(1, id);
             try (ResultSet rs = statement.executeQuery()) {
                 return rs.next() ? Optional.of(GroupRowMapper.mapGroup(rs)) : Optional.empty();
@@ -57,7 +51,7 @@ public class GroupRepositoryImpl implements GroupRepository {
     @Override
     public Optional<Group> findByNumber(int number) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(FIND_BY_NUMBER_QUERY)) {
+             PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + "WHERE number = ?")) {
             statement.setInt(1, number);
             try (ResultSet rs = statement.executeQuery()) {
                 return rs.next() ? Optional.of(GroupRowMapper.mapGroup(rs)) : Optional.empty();
@@ -80,9 +74,10 @@ public class GroupRepositoryImpl implements GroupRepository {
     }
 
     private String updateQuery(long teacherId, GroupSearchCriteria groupSearchCriteria) {
+        String joinQuery = "LEFT JOIN iis_schema.lessons ON (lessons.group_id = groups.id) ";
         return groupSearchCriteria.getSubjectId() != 0 ?
-                FIND_BY_CRITERIA_QUERY + "WHERE lessons.teacher_id = " + teacherId + " AND lessons.subject_id = " + groupSearchCriteria.getSubjectId() :
-                FIND_BY_CRITERIA_QUERY + "WHERE lessons.teacher_id = " + teacherId;
+                FIND_ALL_QUERY + joinQuery + "WHERE lessons.teacher_id = " + teacherId + " AND lessons.subject_id = " + groupSearchCriteria.getSubjectId() :
+                FIND_ALL_QUERY + joinQuery + "WHERE lessons.teacher_id = " + teacherId;
     }
 
     @Override

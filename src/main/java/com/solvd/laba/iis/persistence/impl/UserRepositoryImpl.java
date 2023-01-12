@@ -20,16 +20,6 @@ public class UserRepositoryImpl implements UserRepository {
             SELECT users_info.id as user_id,  users_info.name as user_name, users_info.surname as user_surname,
             users_info.email as user_email, users_info.password as user_password, users_info.role as user_role
             FROM iis_schema.users_info""";
-    private static final String FIND_BY_ID_QUERY = """
-            SELECT users_info.id as user_id,  users_info.name as user_name, users_info.surname as user_surname,
-            users_info.email as user_email, users_info.password as user_password, users_info.role as user_role
-            FROM iis_schema.users_info
-            WHERE id = ?""";
-    private static final String FIND_BY_EMAIL_QUERY = """
-            SELECT users_info.id as user_id,  users_info.name as user_name, users_info.surname as user_surname,
-            users_info.email as user_email, users_info.password as user_password, users_info.role as user_role
-            FROM iis_schema.users_info
-            WHERE email = ?""";
     private static final String CREATE_QUERY = "INSERT INTO iis_schema.users_info (name, surname, email, password, role) VALUES(?, ?, ?, ?, ?)";
     private static final String DELETE_QUERY = "DELETE FROM iis_schema.users_info WHERE id = ?";
     private static final String SAVE_QUERY = "UPDATE iis_schema.users_info SET name = ?, surname = ?, email = ?, password = ?, role = ? WHERE id = ?";
@@ -50,7 +40,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Optional<UserInfo> findById(long id) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(FIND_BY_ID_QUERY)) {
+             PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + " WHERE id = ?")) {
             statement.setLong(1, id);
             try (ResultSet rs = statement.executeQuery()) {
                 return rs.next() ? Optional.of(UserRowMapper.mapUser(rs)) : Optional.empty();
@@ -63,7 +53,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Optional<UserInfo> findByEmail(String email) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(FIND_BY_EMAIL_QUERY)) {
+             PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + " WHERE email = ?")) {
             statement.setString(1, email);
             try (ResultSet rs = statement.executeQuery()) {
                 return rs.next() ? Optional.of(UserRowMapper.mapUser(rs)) : Optional.empty();

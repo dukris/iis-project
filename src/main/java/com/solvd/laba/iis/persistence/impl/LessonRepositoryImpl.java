@@ -28,29 +28,6 @@ public class LessonRepositoryImpl implements LessonRepository {
             LEFT JOIN iis_schema.subjects ON (lessons.subject_id = subjects.id)
             LEFT JOIN iis_schema.groups ON (lessons.group_id = groups.id)
             LEFT JOIN iis_schema.teachers_info ON (lessons.teacher_id = teachers_info.id)
-            LEFT JOIN iis_schema.users_info ON (teachers_info.user_id = users_info.id)""";
-    private static final String FIND_BY_ID_QUERY = """
-            SELECT lessons.id as lesson_id, lessons.room as lesson_room, lessons.weekday as lesson_weekday, lessons.start_time as start_time, lessons.end_time as end_time,
-            subjects.id as subject_id,  subjects.name as subject_name,
-            groups.id as group_id, groups.number as group_number,
-            teachers_info.id as teacher_id,
-            users_info.id as user_id, users_info.name as user_name, users_info.surname as user_surname, users_info.email as user_email, users_info.password as user_password, users_info.role as user_role
-            FROM iis_schema.lessons
-            LEFT JOIN iis_schema.subjects ON (lessons.subject_id = subjects.id)
-            LEFT JOIN iis_schema.groups ON (lessons.group_id = groups.id)
-            LEFT JOIN iis_schema.teachers_info ON (lessons.teacher_id = teachers_info.id)
-            LEFT JOIN iis_schema.users_info ON (teachers_info.user_id = users_info.id)
-            WHERE lessons.id = ?""";
-    private static final String FIND_BY_CRITERIA_QUERY = """
-            SELECT lessons.id as lesson_id, lessons.room as lesson_room, lessons.weekday as lesson_weekday, lessons.start_time as start_time, lessons.end_time as end_time,
-            subjects.id as subject_id,  subjects.name as subject_name,
-            groups.id as group_id, groups.number as group_number,
-            teachers_info.id as teacher_id,
-            users_info.id as user_id, users_info.name as user_name, users_info.surname as user_surname, users_info.email as user_email, users_info.password as user_password, users_info.role as user_role
-            FROM iis_schema.lessons
-            LEFT JOIN iis_schema.subjects ON (lessons.subject_id = subjects.id)
-            LEFT JOIN iis_schema.groups ON (lessons.group_id = groups.id)
-            LEFT JOIN iis_schema.teachers_info ON (lessons.teacher_id = teachers_info.id)
             LEFT JOIN iis_schema.users_info ON (teachers_info.user_id = users_info.id) """;
     private static final String CREATE_QUERY = "INSERT INTO iis_schema.lessons (room, weekday, start_time, end_time, subject_id, group_id, teacher_id) VALUES(?, ?, ?, ?, ?, ?, ?)";
     private static final String DELETE_QUERY = "DELETE FROM iis_schema.lessons WHERE id = ?";
@@ -72,7 +49,7 @@ public class LessonRepositoryImpl implements LessonRepository {
     @Override
     public Optional<Lesson> findById(long id) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(FIND_BY_ID_QUERY)) {
+             PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + "WHERE lessons.id = ?")) {
             statement.setLong(1, id);
             try (ResultSet rs = statement.executeQuery()) {
                 return rs.next() ? Optional.of(LessonRowMapper.mapLesson(rs)) : Optional.empty();
@@ -108,14 +85,14 @@ public class LessonRepositoryImpl implements LessonRepository {
 
     private String updateStudentQuery(long groupId, LessonSearchCriteria lessonSearchCriteria) {
         return Objects.nonNull(lessonSearchCriteria.getWeekday()) ?
-                FIND_BY_CRITERIA_QUERY + "WHERE groups.id = " + groupId + " AND lessons.weekday = \'" + lessonSearchCriteria.getWeekday().toUpperCase() + "\'" :
-                FIND_BY_CRITERIA_QUERY + "WHERE groups.id = " + groupId;
+                FIND_ALL_QUERY + "WHERE groups.id = " + groupId + " AND lessons.weekday = \'" + lessonSearchCriteria.getWeekday().toUpperCase() + "\'" :
+                FIND_ALL_QUERY + "WHERE groups.id = " + groupId;
     }
 
     private String updateTeacherQuery(long teacherId, LessonSearchCriteria lessonSearchCriteria) {
         return Objects.nonNull(lessonSearchCriteria.getWeekday()) ?
-                FIND_BY_CRITERIA_QUERY + "WHERE teachers_info.id = " + teacherId + " AND lessons.weekday = \'" + lessonSearchCriteria.getWeekday().toUpperCase() + "\'" :
-                FIND_BY_CRITERIA_QUERY + "WHERE teachers_info.id = " + teacherId;
+                FIND_ALL_QUERY + "WHERE teachers_info.id = " + teacherId + " AND lessons.weekday = \'" + lessonSearchCriteria.getWeekday().toUpperCase() + "\'" :
+                FIND_ALL_QUERY + "WHERE teachers_info.id = " + teacherId;
     }
 
     @Override

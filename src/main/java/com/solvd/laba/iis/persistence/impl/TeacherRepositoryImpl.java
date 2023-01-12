@@ -24,37 +24,7 @@ public class TeacherRepositoryImpl implements TeacherRepository {
             FROM iis_schema.teachers_info
             LEFT JOIN iis_schema.users_info ON (teachers_info.user_id = users_info.id)
             LEFT JOIN iis_schema.teachers_subjects ON (teachers_info.id = teachers_subjects.teacher_id)
-            LEFT JOIN iis_schema.subjects ON (teachers_subjects.subject_id = subjects.id)""";
-    private static final String FIND_BY_ID_QUERY = """
-            SELECT teachers_info.id as teacher_id,
-            users_info.id as user_id, users_info.name as user_name, users_info.surname as user_surname,
-            users_info.email as user_email, users_info.password as user_password, users_info.role as user_role,
-            subjects.id as subject_id, subjects.name as subject_name
-            FROM iis_schema.teachers_info
-            LEFT JOIN iis_schema.users_info ON (teachers_info.user_id = users_info.id)
-            LEFT JOIN iis_schema.teachers_subjects ON (teachers_info.id = teachers_subjects.teacher_id)
-            LEFT JOIN iis_schema.subjects ON (teachers_subjects.subject_id = subjects.id)
-            WHERE teachers_info.id = ?""";
-    private static final String FIND_BY_GROUP_QUERY = """
-            SELECT teachers_info.id as teacher_id,
-            users_info.id as user_id, users_info.name as user_name, users_info.surname as user_surname,
-            users_info.email as user_email, users_info.password as user_password, users_info.role as user_role,
-            subjects.id as subject_id, subjects.name as subject_name
-            FROM iis_schema.teachers_info
-            LEFT JOIN iis_schema.users_info ON (teachers_info.user_id = users_info.id)
-            LEFT JOIN iis_schema.teachers_subjects ON (teachers_info.id = teachers_subjects.teacher_id)
-            LEFT JOIN iis_schema.subjects ON (teachers_subjects.subject_id = subjects.id)
-            LEFT JOIN iis_schema.lessons ON (teachers_info.id = lessons.teacher_id)
-            WHERE lessons.group_id = ?""";
-    private static final String FIND_BY_SUBJECT_QUERY = """
-            SELECT teachers_info.id as teacher_id,
-            users_info.id as user_id, users_info.name as user_name, users_info.surname as user_surname,
-            users_info.email as user_email, users_info.password as user_password, users_info.role as user_role
-            FROM iis_schema.teachers_info
-            LEFT JOIN iis_schema.users_info ON (teachers_info.user_id = users_info.id)
-            LEFT JOIN iis_schema.teachers_subjects ON (teachers_info.id = teachers_subjects.teacher_id)
-            LEFT JOIN iis_schema.subjects ON (teachers_subjects.subject_id = subjects.id)
-            WHERE subjects.id = ?""";
+            LEFT JOIN iis_schema.subjects ON (teachers_subjects.subject_id = subjects.id) """;
     private static final String CREATE_QUERY = "INSERT INTO iis_schema.teachers_info (user_id) VALUES(?)";
     private static final String DELETE_QUERY = "DELETE FROM iis_schema.teachers_info WHERE id = ?";
     private static final String SAVE_QUERY = "UPDATE iis_schema.teachers_info SET user_id = ? WHERE id = ?";
@@ -77,7 +47,7 @@ public class TeacherRepositoryImpl implements TeacherRepository {
     @Override
     public Optional<TeacherInfo> findById(long id) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(FIND_BY_ID_QUERY)) {
+             PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + "WHERE teachers_info.id = ?")) {
             statement.setLong(1, id);
             try (ResultSet rs = statement.executeQuery()) {
                 return rs.next() ? Optional.of(TeacherRowMapper.mapTeacher(rs)) : Optional.empty();
@@ -89,8 +59,9 @@ public class TeacherRepositoryImpl implements TeacherRepository {
 
     @Override
     public List<TeacherInfo> findByGroup(long groupId) {
+        String joinQuery = "LEFT JOIN iis_schema.lessons ON (teachers_info.id = lessons.teacher_id) ";
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(FIND_BY_GROUP_QUERY)) {
+             PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + joinQuery + "WHERE lessons.group_id = ?")) {
             statement.setLong(1, groupId);
             try (ResultSet rs = statement.executeQuery()) {
                 return TeacherRowMapper.mapTeachers(rs);
@@ -103,7 +74,7 @@ public class TeacherRepositoryImpl implements TeacherRepository {
     @Override
     public List<TeacherInfo> findBySubject(long subjectId) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(FIND_BY_SUBJECT_QUERY)) {
+             PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + "WHERE subjects.id = ?")) {
             statement.setLong(1, subjectId);
             try (ResultSet rs = statement.executeQuery()) {
                 return TeacherRowMapper.mapTeachersBySubject(rs);

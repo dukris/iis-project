@@ -64,8 +64,7 @@ public class ControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorDto handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
         ErrorDto errorDto = new ErrorDto();
-        errorDto.setMessage("The format of date or time is incorrect (pattern for date: yyyy-MM-dd, pattern for time: HH:mm)");
-        log.error(ex.getMessage(), ex);
+        errorDto.setMessage(ex.getMessage());
         return errorDto;
     }
 

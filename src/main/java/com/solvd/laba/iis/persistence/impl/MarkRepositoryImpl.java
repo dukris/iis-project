@@ -33,59 +33,6 @@ public class MarkRepositoryImpl implements MarkRepository {
             LEFT JOIN iis_schema.teachers_info ON (marks.teacher_id = teachers_info.id)
             LEFT JOIN iis_schema.groups ON (students_info.group_id = groups.id)
             LEFT JOIN iis_schema.users_info teacher on  (teacher.id = teachers_info.user_id)
-            LEFT JOIN iis_schema.users_info student on (student.id = students_info.user_id)""";
-    private static final String FIND_BY_ID_QUERY = """
-            SELECT marks.id as mark_id, marks.date as mark_date, marks.value as mark_value, marks.student_id as student_id,
-            students_info.year as student_year, students_info.faculty as student_faculty, students_info.speciality as student_speciality,
-            student.id  as student_user_id, student.name as student_user_name, student.surname  as student_user_surname,
-            student.email as student_user_email, student.password  as student_user_password, student.role as student_user_role,
-            marks.teacher_id  as teacher_id,
-            teacher.id  as teacher_user_id, teacher.name as teacher_user_name, teacher.surname  as teacher_user_surname,
-            teacher.email as teacher_user_email, teacher.password as teacher_user_password, teacher.role as teacher_user_role,
-            groups.id as group_id, groups.number as group_number,
-            subjects.id as subject_id, subjects.name as subject_name
-            FROM iis_schema.marks
-            LEFT JOIN iis_schema.subjects ON (marks.subject_id = subjects.id)
-            LEFT JOIN iis_schema.students_info ON (marks.student_id = students_info.id)
-            LEFT JOIN iis_schema.teachers_info ON (marks.teacher_id = teachers_info.id)
-            LEFT JOIN iis_schema.groups ON (students_info.group_id = groups.id)
-            LEFT JOIN iis_schema.users_info teacher on  (teacher.id = teachers_info.user_id)
-            LEFT JOIN iis_schema.users_info student on (student.id = students_info.user_id)
-            WHERE marks.id = ?""";
-    private static final String FIND_BY_SUBJECT_AND_TEACHER_QUERY = """
-            SELECT marks.id as mark_id, marks.date as mark_date, marks.value as mark_value, marks.student_id as student_id,
-            students_info.year as student_year, students_info.faculty as student_faculty, students_info.speciality as student_speciality,
-            student.id  as student_user_id, student.name as student_user_name, student.surname  as student_user_surname,
-            student.email as student_user_email, student.password  as student_user_password, student.role as student_user_role,
-            marks.teacher_id  as teacher_id,
-            teacher.id  as teacher_user_id, teacher.name as teacher_user_name, teacher.surname  as teacher_user_surname,
-            teacher.email as teacher_user_email, teacher.password as teacher_user_password, teacher.role as teacher_user_role,
-            groups.id as group_id, groups.number as group_number,
-            subjects.id as subject_id, subjects.name as subject_name
-            FROM iis_schema.marks
-            LEFT JOIN iis_schema.subjects ON (marks.subject_id = subjects.id)
-            LEFT JOIN iis_schema.students_info ON (marks.student_id = students_info.id)
-            LEFT JOIN iis_schema.teachers_info ON (marks.teacher_id = teachers_info.id)
-            LEFT JOIN iis_schema.groups ON (students_info.group_id = groups.id)
-            LEFT JOIN iis_schema.users_info teacher on  (teacher.id = teachers_info.user_id)
-            LEFT JOIN iis_schema.users_info student on (student.id = students_info.user_id)
-            WHERE subjects.id = ? AND marks.teacher_id = ?""";
-    private static final String FIND_BY_CRITERIA_QUERY = """
-            SELECT marks.id as mark_id, marks.date as mark_date, marks.value as mark_value, marks.student_id as student_id,
-            students_info.year as student_year, students_info.faculty as student_faculty, students_info.speciality as student_speciality,
-            student.id  as student_user_id, student.name as student_user_name, student.surname  as student_user_surname,
-            student.email as student_user_email, student.password  as student_user_password, student.role as student_user_role,
-            marks.teacher_id  as teacher_id,
-            teacher.id  as teacher_user_id, teacher.name as teacher_user_name, teacher.surname  as teacher_user_surname,
-            teacher.email as teacher_user_email, teacher.password as teacher_user_password, teacher.role as teacher_user_role,
-            groups.id as group_id, groups.number as group_number,
-            subjects.id as subject_id, subjects.name as subject_name
-            FROM iis_schema.marks
-            LEFT JOIN iis_schema.subjects ON (marks.subject_id = subjects.id)
-            LEFT JOIN iis_schema.students_info ON (marks.student_id = students_info.id)
-            LEFT JOIN iis_schema.teachers_info ON (marks.teacher_id = teachers_info.id)
-            LEFT JOIN iis_schema.groups ON (students_info.group_id = groups.id)
-            LEFT JOIN iis_schema.users_info teacher on  (teacher.id = teachers_info.user_id)
             LEFT JOIN iis_schema.users_info student on (student.id = students_info.user_id) """;
     private static final String CREATE_QUERY = "INSERT INTO iis_schema.marks (date, value, student_id, teacher_id, subject_id) VALUES(?, ?, ?, ?, ?)";
     private static final String DELETE_QUERY = "DELETE FROM iis_schema.marks WHERE id = ?";
@@ -107,7 +54,7 @@ public class MarkRepositoryImpl implements MarkRepository {
     @Override
     public Optional<Mark> findById(long id) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(FIND_BY_ID_QUERY)) {
+             PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + "WHERE marks.id = ?")) {
             statement.setLong(1, id);
             try (ResultSet rs = statement.executeQuery()) {
                 return rs.next() ? Optional.of(MarkRowMapper.mapMark(rs)) : Optional.empty();
@@ -120,11 +67,10 @@ public class MarkRepositoryImpl implements MarkRepository {
     @Override
     public List<Mark> findBySubjectAndTeacher(long subjectId, long teacherId) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(FIND_BY_SUBJECT_AND_TEACHER_QUERY)) {
+             PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + "WHERE subjects.id = ? AND marks.teacher_id = ?")) {
             statement.setLong(1, subjectId);
             statement.setLong(2, teacherId);
             try (ResultSet rs = statement.executeQuery()) {
-//                return MarkRowMapper.mapMarksBySubjectAndTeacher(rs);
                 return MarkRowMapper.mapMarks(rs);
             }
         } catch (SQLException ex) {
@@ -137,7 +83,6 @@ public class MarkRepositoryImpl implements MarkRepository {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             try (ResultSet rs = statement.executeQuery(updateQuery(studentId, markSearchCriteria))) {
-//                return MarkRowMapper.mapMarksByStudent(rs);
                 return MarkRowMapper.mapMarks(rs);
             }
         } catch (SQLException ex) {
@@ -147,8 +92,8 @@ public class MarkRepositoryImpl implements MarkRepository {
 
     private String updateQuery(long studentId, MarkSearchCriteria markSearchCriteria) {
         return markSearchCriteria.getSubjectId() != 0 ?
-                FIND_BY_CRITERIA_QUERY + "WHERE marks.student_id = " + studentId + " AND marks.subject_id = " + markSearchCriteria.getSubjectId() :
-                FIND_BY_CRITERIA_QUERY + "WHERE marks.student_id = " + studentId;
+                FIND_ALL_QUERY + "WHERE marks.student_id = " + studentId + " AND marks.subject_id = " + markSearchCriteria.getSubjectId() :
+                FIND_ALL_QUERY + "WHERE marks.student_id = " + studentId;
     }
 
     @Override
