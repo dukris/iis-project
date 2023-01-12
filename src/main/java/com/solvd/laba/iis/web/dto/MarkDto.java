@@ -1,7 +1,6 @@
 package com.solvd.laba.iis.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.solvd.laba.iis.web.dto.validation.OnCreateMarkGroup;
 import com.solvd.laba.iis.web.dto.validation.OnUpdateAndDeleteGroup;
 import jakarta.validation.Valid;
@@ -18,7 +17,6 @@ import java.time.LocalDate;
 @Setter
 @AllArgsConstructor
 @RequiredArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class MarkDto {
 
     @Null(groups = OnCreateMarkGroup.class, message = "Mark's id should be empty")

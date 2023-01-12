@@ -1,8 +1,7 @@
 package com.solvd.laba.iis.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.solvd.laba.iis.domain.*;
+import com.solvd.laba.iis.domain.Weekday;
 import com.solvd.laba.iis.web.dto.validation.OnCreateLessonGroup;
 import com.solvd.laba.iis.web.dto.validation.OnUpdateAndDeleteGroup;
 import jakarta.validation.Valid;
@@ -19,7 +18,6 @@ import java.time.LocalTime;
 @Setter
 @AllArgsConstructor
 @RequiredArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class LessonDto {
 
     @Null(groups = OnCreateLessonGroup.class, message = "Lesson's id should be empty")

@@ -1,7 +1,9 @@
 package com.solvd.laba.iis.web.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.solvd.laba.iis.web.dto.validation.*;
+import com.solvd.laba.iis.web.dto.validation.OnCreateLessonGroup;
+import com.solvd.laba.iis.web.dto.validation.OnCreateMarkGroup;
+import com.solvd.laba.iis.web.dto.validation.OnCreateTeacherGroup;
+import com.solvd.laba.iis.web.dto.validation.OnUpdateAndDeleteGroup;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
@@ -16,7 +18,6 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @RequiredArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class TeacherInfoDto {
 
     @Null(groups = OnCreateTeacherGroup.class, message = "Teacher's id should be empty")

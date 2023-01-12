@@ -1,6 +1,5 @@
 package com.solvd.laba.iis.web.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.solvd.laba.iis.web.dto.validation.OnCreateMarkGroup;
 import com.solvd.laba.iis.web.dto.validation.OnCreateStudentGroup;
 import com.solvd.laba.iis.web.dto.validation.OnUpdateAndDeleteGroup;
@@ -18,7 +17,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @RequiredArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class StudentInfoDto {
 
     @Null(groups = OnCreateStudentGroup.class, message = "Student's id should be empty")

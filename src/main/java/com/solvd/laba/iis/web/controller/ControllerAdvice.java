@@ -59,8 +59,6 @@ public class ControllerAdvice {
         return errorDto;
     }
 
-
-
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorDto handleException(Exception ex) {

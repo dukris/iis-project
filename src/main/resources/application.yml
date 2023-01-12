@@ -7,3 +7,5 @@ spring:
   sql:
     init:
       mode: always
+  jackson:
+    default-property-inclusion: NON_NULL
