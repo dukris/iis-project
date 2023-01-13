@@ -1,11 +1,11 @@
 package com.solvd.laba.iis.web.controller;
 
-import com.solvd.laba.iis.domain.Mark;
+import com.solvd.laba.iis.domain.mark.Mark;
 import com.solvd.laba.iis.service.MarkService;
-import com.solvd.laba.iis.web.dto.MarkDto;
+import com.solvd.laba.iis.web.dto.mark.MarkDto;
 import com.solvd.laba.iis.web.dto.validation.OnCreateMarkGroup;
-import com.solvd.laba.iis.web.dto.validation.OnUpdateAndDeleteGroup;
-import com.solvd.laba.iis.web.mapper.MarkMapper;
+import com.solvd.laba.iis.web.dto.validation.OnUpdateGroup;
+import com.solvd.laba.iis.web.mapper.mark.MarkMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -23,22 +23,23 @@ public class MarkController {
 
     @GetMapping()
     public List<MarkDto> getAll() {
-        List<MarkDto> marks = markMapper.listToListDto(markService.getAll());
+        List<MarkDto> marks = markMapper.entityToDto(markService.findAll());
         return marks;
     }
 
     @GetMapping("/{id}")
     public MarkDto getById(@PathVariable long id) {
-        MarkDto markDto = markMapper.markToMarkDto(markService.getById(id));
+        MarkDto markDto = markMapper.entityToDto(markService.findById(id));
         return markDto;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public MarkDto create(@RequestBody @Validated(OnCreateMarkGroup.class) MarkDto markDto) {
-        Mark mark = markMapper.markDtoToMark(markDto);
+        Mark mark = markMapper.dtoToEntity(markDto);
         mark = markService.create(mark);
-        return markMapper.markToMarkDto(mark);
+        markDto = markMapper.entityToDto(mark);
+        return markDto;
     }
 
     @DeleteMapping("/{id}")
@@ -48,10 +49,11 @@ public class MarkController {
     }
 
     @PutMapping
-    public MarkDto update(@RequestBody @Validated(OnUpdateAndDeleteGroup.class) MarkDto markDto) {
-        Mark mark = markMapper.markDtoToMark(markDto);
+    public MarkDto update(@RequestBody @Validated(OnUpdateGroup.class) MarkDto markDto) {
+        Mark mark = markMapper.dtoToEntity(markDto);
         mark = markService.save(mark);
-        return markMapper.markToMarkDto(mark);
+        markDto = markMapper.entityToDto(mark);
+        return markDto;
     }
 
 }

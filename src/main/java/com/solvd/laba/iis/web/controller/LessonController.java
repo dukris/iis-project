@@ -1,11 +1,11 @@
 package com.solvd.laba.iis.web.controller;
 
-import com.solvd.laba.iis.domain.Lesson;
+import com.solvd.laba.iis.domain.lesson.Lesson;
 import com.solvd.laba.iis.service.LessonService;
-import com.solvd.laba.iis.web.dto.LessonDto;
+import com.solvd.laba.iis.web.dto.lesson.LessonDto;
 import com.solvd.laba.iis.web.dto.validation.OnCreateLessonGroup;
-import com.solvd.laba.iis.web.dto.validation.OnUpdateAndDeleteGroup;
-import com.solvd.laba.iis.web.mapper.LessonMapper;
+import com.solvd.laba.iis.web.dto.validation.OnUpdateGroup;
+import com.solvd.laba.iis.web.mapper.lesson.LessonMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -23,22 +23,23 @@ public class LessonController {
 
     @GetMapping
     public List<LessonDto> getAll() {
-        List<LessonDto> lessons = lessonMapper.listToListDto(lessonService.getAll());
+        List<LessonDto> lessons = lessonMapper.entityToDto(lessonService.findAll());
         return lessons;
     }
 
     @GetMapping("/{id}")
     public LessonDto getById(@PathVariable long id) {
-        LessonDto lesson = lessonMapper.lessonToLessonDto(lessonService.getById(id));
+        LessonDto lesson = lessonMapper.entityToDto(lessonService.findById(id));
         return lesson;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public LessonDto create(@RequestBody @Validated(OnCreateLessonGroup.class) LessonDto lessonDto) {
-        Lesson lesson = lessonMapper.lessonDtoToLesson(lessonDto);
+        Lesson lesson = lessonMapper.dtoToEntity(lessonDto);
         lesson = lessonService.create(lesson);
-        return lessonMapper.lessonToLessonDto(lesson);
+        lessonDto = lessonMapper.entityToDto(lesson);
+        return lessonDto;
     }
 
     @DeleteMapping("/{id}")
@@ -48,10 +49,11 @@ public class LessonController {
     }
 
     @PutMapping
-    public LessonDto update(@RequestBody @Validated(OnUpdateAndDeleteGroup.class) LessonDto lessonDto) {
-        Lesson lesson = lessonMapper.lessonDtoToLesson(lessonDto);
+    public LessonDto update(@RequestBody @Validated(OnUpdateGroup.class) LessonDto lessonDto) {
+        Lesson lesson = lessonMapper.dtoToEntity(lessonDto);
         lesson = lessonService.save(lesson);
-        return lessonMapper.lessonToLessonDto(lesson);
+        lessonDto = lessonMapper.entityToDto(lesson);
+        return lessonDto;
     }
 
 }

@@ -30,23 +30,23 @@ public class UserRepositoryImpl implements UserRepository {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             try (ResultSet rs = statement.executeQuery(FIND_ALL_QUERY)) {
-                return UserRowMapper.mapUsers(rs);
+                return UserRowMapper.mapRows(rs);
             }
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while finding all userInfos");
+            throw new ResourceMappingException("Exception occurred while finding all userInfos", ex);
         }
     }
 
     @Override
-    public Optional<UserInfo> findById(long id) {
+    public Optional<UserInfo> findById(Long id) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + " WHERE id = ?")) {
             statement.setLong(1, id);
             try (ResultSet rs = statement.executeQuery()) {
-                return rs.next() ? Optional.of(UserRowMapper.mapUser(rs)) : Optional.empty();
+                return rs.next() ? Optional.of(UserRowMapper.mapRow(rs)) : Optional.empty();
             }
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while finding user by id = " + id);
+            throw new ResourceMappingException("Exception occurred while finding user by id = " + id, ex);
         }
     }
 
@@ -56,10 +56,10 @@ public class UserRepositoryImpl implements UserRepository {
              PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + " WHERE email = ?")) {
             statement.setString(1, email);
             try (ResultSet rs = statement.executeQuery()) {
-                return rs.next() ? Optional.of(UserRowMapper.mapUser(rs)) : Optional.empty();
+                return rs.next() ? Optional.of(UserRowMapper.mapRow(rs)) : Optional.empty();
             }
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while finding user by email = " + email);
+            throw new ResourceMappingException("Exception occurred while finding user by email = " + email, ex);
         }
     }
 
@@ -80,7 +80,7 @@ public class UserRepositoryImpl implements UserRepository {
                 }
             }
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while creating user");
+            throw new ResourceMappingException("Exception occurred while creating user", ex);
         }
     }
 
@@ -96,18 +96,18 @@ public class UserRepositoryImpl implements UserRepository {
             statement.setLong(6, userInfo.getId());
             statement.executeUpdate();
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while saving user with id = " + userInfo.getId());
+            throw new ResourceMappingException("Exception occurred while saving user with id = " + userInfo.getId(), ex);
         }
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(Long id) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)) {
             statement.setLong(1, id);
             statement.executeUpdate();
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while deleting user with id = " + id);
+            throw new ResourceMappingException("Exception occurred while deleting user with id = " + id, ex);
         }
     }
 

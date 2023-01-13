@@ -9,12 +9,10 @@ import java.util.List;
 @Mapper(componentModel = "spring", uses = {UserInfoMapper.class, SubjectMapper.class})
 public interface TeacherInfoMapper {
 
-    TeacherInfoDto teacherInfoToTeacherInfoDto(TeacherInfo teacherInfo);
+    TeacherInfoDto entityToDto(TeacherInfo teacherInfo);
 
-    TeacherInfo teacherInfoDtoToTeacherInfo(TeacherInfoDto teacherInfoDto);
+    TeacherInfo dtoToEntity(TeacherInfoDto teacherInfoDto);
 
-    List<TeacherInfoDto> listToListDto(List<TeacherInfo> teacherInfos);
-
-    List<TeacherInfo> listDtoToList(List<TeacherInfoDto> teacherInfoDtos);
+    List<TeacherInfoDto> entityToDto(List<TeacherInfo> teacherInfos);
 
 }

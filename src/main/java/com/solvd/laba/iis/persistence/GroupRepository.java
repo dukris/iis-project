@@ -1,7 +1,7 @@
 package com.solvd.laba.iis.persistence;
 
-import com.solvd.laba.iis.domain.Group;
-import com.solvd.laba.iis.domain.criteria.GroupSearchCriteria;
+import com.solvd.laba.iis.domain.group.Group;
+import com.solvd.laba.iis.domain.group.GroupSearchCriteria;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,16 +10,16 @@ public interface GroupRepository {
 
     List<Group> findAll();
 
-    Optional<Group> findById(long id);
+    Optional<Group> findById(Long id);
 
-    Optional<Group> findByNumber(int number);
+    Optional<Group> findByNumber(Integer number);
 
-    List<Group> findByCriteria(long teacherId, GroupSearchCriteria groupSearchCriteria);
+    List<Group> findByCriteria(Long teacherId, GroupSearchCriteria groupSearchCriteria);
 
     void create(Group group);
 
     void save(Group group);
 
-    void delete(long id);
+    void delete(Long id);
 
 }

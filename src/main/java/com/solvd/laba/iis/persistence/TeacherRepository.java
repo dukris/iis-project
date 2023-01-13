@@ -9,20 +9,20 @@ public interface TeacherRepository {
 
     List<TeacherInfo> findAll();
 
-    Optional<TeacherInfo> findById(long id);
+    Optional<TeacherInfo> findById(Long id);
 
-    List<TeacherInfo> findByGroup(long groupId);
+    List<TeacherInfo> findByGroup(Long groupId);
 
-    List<TeacherInfo> findBySubject(long subjectId);
+    List<TeacherInfo> findBySubject(Long subjectId);
 
     void create(TeacherInfo teacherInfo);
 
     void save(TeacherInfo teacherInfo);
 
-    void delete(long id);
+    void delete(Long id);
 
-    void deleteSubject(long teacherId, long subjectId);
+    void deleteSubject(Long teacherId, Long subjectId);
 
-    void addSubject(long teacherId, long subjectId);
+    void addSubject(Long teacherId, Long subjectId);
 
 }

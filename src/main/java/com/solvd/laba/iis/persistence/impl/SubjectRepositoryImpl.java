@@ -27,23 +27,23 @@ public class SubjectRepositoryImpl implements SubjectRepository {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             try (ResultSet rs = statement.executeQuery(FIND_ALL_QUERY)) {
-                return SubjectRowMapper.mapSubjects(rs);
+                return SubjectRowMapper.mapRows(rs);
             }
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while finding all groups");
+            throw new ResourceMappingException("Exception occurred while finding all groups", ex);
         }
     }
 
     @Override
-    public Optional<Subject> findById(long id) {
+    public Optional<Subject> findById(Long id) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + "WHERE id = ?")) {
             statement.setLong(1, id);
             try (ResultSet rs = statement.executeQuery()) {
-                return rs.next() ? Optional.of(SubjectRowMapper.mapSubject(rs)) : Optional.empty();
+                return rs.next() ? Optional.of(SubjectRowMapper.mapRow(rs)) : Optional.empty();
             }
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while finding subject by id = " + id);
+            throw new ResourceMappingException("Exception occurred while finding subject by id = " + id, ex);
         }
     }
 
@@ -53,10 +53,10 @@ public class SubjectRepositoryImpl implements SubjectRepository {
              PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + "WHERE name = ?")) {
             statement.setString(1, name);
             try (ResultSet rs = statement.executeQuery()) {
-                return rs.next() ? Optional.of(SubjectRowMapper.mapSubject(rs)) : Optional.empty();
+                return rs.next() ? Optional.of(SubjectRowMapper.mapRow(rs)) : Optional.empty();
             }
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while finding subject by name = " + name);
+            throw new ResourceMappingException("Exception occurred while finding subject by name = " + name, ex);
         }
     }
 
@@ -72,7 +72,7 @@ public class SubjectRepositoryImpl implements SubjectRepository {
                 }
             }
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while creating subject");
+            throw new ResourceMappingException("Exception occurred while creating subject", ex);
         }
     }
 
@@ -84,18 +84,18 @@ public class SubjectRepositoryImpl implements SubjectRepository {
             statement.setLong(2, subject.getId());
             statement.executeUpdate();
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while saving subject with id = " + subject.getId());
+            throw new ResourceMappingException("Exception occurred while saving subject with id = " + subject.getId(), ex);
         }
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(Long id) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)) {
             statement.setLong(1, id);
             statement.executeUpdate();
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while deleting subject with id = " + id);
+            throw new ResourceMappingException("Exception occurred while deleting subject with id = " + id, ex);
         }
     }
 

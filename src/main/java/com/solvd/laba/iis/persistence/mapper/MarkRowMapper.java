@@ -1,6 +1,9 @@
 package com.solvd.laba.iis.persistence.mapper;
 
 import com.solvd.laba.iis.domain.*;
+import com.solvd.laba.iis.domain.group.Group;
+import com.solvd.laba.iis.domain.mark.Mark;
+import com.solvd.laba.iis.domain.student.StudentInfo;
 import lombok.SneakyThrows;
 
 import java.sql.ResultSet;
@@ -10,7 +13,7 @@ import java.util.List;
 public abstract class MarkRowMapper {
 
     @SneakyThrows
-    public static Mark mapMark(ResultSet rs) {
+    public static Mark mapRow(ResultSet rs) {
         Mark mark = new Mark();
         mark.setId(rs.getLong("mark_id"));
         mark.setDate(rs.getDate("mark_date").toLocalDate());
@@ -29,7 +32,7 @@ public abstract class MarkRowMapper {
         student.setPassword(rs.getString("student_user_password"));
         student.setRole(UserInfo.Role.valueOf(rs.getString("student_user_role").toUpperCase()));
         studentInfo.setUser(student);
-        Group group = GroupRowMapper.mapGroup(rs);
+        Group group = GroupRowMapper.mapRow(rs);
         studentInfo.setGroup(group);
         mark.setStudent(studentInfo);
 
@@ -45,16 +48,16 @@ public abstract class MarkRowMapper {
         teacherInfo.setUser(teacher);
         mark.setTeacher(teacherInfo);
 
-        Subject subject = SubjectRowMapper.mapSubject(rs);
+        Subject subject = SubjectRowMapper.mapRow(rs);
         mark.setSubject(subject);
         return mark;
     }
 
     @SneakyThrows
-    public static List<Mark> mapMarks(ResultSet rs) {
+    public static List<Mark> mapRows(ResultSet rs) {
         List<Mark> marks = new ArrayList<>();
         while (rs.next()) {
-            Mark mark = mapMark(rs);
+            Mark mark = mapRow(rs);
             marks.add(mark);
         }
         return marks;

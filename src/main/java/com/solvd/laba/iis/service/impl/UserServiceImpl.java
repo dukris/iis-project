@@ -17,12 +17,12 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public List<UserInfo> getAll() {
+    public List<UserInfo> findAll() {
         return userRepository.findAll();
     }
 
     @Override
-    public UserInfo getById(long id) {
+    public UserInfo findById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ResourceDoesNotExistException("User with id = " + id + " not found"));
     }
@@ -39,13 +39,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserInfo save(UserInfo userInfo) {
-        getById(userInfo.getId());
+        findById(userInfo.getId());
         userRepository.save(userInfo);
         return userInfo;
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(Long id) {
         userRepository.delete(id);
     }
 

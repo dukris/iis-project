@@ -4,7 +4,7 @@ import com.solvd.laba.iis.domain.UserInfo;
 import com.solvd.laba.iis.web.dto.validation.OnCreateGroup;
 import com.solvd.laba.iis.web.dto.validation.OnCreateStudentGroup;
 import com.solvd.laba.iis.web.dto.validation.OnCreateTeacherGroup;
-import com.solvd.laba.iis.web.dto.validation.OnUpdateAndDeleteGroup;
+import com.solvd.laba.iis.web.dto.validation.OnUpdateGroup;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
@@ -18,7 +18,7 @@ import lombok.*;
 public class UserInfoDto {
 
     @Null(groups = OnCreateGroup.class, message = "User's id should be empty")
-    @NotNull(groups = {OnUpdateAndDeleteGroup.class, OnCreateTeacherGroup.class, OnCreateStudentGroup.class}, message = "User's id should be filled")
+    @NotNull(groups = {OnUpdateGroup.class, OnCreateTeacherGroup.class, OnCreateStudentGroup.class}, message = "User's id should be filled")
     private Long id;
 
     @NotBlank(message = "Name should be filled")

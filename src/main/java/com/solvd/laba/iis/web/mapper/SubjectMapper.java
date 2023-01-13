@@ -9,13 +9,13 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface SubjectMapper {
 
-    SubjectDto subjectToSubjectDto(Subject subject);
+    SubjectDto entityToDto(Subject subject);
 
-    Subject subjectDtoToSubject(SubjectDto subjectDto);
+    Subject dtoToEntity(SubjectDto subjectDto);
 
-    List<SubjectDto> listToListDto(List<Subject> subjects);
+    List<SubjectDto> entityToDto(List<Subject> subjects);
 
-    List<Subject> listDtoToList(List<SubjectDto> subjectDtos);
+    List<Subject> dtoToEntity(List<SubjectDto> subjectDtos);
 
 }
 

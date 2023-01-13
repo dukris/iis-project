@@ -24,14 +24,16 @@ public class ControllerAdvice {
     public ErrorDto handleResourceMappingException(ResourceMappingException ex) {
         ErrorDto errorDto = new ErrorDto();
         errorDto.setMessage(ex.getMessage());
+        log.error(ex.getMessage(), ex);
         return errorDto;
     }
 
     @ExceptionHandler(ResourceDoesNotExistException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorDto handleResourceNotFoundException(ResourceDoesNotExistException ex) {
+    public ErrorDto handleResourceDoesNotExistException(ResourceDoesNotExistException ex) {
         ErrorDto errorDto = new ErrorDto();
         errorDto.setMessage(ex.getMessage());
+        log.error(ex.getMessage(), ex);
         return errorDto;
     }
 
@@ -40,6 +42,7 @@ public class ControllerAdvice {
     public ErrorDto handleResourceAlreadyExistsException(ResourceAlreadyExistsException ex) {
         ErrorDto errorDto = new ErrorDto();
         errorDto.setMessage(ex.getMessage());
+        log.error(ex.getMessage(), ex);
         return errorDto;
     }
 
@@ -49,6 +52,7 @@ public class ControllerAdvice {
         List<ErrorDto> errors = ex.getBindingResult().getFieldErrors().stream()
                 .map(error -> new ErrorDto(error.getObjectName() + "." + error.getField(), error.getDefaultMessage()))
                 .toList();
+        log.error(ex.getMessage(), ex);
         return errors;
     }
 
@@ -57,6 +61,7 @@ public class ControllerAdvice {
     public ErrorDto handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
         ErrorDto errorDto = new ErrorDto();
         errorDto.setMessage(ex.getMessage());
+        log.error(ex.getMessage(), ex);
         return errorDto;
     }
 
@@ -65,6 +70,7 @@ public class ControllerAdvice {
     public ErrorDto handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
         ErrorDto errorDto = new ErrorDto();
         errorDto.setMessage(ex.getMessage());
+        log.error(ex.getMessage(), ex);
         return errorDto;
     }
 
@@ -72,7 +78,7 @@ public class ControllerAdvice {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorDto handleException(Exception ex) {
         ErrorDto errorDto = new ErrorDto();
-        errorDto.setMessage(ex.getMessage());
+        errorDto.setMessage("Please, try again");
         log.error(ex.getMessage(), ex);
         return errorDto;
     }

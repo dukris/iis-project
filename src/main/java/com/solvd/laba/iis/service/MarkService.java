@@ -1,20 +1,20 @@
 package com.solvd.laba.iis.service;
 
-import com.solvd.laba.iis.domain.Mark;
-import com.solvd.laba.iis.domain.criteria.MarkSearchCriteria;
+import com.solvd.laba.iis.domain.mark.Mark;
+import com.solvd.laba.iis.domain.mark.MarkSearchCriteria;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 public interface MarkService {
 
-    List<Mark> getAll();
+    List<Mark> findAll();
 
-    Mark getById(long id);
+    Mark findById(Long id);
 
-    List<Mark> getByTeacher(long subjectId, long teacherId);
+    List<Mark> findByTeacher(Long subjectId, Long teacherId);
 
-    List<Mark> getByCriteria(long studentId, MarkSearchCriteria markSearchCriteria);
+    List<Mark> findByCriteria(Long studentId, MarkSearchCriteria markSearchCriteria);
 
     @Transactional
     Mark create(Mark mark);
@@ -23,6 +23,6 @@ public interface MarkService {
     Mark save(Mark mark);
 
     @Transactional
-    void delete(long id);
+    void delete(Long id);
 
 }

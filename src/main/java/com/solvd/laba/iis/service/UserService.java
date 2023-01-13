@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface UserService {
 
-    List<UserInfo> getAll();
+    List<UserInfo> findAll();
 
-    UserInfo getById(long id);
+    UserInfo findById(Long id);
 
     @Transactional
     UserInfo create(UserInfo userInfo);
@@ -18,6 +18,6 @@ public interface UserService {
     UserInfo save(UserInfo userInfo);
 
     @Transactional
-    void delete(long id);
+    void delete(Long id);
 
 }

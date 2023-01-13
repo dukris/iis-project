@@ -9,7 +9,7 @@ public interface SubjectRepository {
 
     List<Subject> findAll();
 
-    Optional<Subject> findById(long id);
+    Optional<Subject> findById(Long id);
 
     Optional<Subject> findByName(String name);
 
@@ -17,6 +17,6 @@ public interface SubjectRepository {
 
     void save(Subject subject);
 
-    void delete(long id);
+    void delete(Long id);
 
 }

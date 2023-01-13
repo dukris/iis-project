@@ -11,13 +11,11 @@ import java.util.List;
 public interface UserInfoMapper {
 
     @Mapping(target = "password", ignore = true)
-    UserInfoDto userToUserDto(UserInfo userInfo);
+    UserInfoDto entityToDto(UserInfo userInfo);
 
-    UserInfo userDtoToUser(UserInfoDto userInfoDto);
+    UserInfo dtoToEntity(UserInfoDto userInfoDto);
 
     @Mapping(target = "password", ignore = true)
-    List<UserInfoDto> listToListDto(List<UserInfo> userInfos);
-
-    List<UserInfo> listDtoToList(List<UserInfoDto> userInfoDtos);
+    List<UserInfoDto> entityToDto(List<UserInfo> userInfos);
 
 }

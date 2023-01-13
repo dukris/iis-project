@@ -10,7 +10,7 @@ import java.util.List;
 public abstract class SubjectRowMapper {
 
     @SneakyThrows
-    public static Subject mapSubject(ResultSet rs) {
+    public static Subject mapRow(ResultSet rs) {
         Subject subject = new Subject();
         subject.setId(rs.getLong("subject_id"));
         subject.setName(rs.getString("subject_name"));
@@ -18,10 +18,10 @@ public abstract class SubjectRowMapper {
     }
 
     @SneakyThrows
-    public static List<Subject> mapSubjects(ResultSet rs) {
+    public static List<Subject> mapRows(ResultSet rs) {
         List<Subject> subjects = new ArrayList<>();
         while (rs.next()) {
-            Subject subject = mapSubject(rs);
+            Subject subject = mapRow(rs);
             subjects.add(subject);
         }
         return subjects;

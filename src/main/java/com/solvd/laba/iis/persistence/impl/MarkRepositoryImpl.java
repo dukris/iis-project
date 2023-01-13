@@ -1,9 +1,9 @@
 package com.solvd.laba.iis.persistence.impl;
 
-import com.solvd.laba.iis.domain.Mark;
+import com.solvd.laba.iis.domain.mark.Mark;
 import com.solvd.laba.iis.domain.exception.ResourceMappingException;
 import com.solvd.laba.iis.persistence.MarkRepository;
-import com.solvd.laba.iis.domain.criteria.MarkSearchCriteria;
+import com.solvd.laba.iis.domain.mark.MarkSearchCriteria;
 import com.solvd.laba.iis.persistence.mapper.MarkRowMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -44,53 +44,53 @@ public class MarkRepositoryImpl implements MarkRepository {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             try (ResultSet rs = statement.executeQuery(FIND_ALL_QUERY)) {
-                return MarkRowMapper.mapMarks(rs);
+                return MarkRowMapper.mapRows(rs);
             }
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while finding all marks");
+            throw new ResourceMappingException("Exception occurred while finding all marks", ex);
         }
     }
 
     @Override
-    public Optional<Mark> findById(long id) {
+    public Optional<Mark> findById(Long id) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + "WHERE marks.id = ?")) {
             statement.setLong(1, id);
             try (ResultSet rs = statement.executeQuery()) {
-                return rs.next() ? Optional.of(MarkRowMapper.mapMark(rs)) : Optional.empty();
+                return rs.next() ? Optional.of(MarkRowMapper.mapRow(rs)) : Optional.empty();
             }
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while finding mark by mark's id = " + id);
+            throw new ResourceMappingException("Exception occurred while finding mark by mark's id = " + id, ex);
         }
     }
 
     @Override
-    public List<Mark> findBySubjectAndTeacher(long subjectId, long teacherId) {
+    public List<Mark> findBySubjectAndTeacher(Long subjectId, Long teacherId) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + "WHERE subjects.id = ? AND marks.teacher_id = ?")) {
             statement.setLong(1, subjectId);
             statement.setLong(2, teacherId);
             try (ResultSet rs = statement.executeQuery()) {
-                return MarkRowMapper.mapMarks(rs);
+                return MarkRowMapper.mapRows(rs);
             }
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while finding marks by teacher's id = " + teacherId + " and subject's id = " + subjectId);
+            throw new ResourceMappingException("Exception occurred while finding marks by teacher's id = " + teacherId + " and subject's id = " + subjectId, ex);
         }
     }
 
     @Override
-    public List<Mark> findByCriteria(long studentId, MarkSearchCriteria markSearchCriteria) {
+    public List<Mark> findByCriteria(Long studentId, MarkSearchCriteria markSearchCriteria) {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             try (ResultSet rs = statement.executeQuery(updateQuery(studentId, markSearchCriteria))) {
-                return MarkRowMapper.mapMarks(rs);
+                return MarkRowMapper.mapRows(rs);
             }
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while finding marks by student's id = " + studentId);
+            throw new ResourceMappingException("Exception occurred while finding marks by student's id = " + studentId, ex);
         }
     }
 
-    private String updateQuery(long studentId, MarkSearchCriteria markSearchCriteria) {
+    private String updateQuery(Long studentId, MarkSearchCriteria markSearchCriteria) {
         return markSearchCriteria.getSubjectId() != 0 ?
                 FIND_ALL_QUERY + "WHERE marks.student_id = " + studentId + " AND marks.subject_id = " + markSearchCriteria.getSubjectId() :
                 FIND_ALL_QUERY + "WHERE marks.student_id = " + studentId;
@@ -113,7 +113,7 @@ public class MarkRepositoryImpl implements MarkRepository {
                 }
             }
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while creating mark");
+            throw new ResourceMappingException("Exception occurred while creating mark", ex);
         }
     }
 
@@ -129,18 +129,18 @@ public class MarkRepositoryImpl implements MarkRepository {
             statement.setLong(6, mark.getId());
             statement.executeUpdate();
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while saving mark");
+            throw new ResourceMappingException("Exception occurred while saving mark", ex);
         }
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(Long id) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)) {
             statement.setLong(1, id);
             statement.executeUpdate();
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while deleting mark with id = " + id);
+            throw new ResourceMappingException("Exception occurred while deleting mark with id = " + id, ex);
         }
     }
 

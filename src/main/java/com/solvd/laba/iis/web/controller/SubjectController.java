@@ -6,7 +6,7 @@ import com.solvd.laba.iis.service.TeacherService;
 import com.solvd.laba.iis.web.dto.SubjectDto;
 import com.solvd.laba.iis.web.dto.TeacherInfoDto;
 import com.solvd.laba.iis.web.dto.validation.OnCreateGroup;
-import com.solvd.laba.iis.web.dto.validation.OnUpdateAndDeleteGroup;
+import com.solvd.laba.iis.web.dto.validation.OnUpdateGroup;
 import com.solvd.laba.iis.web.mapper.SubjectMapper;
 import com.solvd.laba.iis.web.mapper.TeacherInfoMapper;
 import lombok.RequiredArgsConstructor;
@@ -22,34 +22,35 @@ import java.util.List;
 public class SubjectController {
 
     private final SubjectService subjectService;
-    private final SubjectMapper subjectMapper;
     private final TeacherService teacherService;
+    private final SubjectMapper subjectMapper;
     private final TeacherInfoMapper teacherInfoMapper;
 
     @GetMapping
     public List<SubjectDto> getAll() {
-        List<SubjectDto> subjects = subjectMapper.listToListDto(subjectService.getAll());
+        List<SubjectDto> subjects = subjectMapper.entityToDto(subjectService.findAll());
         return subjects;
     }
 
     @GetMapping("/{id}")
     public SubjectDto getById(@PathVariable long id) {
-        SubjectDto subject = subjectMapper.subjectToSubjectDto(subjectService.getById(id));
+        SubjectDto subject = subjectMapper.entityToDto(subjectService.findById(id));
         return subject;
     }
 
     @GetMapping("/{id}/teachers")
     public List<TeacherInfoDto> getTeachers(@PathVariable long id) {
-        List<TeacherInfoDto> teachers = teacherInfoMapper.listToListDto(teacherService.getBySubject(id));
+        List<TeacherInfoDto> teachers = teacherInfoMapper.entityToDto(teacherService.findBySubject(id));
         return teachers;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public SubjectDto create(@RequestBody @Validated(OnCreateGroup.class) SubjectDto subjectDto) {
-        Subject subject = subjectMapper.subjectDtoToSubject(subjectDto);
+        Subject subject = subjectMapper.dtoToEntity(subjectDto);
         subject = subjectService.create(subject);
-        return subjectMapper.subjectToSubjectDto(subject);
+        subjectDto = subjectMapper.entityToDto(subject);
+        return subjectDto;
     }
 
     @DeleteMapping("/{id}")
@@ -59,10 +60,11 @@ public class SubjectController {
     }
 
     @PutMapping
-    public SubjectDto update(@RequestBody @Validated(OnUpdateAndDeleteGroup.class) SubjectDto subjectDto) {
-        Subject subject = subjectMapper.subjectDtoToSubject(subjectDto);
+    public SubjectDto update(@RequestBody @Validated(OnUpdateGroup.class) SubjectDto subjectDto) {
+        Subject subject = subjectMapper.dtoToEntity(subjectDto);
         subject = subjectService.save(subject);
-        return subjectMapper.subjectToSubjectDto(subject);
+        subjectDto = subjectMapper.entityToDto(subject);
+        return subjectDto;
     }
 
 }

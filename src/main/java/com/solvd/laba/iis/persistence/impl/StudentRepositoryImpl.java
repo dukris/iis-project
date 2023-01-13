@@ -1,9 +1,9 @@
 package com.solvd.laba.iis.persistence.impl;
 
-import com.solvd.laba.iis.domain.StudentInfo;
+import com.solvd.laba.iis.domain.student.StudentInfo;
 import com.solvd.laba.iis.domain.exception.ResourceMappingException;
 import com.solvd.laba.iis.persistence.StudentRepository;
-import com.solvd.laba.iis.domain.criteria.StudentSearchCriteria;
+import com.solvd.laba.iis.domain.student.StudentSearchCriteria;
 import com.solvd.laba.iis.persistence.mapper.StudentRowMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -36,23 +36,23 @@ public class StudentRepositoryImpl implements StudentRepository {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             try (ResultSet rs = statement.executeQuery(FIND_ALL_QUERY)) {
-                return StudentRowMapper.mapStudents(rs);
+                return StudentRowMapper.mapRows(rs);
             }
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while finding all students");
+            throw new ResourceMappingException("Exception occurred while finding all students", ex);
         }
     }
 
     @Override
-    public Optional<StudentInfo> findById(long id) {
+    public Optional<StudentInfo> findById(Long id) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + "WHERE students_info.id = ?")) {
             statement.setLong(1, id);
             try (ResultSet rs = statement.executeQuery()) {
-                return rs.next() ? Optional.of(StudentRowMapper.mapStudent(rs)) : Optional.empty();
+                return rs.next() ? Optional.of(StudentRowMapper.mapRow(rs)) : Optional.empty();
             }
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while finding student by id = " + id);
+            throw new ResourceMappingException("Exception occurred while finding student by id = " + id, ex);
         }
     }
 
@@ -61,10 +61,10 @@ public class StudentRepositoryImpl implements StudentRepository {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             try (ResultSet rs = statement.executeQuery(updateQuery(studentSearchCriteria))) {
-                return StudentRowMapper.mapStudents(rs);
+                return StudentRowMapper.mapRows(rs);
             }
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while finding students by criteria");
+            throw new ResourceMappingException("Exception occurred while finding students by criteria", ex);
         }
     }
 
@@ -77,15 +77,15 @@ public class StudentRepositoryImpl implements StudentRepository {
     }
 
     @Override
-    public List<StudentInfo> findByGroup(long groupId) {
+    public List<StudentInfo> findByGroup(Long groupId) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + "WHERE students_info.group_id = ?")) {
             statement.setLong(1, groupId);
             try (ResultSet rs = statement.executeQuery()) {
-                return StudentRowMapper.mapStudents(rs);
+                return StudentRowMapper.mapRows(rs);
             }
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while finding students by group's id = " + groupId);
+            throw new ResourceMappingException("Exception occurred while finding students by group's id = " + groupId, ex);
         }
     }
 
@@ -106,7 +106,7 @@ public class StudentRepositoryImpl implements StudentRepository {
                 }
             }
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while creating student");
+            throw new ResourceMappingException("Exception occurred while creating student", ex);
         }
     }
 
@@ -122,18 +122,18 @@ public class StudentRepositoryImpl implements StudentRepository {
             statement.setLong(6, studentInfo.getId());
             statement.executeUpdate();
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while saving student with id = " + studentInfo.getId());
+            throw new ResourceMappingException("Exception occurred while saving student with id = " + studentInfo.getId(), ex);
         }
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(Long id) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)) {
             statement.setLong(1, id);
             statement.executeUpdate();
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while deleting student with id = " + id);
+            throw new ResourceMappingException("Exception occurred while deleting student with id = " + id, ex);
         }
     }
 

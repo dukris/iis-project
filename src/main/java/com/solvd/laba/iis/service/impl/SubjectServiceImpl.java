@@ -17,12 +17,12 @@ public class SubjectServiceImpl implements SubjectService {
     private final SubjectRepository subjectRepository;
 
     @Override
-    public List<Subject> getAll() {
+    public List<Subject> findAll() {
         return subjectRepository.findAll();
     }
 
     @Override
-    public Subject getById(long id) {
+    public Subject findById(Long id) {
         return subjectRepository.findById(id)
                 .orElseThrow(() -> new ResourceDoesNotExistException("Subject with id = " + id + " not found"));
     }
@@ -39,13 +39,13 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Override
     public Subject save(Subject subject) {
-        getById(subject.getId());
+        findById(subject.getId());
         subjectRepository.save(subject);
         return subject;
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(Long id) {
         subjectRepository.delete(id);
     }
 

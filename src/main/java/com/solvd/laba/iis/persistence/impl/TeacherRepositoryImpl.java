@@ -37,50 +37,50 @@ public class TeacherRepositoryImpl implements TeacherRepository {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             try (ResultSet rs = statement.executeQuery(FIND_ALL_QUERY)) {
-                return TeacherRowMapper.mapTeachers(rs);
+                return TeacherRowMapper.mapRows(rs);
             }
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while finding all teachers");
+            throw new ResourceMappingException("Exception occurred while finding all teachers", ex);
         }
     }
 
     @Override
-    public Optional<TeacherInfo> findById(long id) {
+    public Optional<TeacherInfo> findById(Long id) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + "WHERE teachers_info.id = ?")) {
             statement.setLong(1, id);
             try (ResultSet rs = statement.executeQuery()) {
-                return rs.next() ? Optional.of(TeacherRowMapper.mapTeacher(rs)) : Optional.empty();
+                return rs.next() ? Optional.of(TeacherRowMapper.mapRow(rs)) : Optional.empty();
             }
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while finding teacher by teacher's id = " + id);
+            throw new ResourceMappingException("Exception occurred while finding teacher by teacher's id = " + id, ex);
         }
     }
 
     @Override
-    public List<TeacherInfo> findByGroup(long groupId) {
+    public List<TeacherInfo> findByGroup(Long groupId) {
         String joinQuery = "LEFT JOIN iis_schema.lessons ON (teachers_info.id = lessons.teacher_id) ";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + joinQuery + "WHERE lessons.group_id = ?")) {
             statement.setLong(1, groupId);
             try (ResultSet rs = statement.executeQuery()) {
-                return TeacherRowMapper.mapTeachers(rs);
+                return TeacherRowMapper.mapRows(rs);
             }
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while finding teachers by group's id = " + groupId);
+            throw new ResourceMappingException("Exception occurred while finding teachers by group's id = " + groupId, ex);
         }
     }
 
     @Override
-    public List<TeacherInfo> findBySubject(long subjectId) {
+    public List<TeacherInfo> findBySubject(Long subjectId) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + "WHERE subjects.id = ?")) {
             statement.setLong(1, subjectId);
             try (ResultSet rs = statement.executeQuery()) {
-                return TeacherRowMapper.mapTeachersBySubject(rs);
+                return TeacherRowMapper.mapRowsBySubject(rs);
             }
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while finding teachers by subject's id = " + subjectId);
+            throw new ResourceMappingException("Exception occurred while finding teachers by subject's id = " + subjectId, ex);
         }
     }
 
@@ -97,7 +97,7 @@ public class TeacherRepositoryImpl implements TeacherRepository {
                 }
             }
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while creating teacher");
+            throw new ResourceMappingException("Exception occurred while creating teacher", ex);
         }
     }
 
@@ -109,42 +109,42 @@ public class TeacherRepositoryImpl implements TeacherRepository {
             statement.setLong(2, teacherInfo.getId());
             statement.executeUpdate();
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while saving teacher with id = " + teacherInfo.getId());
+            throw new ResourceMappingException("Exception occurred while saving teacher with id = " + teacherInfo.getId(), ex);
         }
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(Long id) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)) {
             statement.setLong(1, id);
             statement.executeUpdate();
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while deleting teacher with id = " + id);
+            throw new ResourceMappingException("Exception occurred while deleting teacher with id = " + id, ex);
         }
     }
 
     @Override
-    public void deleteSubject(long teacherId, long subjectId) {
+    public void deleteSubject(Long teacherId, Long subjectId) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_SUBJECT_QUERY)) {
             statement.setLong(1, teacherId);
             statement.setLong(2, subjectId);
             statement.executeUpdate();
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while deleting subject with id = " + subjectId);
+            throw new ResourceMappingException("Exception occurred while deleting subject with id = " + subjectId, ex);
         }
     }
 
     @Override
-    public void addSubject(long teacherId, long subjectId) {
+    public void addSubject(Long teacherId, Long subjectId) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(ADD_SUBJECT_QUERY)) {
             statement.setLong(1, teacherId);
             statement.setLong(2, subjectId);
             statement.executeUpdate();
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while adding subject with id = " + subjectId);
+            throw new ResourceMappingException("Exception occurred while adding subject with id = " + subjectId, ex);
         }
     }
 

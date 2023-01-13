@@ -1,9 +1,9 @@
 package com.solvd.laba.iis.service.impl;
 
-import com.solvd.laba.iis.domain.Lesson;
+import com.solvd.laba.iis.domain.lesson.Lesson;
 import com.solvd.laba.iis.domain.exception.ResourceDoesNotExistException;
 import com.solvd.laba.iis.persistence.LessonRepository;
-import com.solvd.laba.iis.domain.criteria.LessonSearchCriteria;
+import com.solvd.laba.iis.domain.lesson.LessonSearchCriteria;
 import com.solvd.laba.iis.service.LessonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,23 +17,23 @@ public class LessonServiceImpl implements LessonService {
     private final LessonRepository lessonRepository;
 
     @Override
-    public List<Lesson> getAll() {
+    public List<Lesson> findAll() {
         return lessonRepository.findAll();
     }
 
     @Override
-    public Lesson getById(long id) {
+    public Lesson findById(Long id) {
         return lessonRepository.findById(id)
                 .orElseThrow(() -> new ResourceDoesNotExistException("Lesson with id = " + id + " not found"));
     }
 
     @Override
-    public List<Lesson> getByStudentCriteria(long groupId, LessonSearchCriteria lessonSearchCriteria) {
+    public List<Lesson> findByStudentCriteria(Long groupId, LessonSearchCriteria lessonSearchCriteria) {
         return lessonRepository.findByStudentCriteria(groupId, lessonSearchCriteria);
     }
 
     @Override
-    public List<Lesson> getByTeacherCriteria(long teacherId, LessonSearchCriteria lessonSearchCriteria) {
+    public List<Lesson> findByTeacherCriteria(Long teacherId, LessonSearchCriteria lessonSearchCriteria) {
         return lessonRepository.findByTeacherCriteria(teacherId, lessonSearchCriteria);
     }
 
@@ -45,13 +45,13 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     public Lesson save(Lesson lesson) {
-        getById(lesson.getId());
+        findById(lesson.getId());
         lessonRepository.save(lesson);
         return lesson;
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(Long id) {
         lessonRepository.delete(id);
     }
 

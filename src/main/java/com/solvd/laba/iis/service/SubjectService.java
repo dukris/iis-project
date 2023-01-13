@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface SubjectService {
 
-    List<Subject> getAll();
+    List<Subject> findAll();
 
-    Subject getById(long id);
+    Subject findById(Long id);
 
     @Transactional
     Subject create(Subject subject);
@@ -18,6 +18,6 @@ public interface SubjectService {
     Subject save(Subject subject);
 
     @Transactional
-    void delete(long id);
+    void delete(Long id);
 
 }

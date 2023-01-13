@@ -1,9 +1,9 @@
 package com.solvd.laba.iis.persistence.impl;
 
-import com.solvd.laba.iis.domain.Lesson;
+import com.solvd.laba.iis.domain.lesson.Lesson;
 import com.solvd.laba.iis.domain.exception.ResourceMappingException;
 import com.solvd.laba.iis.persistence.LessonRepository;
-import com.solvd.laba.iis.domain.criteria.LessonSearchCriteria;
+import com.solvd.laba.iis.domain.lesson.LessonSearchCriteria;
 import com.solvd.laba.iis.persistence.mapper.LessonRowMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -39,57 +39,57 @@ public class LessonRepositoryImpl implements LessonRepository {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             try (ResultSet rs = statement.executeQuery(FIND_ALL_QUERY)) {
-                return LessonRowMapper.mapLessons(rs);
+                return LessonRowMapper.mapRows(rs);
             }
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while finding all lessons");
+            throw new ResourceMappingException("Exception occurred while finding all lessons", ex);
         }
     }
 
     @Override
-    public Optional<Lesson> findById(long id) {
+    public Optional<Lesson> findById(Long id) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + "WHERE lessons.id = ?")) {
             statement.setLong(1, id);
             try (ResultSet rs = statement.executeQuery()) {
-                return rs.next() ? Optional.of(LessonRowMapper.mapLesson(rs)) : Optional.empty();
+                return rs.next() ? Optional.of(LessonRowMapper.mapRow(rs)) : Optional.empty();
             }
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while finding lesson by lesson's id = " + id);
+            throw new ResourceMappingException("Exception occurred while finding lesson by lesson's id = " + id, ex);
         }
     }
 
     @Override
-    public List<Lesson> findByStudentCriteria(long groupId, LessonSearchCriteria lessonSearchCriteria) {
+    public List<Lesson> findByStudentCriteria(Long groupId, LessonSearchCriteria lessonSearchCriteria) {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             try (ResultSet rs = statement.executeQuery(updateStudentQuery(groupId, lessonSearchCriteria))) {
-                return LessonRowMapper.mapLessons(rs);
+                return LessonRowMapper.mapRows(rs);
             }
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while finding lessons by group's id = " + groupId);
+            throw new ResourceMappingException("Exception occurred while finding lessons by group's id = " + groupId, ex);
         }
     }
 
     @Override
-    public List<Lesson> findByTeacherCriteria(long teacherId, LessonSearchCriteria lessonSearchCriteria) {
+    public List<Lesson> findByTeacherCriteria(Long teacherId, LessonSearchCriteria lessonSearchCriteria) {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             try (ResultSet rs = statement.executeQuery(updateTeacherQuery(teacherId, lessonSearchCriteria))) {
-                return LessonRowMapper.mapLessons(rs);
+                return LessonRowMapper.mapRows(rs);
             }
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while finding lessons by teacher's id = " + teacherId);
+            throw new ResourceMappingException("Exception occurred while finding lessons by teacher's id = " + teacherId, ex);
         }
     }
 
-    private String updateStudentQuery(long groupId, LessonSearchCriteria lessonSearchCriteria) {
+    private String updateStudentQuery(Long groupId, LessonSearchCriteria lessonSearchCriteria) {
         return Objects.nonNull(lessonSearchCriteria.getWeekday()) ?
                 FIND_ALL_QUERY + "WHERE groups.id = " + groupId + " AND lessons.weekday = \'" + lessonSearchCriteria.getWeekday().toUpperCase() + "\'" :
                 FIND_ALL_QUERY + "WHERE groups.id = " + groupId;
     }
 
-    private String updateTeacherQuery(long teacherId, LessonSearchCriteria lessonSearchCriteria) {
+    private String updateTeacherQuery(Long teacherId, LessonSearchCriteria lessonSearchCriteria) {
         return Objects.nonNull(lessonSearchCriteria.getWeekday()) ?
                 FIND_ALL_QUERY + "WHERE teachers_info.id = " + teacherId + " AND lessons.weekday = \'" + lessonSearchCriteria.getWeekday().toUpperCase() + "\'" :
                 FIND_ALL_QUERY + "WHERE teachers_info.id = " + teacherId;
@@ -114,7 +114,7 @@ public class LessonRepositoryImpl implements LessonRepository {
                 }
             }
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while creating lesson");
+            throw new ResourceMappingException("Exception occurred while creating lesson", ex);
         }
     }
 
@@ -132,18 +132,18 @@ public class LessonRepositoryImpl implements LessonRepository {
             statement.setLong(8, lesson.getId());
             statement.executeUpdate();
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while saving lesson with id = " + lesson.getId());
+            throw new ResourceMappingException("Exception occurred while saving lesson with id = " + lesson.getId(), ex);
         }
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(Long id) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)) {
             statement.setLong(1, id);
             statement.executeUpdate();
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while deleting lesson with id = " + id);
+            throw new ResourceMappingException("Exception occurred while deleting lesson with id = " + id, ex);
         }
     }
 

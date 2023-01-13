@@ -16,23 +16,23 @@ public class TeacherServiceImpl implements TeacherService {
     private final TeacherRepository teacherRepository;
 
     @Override
-    public List<TeacherInfo> getAll() {
+    public List<TeacherInfo> findAll() {
         return teacherRepository.findAll();
     }
 
     @Override
-    public TeacherInfo getById(long id) {
+    public TeacherInfo findById(Long id) {
         return teacherRepository.findById(id)
                 .orElseThrow(() -> new ResourceDoesNotExistException("Teacher with id = " + id + " not found"));
     }
 
     @Override
-    public List<TeacherInfo> getByGroup(long groupId) {
+    public List<TeacherInfo> findByGroup(Long groupId) {
         return teacherRepository.findByGroup(groupId);
     }
 
     @Override
-    public List<TeacherInfo> getBySubject(long subjectId) {
+    public List<TeacherInfo> findBySubject(Long subjectId) {
         return teacherRepository.findBySubject(subjectId);
     }
 
@@ -44,23 +44,23 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public TeacherInfo save(TeacherInfo teacherInfo) {
-        getById(teacherInfo.getId());
+        findById(teacherInfo.getId());
         teacherRepository.save(teacherInfo);
         return teacherInfo;
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(Long id) {
         teacherRepository.delete(id);
     }
 
     @Override
-    public void deleteSubject(long teacherId, long subjectId) {
+    public void deleteSubjectForTeacher(Long teacherId, Long subjectId) {
         teacherRepository.deleteSubject(teacherId, subjectId);
     }
 
     @Override
-    public void addSubject(long teacherId, long subjectId) {
+    public void addSubjectForTeacher(Long teacherId, Long subjectId) {
         teacherRepository.addSubject(teacherId, subjectId);
     }
 

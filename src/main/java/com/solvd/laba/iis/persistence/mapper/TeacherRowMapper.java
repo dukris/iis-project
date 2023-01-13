@@ -13,25 +13,25 @@ import java.util.Objects;
 public abstract class TeacherRowMapper {
 
     @SneakyThrows
-    public static TeacherInfo mapTeacher(ResultSet rs) {
+    public static TeacherInfo mapRow(ResultSet rs) {
         TeacherInfo teacher = new TeacherInfo();
         List<Subject> subjects = new ArrayList<>();
 
         teacher.setId(rs.getLong("teacher_id"));
-        UserInfo userInfo = UserRowMapper.mapUser(rs);
+        UserInfo userInfo = UserRowMapper.mapRow(rs);
         teacher.setUser(userInfo);
 
-        Subject subject = SubjectRowMapper.mapSubject(rs);
+        Subject subject = SubjectRowMapper.mapRow(rs);
         subjects.add(subject);
         rs.next();
-        subject = SubjectRowMapper.mapSubject(rs);
+        subject = SubjectRowMapper.mapRow(rs);
         subjects.add(subject);
         teacher.setSubjects(subjects);
         return teacher;
     }
 
     @SneakyThrows
-    public static List<TeacherInfo> mapTeachers(ResultSet rs) {
+    public static List<TeacherInfo> mapRows(ResultSet rs) {
         List<TeacherInfo> teachers = new ArrayList<>();
         long prevId = 0;
         long currentId;
@@ -40,7 +40,7 @@ public abstract class TeacherRowMapper {
             currentId = rs.getLong("teacher_id");
             if (prevId == currentId && Objects.nonNull(prevTeacher)) {
                 List<Subject> subjectList = prevTeacher.getSubjects();
-                Subject subject = SubjectRowMapper.mapSubject(rs);
+                Subject subject = SubjectRowMapper.mapRow(rs);
                 subjectList.add(subject);
                 prevTeacher.setSubjects(subjectList);
             } else {
@@ -49,10 +49,10 @@ public abstract class TeacherRowMapper {
                 }
                 TeacherInfo teacher = new TeacherInfo();
                 teacher.setId(currentId);
-                UserInfo userInfo = UserRowMapper.mapUser(rs);
+                UserInfo userInfo = UserRowMapper.mapRow(rs);
                 teacher.setUser(userInfo);
 
-                Subject subject = SubjectRowMapper.mapSubject(rs);
+                Subject subject = SubjectRowMapper.mapRow(rs);
                 List<Subject> subjects = new ArrayList<>();
                 subjects.add(subject);
                 teacher.setSubjects(subjects);
@@ -65,12 +65,12 @@ public abstract class TeacherRowMapper {
     }
 
     @SneakyThrows
-    public static List<TeacherInfo> mapTeachersBySubject(ResultSet rs) {
+    public static List<TeacherInfo> mapRowsBySubject(ResultSet rs) {
         List<TeacherInfo> teachers = new ArrayList<>();
         while (rs.next()) {
             TeacherInfo teacher = new TeacherInfo();
             teacher.setId(rs.getLong("teacher_id"));
-            UserInfo userInfo = UserRowMapper.mapUser(rs);
+            UserInfo userInfo = UserRowMapper.mapRow(rs);
             teacher.setUser(userInfo);
             teachers.add(teacher);
         }

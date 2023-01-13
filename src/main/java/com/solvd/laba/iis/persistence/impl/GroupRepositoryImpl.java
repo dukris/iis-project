@@ -1,9 +1,9 @@
 package com.solvd.laba.iis.persistence.impl;
 
-import com.solvd.laba.iis.domain.Group;
+import com.solvd.laba.iis.domain.group.Group;
 import com.solvd.laba.iis.domain.exception.ResourceMappingException;
 import com.solvd.laba.iis.persistence.GroupRepository;
-import com.solvd.laba.iis.domain.criteria.GroupSearchCriteria;
+import com.solvd.laba.iis.domain.group.GroupSearchCriteria;
 import com.solvd.laba.iis.persistence.mapper.GroupRowMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -28,52 +28,52 @@ public class GroupRepositoryImpl implements GroupRepository {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             try (ResultSet rs = statement.executeQuery(FIND_ALL_QUERY)) {
-                return GroupRowMapper.mapGroups(rs);
+                return GroupRowMapper.mapRows(rs);
             }
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while finding all groups");
+            throw new ResourceMappingException("Exception occurred while finding all groups", ex);
         }
     }
 
     @Override
-    public Optional<Group> findById(long id) {
+    public Optional<Group> findById(Long id) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + "WHERE id = ?")) {
             statement.setLong(1, id);
             try (ResultSet rs = statement.executeQuery()) {
-                return rs.next() ? Optional.of(GroupRowMapper.mapGroup(rs)) : Optional.empty();
+                return rs.next() ? Optional.of(GroupRowMapper.mapRow(rs)) : Optional.empty();
             }
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while finding group by id = " + id);
+            throw new ResourceMappingException("Exception occurred while finding group by id = " + id, ex);
         }
     }
 
     @Override
-    public Optional<Group> findByNumber(int number) {
+    public Optional<Group> findByNumber(Integer number) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + "WHERE number = ?")) {
             statement.setInt(1, number);
             try (ResultSet rs = statement.executeQuery()) {
-                return rs.next() ? Optional.of(GroupRowMapper.mapGroup(rs)) : Optional.empty();
+                return rs.next() ? Optional.of(GroupRowMapper.mapRow(rs)) : Optional.empty();
             }
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while finding group by number = " + number);
+            throw new ResourceMappingException("Exception occurred while finding group by number = " + number, ex);
         }
     }
 
     @Override
-    public List<Group> findByCriteria(long teacherId, GroupSearchCriteria groupSearchCriteria) {
+    public List<Group> findByCriteria(Long teacherId, GroupSearchCriteria groupSearchCriteria) {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             try (ResultSet rs = statement.executeQuery(updateQuery(teacherId, groupSearchCriteria))) {
-                return GroupRowMapper.mapGroups(rs);
+                return GroupRowMapper.mapRows(rs);
             }
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while finding groups by teacher's id = " + teacherId);
+            throw new ResourceMappingException("Exception occurred while finding groups by teacher's id = " + teacherId, ex);
         }
     }
 
-    private String updateQuery(long teacherId, GroupSearchCriteria groupSearchCriteria) {
+    private String updateQuery(Long teacherId, GroupSearchCriteria groupSearchCriteria) {
         String joinQuery = "LEFT JOIN iis_schema.lessons ON (lessons.group_id = groups.id) ";
         return groupSearchCriteria.getSubjectId() != 0 ?
                 FIND_ALL_QUERY + joinQuery + "WHERE lessons.teacher_id = " + teacherId + " AND lessons.subject_id = " + groupSearchCriteria.getSubjectId() :
@@ -93,7 +93,7 @@ public class GroupRepositoryImpl implements GroupRepository {
                 }
             }
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while creating group");
+            throw new ResourceMappingException("Exception occurred while creating group", ex);
         }
     }
 
@@ -105,18 +105,18 @@ public class GroupRepositoryImpl implements GroupRepository {
             statement.setLong(2, group.getId());
             statement.executeUpdate();
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while saving group with id = " + group.getId());
+            throw new ResourceMappingException("Exception occurred while saving group with id = " + group.getId(), ex);
         }
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(Long id) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)) {
             statement.setLong(1, id);
             statement.executeUpdate();
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while deleting group with id = " + id);
+            throw new ResourceMappingException("Exception occurred while deleting group with id = " + id, ex);
         }
     }
 

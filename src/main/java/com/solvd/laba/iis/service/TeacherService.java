@@ -7,13 +7,13 @@ import java.util.List;
 
 public interface TeacherService {
 
-    List<TeacherInfo> getAll();
+    List<TeacherInfo> findAll();
 
-    TeacherInfo getById(long id);
+    TeacherInfo findById(Long id);
 
-    List<TeacherInfo> getByGroup(long groupId);
+    List<TeacherInfo> findByGroup(Long groupId);
 
-    List<TeacherInfo> getBySubject(long subjectId);
+    List<TeacherInfo> findBySubject(Long subjectId);
 
     @Transactional
     TeacherInfo create(TeacherInfo teacherInfo);
@@ -22,12 +22,12 @@ public interface TeacherService {
     TeacherInfo save(TeacherInfo teacherInfo);
 
     @Transactional
-    void delete(long id);
+    void delete(Long id);
 
     @Transactional
-    void deleteSubject(long teacherId, long subjectId);
+    void deleteSubjectForTeacher(Long teacherId, Long subjectId);
 
     @Transactional
-    void addSubject(long teacherId, long subjectId);
+    void addSubjectForTeacher(Long teacherId, Long subjectId);
 
 }

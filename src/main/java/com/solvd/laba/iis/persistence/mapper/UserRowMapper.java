@@ -10,7 +10,7 @@ import java.util.List;
 public abstract class UserRowMapper {
 
     @SneakyThrows
-    public static UserInfo mapUser(ResultSet rs) {
+    public static UserInfo mapRow(ResultSet rs) {
         UserInfo userInfo = new UserInfo();
         userInfo.setId(rs.getLong("user_id"));
         userInfo.setName(rs.getString("user_name"));
@@ -22,10 +22,10 @@ public abstract class UserRowMapper {
     }
 
     @SneakyThrows
-    public static List<UserInfo> mapUsers(ResultSet rs) {
+    public static List<UserInfo> mapRows(ResultSet rs) {
         List<UserInfo> userInfos = new ArrayList<>();
         while (rs.next()) {
-            UserInfo userInfo = mapUser(rs);
+            UserInfo userInfo = mapRow(rs);
             userInfos.add(userInfo);
         }
         return userInfos;

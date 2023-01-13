@@ -1,10 +1,10 @@
 package com.solvd.laba.iis.service.impl;
 
-import com.solvd.laba.iis.domain.Group;
+import com.solvd.laba.iis.domain.group.Group;
 import com.solvd.laba.iis.domain.exception.ResourceAlreadyExistsException;
 import com.solvd.laba.iis.domain.exception.ResourceDoesNotExistException;
 import com.solvd.laba.iis.persistence.GroupRepository;
-import com.solvd.laba.iis.domain.criteria.GroupSearchCriteria;
+import com.solvd.laba.iis.domain.group.GroupSearchCriteria;
 import com.solvd.laba.iis.service.GroupService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,18 +18,18 @@ public class GroupServiceImpl implements GroupService {
     private final GroupRepository groupRepository;
 
     @Override
-    public List<Group> getAll() {
+    public List<Group> findAll() {
         return groupRepository.findAll();
     }
 
     @Override
-    public Group getById(long id) {
+    public Group findById(Long id) {
         return groupRepository.findById(id)
                 .orElseThrow(() -> new ResourceDoesNotExistException("Group with id = " + id + " not found"));
     }
 
     @Override
-    public List<Group> getByCriteria(long teacherId, GroupSearchCriteria groupSearchCriteria) {
+    public List<Group> findByCriteria(Long teacherId, GroupSearchCriteria groupSearchCriteria) {
         return groupRepository.findByCriteria(teacherId, groupSearchCriteria);
     }
 
@@ -45,13 +45,13 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public Group save(Group group) {
-        getById(group.getId());
+        findById(group.getId());
         groupRepository.save(group);
         return group;
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(Long id) {
         groupRepository.delete(id);
     }
 

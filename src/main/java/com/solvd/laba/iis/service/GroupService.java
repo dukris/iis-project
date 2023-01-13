@@ -1,18 +1,18 @@
 package com.solvd.laba.iis.service;
 
-import com.solvd.laba.iis.domain.Group;
-import com.solvd.laba.iis.domain.criteria.GroupSearchCriteria;
+import com.solvd.laba.iis.domain.group.Group;
+import com.solvd.laba.iis.domain.group.GroupSearchCriteria;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 public interface GroupService {
 
-    List<Group> getAll();
+    List<Group> findAll();
 
-    Group getById(long id);
+    Group findById(Long id);
 
-    List<Group> getByCriteria(long teacherId, GroupSearchCriteria groupSearchCriteria);
+    List<Group> findByCriteria(Long teacherId, GroupSearchCriteria groupSearchCriteria);
 
     @Transactional
     Group create(Group group);
@@ -21,6 +21,6 @@ public interface GroupService {
     Group save(Group group);
 
     @Transactional
-    void delete(long id);
+    void delete(Long id);
 
 }
