@@ -11,11 +11,11 @@ public interface SubjectRepository {
 
     Optional<Subject> findById(Long id);
 
-    Optional<Subject> findByName(String name);
+    boolean isExist(String name);
 
     void create(Subject subject);
 
-    void save(Subject subject);
+    void update(Subject subject);
 
     void delete(Long id);
 

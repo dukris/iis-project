@@ -1,4 +1,4 @@
-package com.solvd.laba.iis.web.dto.group;
+package com.solvd.laba.iis.web.dto;
 
 import com.solvd.laba.iis.web.dto.validation.OnCreateGroup;
 import com.solvd.laba.iis.web.dto.validation.OnCreateLessonGroup;

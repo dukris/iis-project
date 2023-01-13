@@ -1,23 +1,19 @@
 package com.solvd.laba.iis.service;
 
 import com.solvd.laba.iis.domain.Subject;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 public interface SubjectService {
 
-    List<Subject> findAll();
+    List<Subject> retrieveAll();
 
-    Subject findById(Long id);
+    Subject retrieveById(Long id);
 
-    @Transactional
     Subject create(Subject subject);
 
-    @Transactional
-    Subject save(Subject subject);
+    Subject update(Subject subject);
 
-    @Transactional
     void delete(Long id);
 
 }

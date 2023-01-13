@@ -1,8 +1,8 @@
 package com.solvd.laba.iis.web.controller;
 
-import com.solvd.laba.iis.domain.mark.Mark;
+import com.solvd.laba.iis.domain.Mark;
 import com.solvd.laba.iis.service.MarkService;
-import com.solvd.laba.iis.web.dto.mark.MarkDto;
+import com.solvd.laba.iis.web.dto.MarkDto;
 import com.solvd.laba.iis.web.dto.validation.OnCreateMarkGroup;
 import com.solvd.laba.iis.web.dto.validation.OnUpdateGroup;
 import com.solvd.laba.iis.web.mapper.mark.MarkMapper;
@@ -23,13 +23,15 @@ public class MarkController {
 
     @GetMapping()
     public List<MarkDto> getAll() {
-        List<MarkDto> marks = markMapper.entityToDto(markService.findAll());
-        return marks;
+        List<Mark> marks = markService.retrieveAll();
+        List<MarkDto> markDtos = markMapper.entityToDto(marks);
+        return markDtos;
     }
 
     @GetMapping("/{id}")
-    public MarkDto getById(@PathVariable long id) {
-        MarkDto markDto = markMapper.entityToDto(markService.findById(id));
+    public MarkDto getById(@PathVariable Long id) {
+        Mark mark = markService.retrieveById(id);
+        MarkDto markDto = markMapper.entityToDto(mark);
         return markDto;
     }
 
@@ -44,14 +46,14 @@ public class MarkController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable long id) {
+    public void delete(@PathVariable Long id) {
         markService.delete(id);
     }
 
     @PutMapping
     public MarkDto update(@RequestBody @Validated(OnUpdateGroup.class) MarkDto markDto) {
         Mark mark = markMapper.dtoToEntity(markDto);
-        mark = markService.save(mark);
+        mark = markService.update(mark);
         markDto = markMapper.entityToDto(mark);
         return markDto;
     }

@@ -1,7 +1,7 @@
 package com.solvd.laba.iis.persistence;
 
-import com.solvd.laba.iis.domain.student.StudentInfo;
-import com.solvd.laba.iis.domain.student.StudentSearchCriteria;
+import com.solvd.laba.iis.domain.StudentInfo;
+import com.solvd.laba.iis.domain.criteria.StudentSearchCriteria;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +18,7 @@ public interface StudentRepository {
 
     void create(StudentInfo studentInfo);
 
-    void save(StudentInfo studentInfo);
+    void update(StudentInfo studentInfo);
 
     void delete(Long id);
 

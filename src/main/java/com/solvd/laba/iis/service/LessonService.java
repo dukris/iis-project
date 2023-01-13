@@ -1,28 +1,24 @@
 package com.solvd.laba.iis.service;
 
-import com.solvd.laba.iis.domain.lesson.Lesson;
-import com.solvd.laba.iis.domain.lesson.LessonSearchCriteria;
-import org.springframework.transaction.annotation.Transactional;
+import com.solvd.laba.iis.domain.Lesson;
+import com.solvd.laba.iis.domain.criteria.LessonSearchCriteria;
 
 import java.util.List;
 
 public interface LessonService {
 
-    List<Lesson> findAll();
+    List<Lesson> retrieveAll();
 
-    Lesson findById(Long id);
+    Lesson retrieveById(Long id);
 
-    List<Lesson> findByStudentCriteria(Long groupId, LessonSearchCriteria lessonSearchCriteria);
+    List<Lesson> retrieveByStudentCriteria(Long groupId, LessonSearchCriteria lessonSearchCriteria);
 
-    List<Lesson> findByTeacherCriteria(Long teacherId, LessonSearchCriteria lessonSearchCriteria);
+    List<Lesson> retrieveByTeacherCriteria(Long teacherId, LessonSearchCriteria lessonSearchCriteria);
 
-    @Transactional
     Lesson create(Lesson lesson);
 
-    @Transactional
-    Lesson save(Lesson lesson);
+    Lesson update(Lesson lesson);
 
-    @Transactional
     void delete(Long id);
 
 }

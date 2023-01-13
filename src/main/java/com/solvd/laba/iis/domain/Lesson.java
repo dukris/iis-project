@@ -1,8 +1,5 @@
-package com.solvd.laba.iis.domain.lesson;
+package com.solvd.laba.iis.domain;
 
-import com.solvd.laba.iis.domain.Subject;
-import com.solvd.laba.iis.domain.TeacherInfo;
-import com.solvd.laba.iis.domain.group.Group;
 import lombok.*;
 
 import java.time.LocalTime;

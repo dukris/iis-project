@@ -7,6 +7,7 @@ import com.solvd.laba.iis.persistence.UserRepository;
 import com.solvd.laba.iis.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,34 +18,41 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public List<UserInfo> findAll() {
+    public List<UserInfo> retrieveAll() {
         return userRepository.findAll();
     }
 
     @Override
-    public UserInfo findById(Long id) {
+    public UserInfo retrieveById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ResourceDoesNotExistException("User with id = " + id + " not found"));
     }
 
     @Override
+    @Transactional
     public UserInfo create(UserInfo userInfo) {
-        userRepository.findByEmail(userInfo.getEmail())
-                .ifPresent(el -> {
-                    throw new ResourceAlreadyExistsException("User with email = " + userInfo.getEmail() + " already exists");
-                });
+        if (userRepository.isExist(userInfo.getEmail())) {
+            throw new ResourceAlreadyExistsException("User with email = " + userInfo.getEmail() + " already exists");
+        }
         userRepository.create(userInfo);
         return userInfo;
     }
 
     @Override
-    public UserInfo save(UserInfo userInfo) {
-        findById(userInfo.getId());
-        userRepository.save(userInfo);
+    @Transactional
+    public UserInfo update(UserInfo userInfo) {
+        UserInfo foundUser = retrieveById(userInfo.getId());
+        foundUser.setName(userInfo.getName());
+        foundUser.setSurname(userInfo.getSurname());
+        foundUser.setEmail(userInfo.getEmail());
+        foundUser.setPassword(userInfo.getPassword());
+        foundUser.setRole(userInfo.getRole());
+        userRepository.update(userInfo);
         return userInfo;
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
         userRepository.delete(id);
     }

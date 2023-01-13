@@ -1,9 +1,9 @@
 package com.solvd.laba.iis.persistence.impl;
 
-import com.solvd.laba.iis.domain.mark.Mark;
+import com.solvd.laba.iis.domain.Mark;
 import com.solvd.laba.iis.domain.exception.ResourceMappingException;
 import com.solvd.laba.iis.persistence.MarkRepository;
-import com.solvd.laba.iis.domain.mark.MarkSearchCriteria;
+import com.solvd.laba.iis.domain.criteria.MarkSearchCriteria;
 import com.solvd.laba.iis.persistence.mapper.MarkRowMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -27,16 +27,17 @@ public class MarkRepositoryImpl implements MarkRepository {
             teacher.email as teacher_user_email, teacher.password as teacher_user_password, teacher.role as teacher_user_role,
             groups.id as group_id, groups.number as group_number,
             subjects.id as subject_id, subjects.name as subject_name
-            FROM iis_schema.marks
-            LEFT JOIN iis_schema.subjects ON (marks.subject_id = subjects.id)
-            LEFT JOIN iis_schema.students_info ON (marks.student_id = students_info.id)
-            LEFT JOIN iis_schema.teachers_info ON (marks.teacher_id = teachers_info.id)
-            LEFT JOIN iis_schema.groups ON (students_info.group_id = groups.id)
-            LEFT JOIN iis_schema.users_info teacher on  (teacher.id = teachers_info.user_id)
-            LEFT JOIN iis_schema.users_info student on (student.id = students_info.user_id) """;
-    private static final String CREATE_QUERY = "INSERT INTO iis_schema.marks (date, value, student_id, teacher_id, subject_id) VALUES(?, ?, ?, ?, ?)";
-    private static final String DELETE_QUERY = "DELETE FROM iis_schema.marks WHERE id = ?";
-    private static final String SAVE_QUERY = "UPDATE iis_schema.marks SET date = ?, value = ?, student_id = ?, teacher_id = ?, subject_id = ? WHERE id = ?";
+            FROM marks
+            LEFT JOIN subjects ON (marks.subject_id = subjects.id)
+            LEFT JOIN students_info ON (marks.student_id = students_info.id)
+            LEFT JOIN teachers_info ON (marks.teacher_id = teachers_info.id)
+            LEFT JOIN groups ON (students_info.group_id = groups.id)
+            LEFT JOIN users_info teacher on  (teacher.id = teachers_info.user_id)
+            LEFT JOIN users_info student on (student.id = students_info.user_id) """;
+    private static final String CREATE_QUERY = "INSERT INTO marks (date, value, student_id, teacher_id, subject_id) VALUES(?, ?, ?, ?, ?)";
+    private static final String DELETE_QUERY = "DELETE FROM marks WHERE id = ?";
+    private static final String SAVE_QUERY = "UPDATE marks SET date = ?, value = ?, student_id = ?, teacher_id = ?, subject_id = ? WHERE id = ?";
+
     private final DataSource dataSource;
 
     @Override
@@ -118,7 +119,7 @@ public class MarkRepositoryImpl implements MarkRepository {
     }
 
     @Override
-    public void save(Mark mark) {
+    public void update(Mark mark) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(SAVE_QUERY)) {
             statement.setDate(1, Date.valueOf(mark.getDate()));

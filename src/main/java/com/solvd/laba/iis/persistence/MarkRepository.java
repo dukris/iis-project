@@ -1,7 +1,7 @@
 package com.solvd.laba.iis.persistence;
 
-import com.solvd.laba.iis.domain.mark.Mark;
-import com.solvd.laba.iis.domain.mark.MarkSearchCriteria;
+import com.solvd.laba.iis.domain.Mark;
+import com.solvd.laba.iis.domain.criteria.MarkSearchCriteria;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +18,7 @@ public interface MarkRepository {
 
     void create(Mark mark);
 
-    void save(Mark mark);
+    void update(Mark mark);
 
     void delete(Long id);
 

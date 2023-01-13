@@ -1,7 +1,7 @@
 package com.solvd.laba.iis.web.mapper.lesson;
 
-import com.solvd.laba.iis.domain.lesson.Lesson;
-import com.solvd.laba.iis.web.dto.lesson.LessonDto;
+import com.solvd.laba.iis.domain.Lesson;
+import com.solvd.laba.iis.web.dto.LessonDto;
 import com.solvd.laba.iis.web.mapper.SubjectMapper;
 import com.solvd.laba.iis.web.mapper.TeacherInfoMapper;
 import com.solvd.laba.iis.web.mapper.group.GroupMapper;

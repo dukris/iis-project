@@ -1,18 +1,21 @@
 package com.solvd.laba.iis.web.controller;
 
+import com.solvd.laba.iis.domain.Group;
+import com.solvd.laba.iis.domain.Lesson;
+import com.solvd.laba.iis.domain.Mark;
 import com.solvd.laba.iis.domain.TeacherInfo;
-import com.solvd.laba.iis.domain.group.GroupSearchCriteria;
-import com.solvd.laba.iis.domain.lesson.LessonSearchCriteria;
+import com.solvd.laba.iis.domain.criteria.GroupSearchCriteria;
+import com.solvd.laba.iis.domain.criteria.LessonSearchCriteria;
 import com.solvd.laba.iis.service.GroupService;
 import com.solvd.laba.iis.service.LessonService;
 import com.solvd.laba.iis.service.MarkService;
 import com.solvd.laba.iis.service.TeacherService;
-import com.solvd.laba.iis.web.dto.group.GroupDto;
-import com.solvd.laba.iis.web.dto.lesson.LessonDto;
-import com.solvd.laba.iis.web.dto.mark.MarkDto;
+import com.solvd.laba.iis.web.dto.GroupDto;
+import com.solvd.laba.iis.web.dto.LessonDto;
+import com.solvd.laba.iis.web.dto.MarkDto;
 import com.solvd.laba.iis.web.dto.TeacherInfoDto;
-import com.solvd.laba.iis.web.dto.group.GroupSearchCriteriaDto;
-import com.solvd.laba.iis.web.dto.lesson.LessonSearchCriteriaDto;
+import com.solvd.laba.iis.web.dto.criteria.GroupSearchCriteriaDto;
+import com.solvd.laba.iis.web.dto.criteria.LessonSearchCriteriaDto;
 import com.solvd.laba.iis.web.dto.validation.OnCreateTeacherGroup;
 import com.solvd.laba.iis.web.dto.validation.OnUpdateGroup;
 import com.solvd.laba.iis.web.mapper.group.GroupMapper;
@@ -46,37 +49,42 @@ public class TeacherController {
 
     @GetMapping
     public List<TeacherInfoDto> getAll() {
-        List<TeacherInfoDto> teachers = teacherInfoMapper.entityToDto(teacherService.findAll());
-        return teachers;
+        List<TeacherInfo> teachers = teacherService.retrieveAll();
+        List<TeacherInfoDto> teacherDtos = teacherInfoMapper.entityToDto(teachers);
+        return teacherDtos;
     }
 
     @GetMapping("/{id}")
-    public TeacherInfoDto getById(@PathVariable long id) {
-        TeacherInfoDto teacher = teacherInfoMapper.entityToDto(teacherService.findById(id));
-        return teacher;
+    public TeacherInfoDto getById(@PathVariable Long id) {
+        TeacherInfo teacher = teacherService.retrieveById(id);
+        TeacherInfoDto teacherDto = teacherInfoMapper.entityToDto(teacher);
+        return teacherDto;
     }
 
     @GetMapping("/{id}/groups")
-    public List<GroupDto> getGroups(@PathVariable long id,
+    public List<GroupDto> getGroups(@PathVariable Long id,
                                     GroupSearchCriteriaDto groupSearchCriteriaDto) {
         GroupSearchCriteria groupSearchCriteria = groupSearchCriteriaMapper.dtoToEntity(groupSearchCriteriaDto);
-        List<GroupDto> groups = groupMapper.entityToDto(groupService.findByCriteria(id, groupSearchCriteria));
-        return groups;
+        List<Group> groups = groupService.retrieveByCriteria(id, groupSearchCriteria);
+        List<GroupDto> groupDtos = groupMapper.entityToDto(groups);
+        return groupDtos;
     }
 
     @GetMapping("/{id}/lessons")
-    public List<LessonDto> getLessons(@PathVariable long id,
+    public List<LessonDto> getLessons(@PathVariable Long id,
                                       LessonSearchCriteriaDto lessonSearchCriteriaDto) {
         LessonSearchCriteria lessonSearchCriteria = lessonSearchCriteriaMapper.dtoToEntity(lessonSearchCriteriaDto);
-        List<LessonDto> lessons = lessonMapper.entityToDto(lessonService.findByTeacherCriteria(id, lessonSearchCriteria));
-        return lessons;
+        List<Lesson> lessons = lessonService.retrieveByTeacherCriteria(id, lessonSearchCriteria);
+        List<LessonDto> lessonDtos = lessonMapper.entityToDto(lessons);
+        return lessonDtos;
     }
 
     @GetMapping("/{id}/subjects/{subject_id}/marks")
-    public List<MarkDto> getMarks(@PathVariable long id,
-                                  @PathVariable(name = "subject_id") long subjectId) {
-        List<MarkDto> marks = markMapper.entityToDto(markService.findByTeacher(subjectId, id));
-        return marks;
+    public List<MarkDto> getMarks(@PathVariable Long id,
+                                  @PathVariable(name = "subject_id") Long subjectId) {
+        List<Mark> marks = markService.retrieveByTeacher(subjectId, id);
+        List<MarkDto> markDtos = markMapper.entityToDto(marks);
+        return markDtos;
     }
 
     @PostMapping
@@ -90,29 +98,29 @@ public class TeacherController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable long id) {
+    public void delete(@PathVariable Long id) {
         teacherService.delete(id);
     }
 
     @PutMapping
     public TeacherInfoDto update(@RequestBody @Validated(OnUpdateGroup.class) TeacherInfoDto teacherInfoDto) {
         TeacherInfo teacherInfo = teacherInfoMapper.dtoToEntity(teacherInfoDto);
-        teacherInfo = teacherService.save(teacherInfo);
+        teacherInfo = teacherService.update(teacherInfo);
         teacherInfoDto = teacherInfoMapper.entityToDto(teacherInfo);
         return teacherInfoDto;
     }
 
     @PostMapping("/{id}/subjects")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addSubject(@PathVariable long id,
-                           @RequestParam(name = "subject_id") long subjectId) {
+    public void addSubject(@PathVariable Long id,
+                           @RequestParam(name = "subject_id") Long subjectId) {
         teacherService.addSubjectForTeacher(id, subjectId);
     }
 
     @DeleteMapping("/{id}/subjects/{subject_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteSubject(@PathVariable long id,
-                              @PathVariable(name = "subject_id") long subjectId) {
+    public void deleteSubject(@PathVariable Long id,
+                              @PathVariable(name = "subject_id") Long subjectId) {
         teacherService.deleteSubjectForTeacher(id, subjectId);
     }
 

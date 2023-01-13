@@ -21,15 +21,16 @@ public class TeacherRepositoryImpl implements TeacherRepository {
             users_info.id as user_id, users_info.name as user_name, users_info.surname as user_surname,
             users_info.email as user_email, users_info.password as user_password, users_info.role as user_role,
             subjects.id as subject_id, subjects.name as subject_name
-            FROM iis_schema.teachers_info
-            LEFT JOIN iis_schema.users_info ON (teachers_info.user_id = users_info.id)
-            LEFT JOIN iis_schema.teachers_subjects ON (teachers_info.id = teachers_subjects.teacher_id)
-            LEFT JOIN iis_schema.subjects ON (teachers_subjects.subject_id = subjects.id) """;
-    private static final String CREATE_QUERY = "INSERT INTO iis_schema.teachers_info (user_id) VALUES(?)";
-    private static final String DELETE_QUERY = "DELETE FROM iis_schema.teachers_info WHERE id = ?";
-    private static final String SAVE_QUERY = "UPDATE iis_schema.teachers_info SET user_id = ? WHERE id = ?";
-    private static final String ADD_SUBJECT_QUERY = "INSERT INTO iis_schema.teachers_subjects (teacher_id, subject_id) VALUES(?,?)";
-    private static final String DELETE_SUBJECT_QUERY = "DELETE FROM iis_schema.teachers_subjects WHERE teacher_id = ? AND subject_id = ?";
+            FROM teachers_info
+            LEFT JOIN users_info ON (teachers_info.user_id = users_info.id)
+            LEFT JOIN teachers_subjects ON (teachers_info.id = teachers_subjects.teacher_id)
+            LEFT JOIN subjects ON (teachers_subjects.subject_id = subjects.id) """;
+    private static final String CREATE_QUERY = "INSERT INTO teachers_info (user_id) VALUES(?)";
+    private static final String DELETE_QUERY = "DELETE FROM teachers_info WHERE id = ?";
+    private static final String SAVE_QUERY = "UPDATE teachers_info SET user_id = ? WHERE id = ?";
+    private static final String ADD_SUBJECT_QUERY = "INSERT INTO teachers_subjects (teacher_id, subject_id) VALUES(?,?)";
+    private static final String DELETE_SUBJECT_QUERY = "DELETE FROM teachers_subjects WHERE teacher_id = ? AND subject_id = ?";
+
     private final DataSource dataSource;
 
     @Override
@@ -59,7 +60,7 @@ public class TeacherRepositoryImpl implements TeacherRepository {
 
     @Override
     public List<TeacherInfo> findByGroup(Long groupId) {
-        String joinQuery = "LEFT JOIN iis_schema.lessons ON (teachers_info.id = lessons.teacher_id) ";
+        String joinQuery = "LEFT JOIN lessons ON (teachers_info.id = lessons.teacher_id) ";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + joinQuery + "WHERE lessons.group_id = ?")) {
             statement.setLong(1, groupId);
@@ -102,7 +103,7 @@ public class TeacherRepositoryImpl implements TeacherRepository {
     }
 
     @Override
-    public void save(TeacherInfo teacherInfo) {
+    public void update(TeacherInfo teacherInfo) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(SAVE_QUERY)) {
             statement.setLong(1, teacherInfo.getUser().getId());

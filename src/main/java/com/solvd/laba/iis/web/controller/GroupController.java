@@ -1,16 +1,19 @@
 package com.solvd.laba.iis.web.controller;
 
-import com.solvd.laba.iis.domain.group.Group;
-import com.solvd.laba.iis.domain.lesson.LessonSearchCriteria;
+import com.solvd.laba.iis.domain.Group;
+import com.solvd.laba.iis.domain.Lesson;
+import com.solvd.laba.iis.domain.StudentInfo;
+import com.solvd.laba.iis.domain.TeacherInfo;
+import com.solvd.laba.iis.domain.criteria.LessonSearchCriteria;
 import com.solvd.laba.iis.service.GroupService;
 import com.solvd.laba.iis.service.LessonService;
 import com.solvd.laba.iis.service.StudentService;
 import com.solvd.laba.iis.service.TeacherService;
-import com.solvd.laba.iis.web.dto.group.GroupDto;
-import com.solvd.laba.iis.web.dto.lesson.LessonDto;
-import com.solvd.laba.iis.web.dto.student.StudentInfoDto;
+import com.solvd.laba.iis.web.dto.GroupDto;
+import com.solvd.laba.iis.web.dto.LessonDto;
+import com.solvd.laba.iis.web.dto.StudentInfoDto;
 import com.solvd.laba.iis.web.dto.TeacherInfoDto;
-import com.solvd.laba.iis.web.dto.lesson.LessonSearchCriteriaDto;
+import com.solvd.laba.iis.web.dto.criteria.LessonSearchCriteriaDto;
 import com.solvd.laba.iis.web.dto.validation.OnCreateGroup;
 import com.solvd.laba.iis.web.dto.validation.OnUpdateGroup;
 import com.solvd.laba.iis.web.mapper.group.GroupMapper;
@@ -42,34 +45,39 @@ public class GroupController {
 
     @GetMapping
     public List<GroupDto> getAll() {
-        List<GroupDto> groups = groupMapper.entityToDto(groupService.findAll());
-        return groups;
+        List<Group> groups = groupService.retrieveAll();
+        List<GroupDto> groupDtos = groupMapper.entityToDto(groups);
+        return groupDtos;
     }
 
     @GetMapping("/{id}")
-    public GroupDto getById(@PathVariable long id) {
-        GroupDto group = groupMapper.entityToDto(groupService.findById(id));
-        return group;
+    public GroupDto getById(@PathVariable Long id) {
+        Group group = groupService.retrieveById(id);
+        GroupDto groupDto = groupMapper.entityToDto(group);
+        return groupDto;
     }
 
     @GetMapping("/{id}/lessons")
-    public List<LessonDto> getLessons(@PathVariable long id,
+    public List<LessonDto> getLessons(@PathVariable Long id,
                                       LessonSearchCriteriaDto lessonSearchCriteriaDto) {
         LessonSearchCriteria lessonSearchCriteria = lessonSearchCriteriaMapper.dtoToEntity(lessonSearchCriteriaDto);
-        List<LessonDto> lessons = lessonMapper.entityToDto(lessonService.findByStudentCriteria(id, lessonSearchCriteria));
-        return lessons;
+        List<Lesson> lessons = lessonService.retrieveByStudentCriteria(id, lessonSearchCriteria);
+        List<LessonDto> lessonDtos = lessonMapper.entityToDto(lessons);
+        return lessonDtos;
     }
 
     @GetMapping("/{id}/students")
-    public List<StudentInfoDto> getStudents(@PathVariable long id) {
-        List<StudentInfoDto> students = studentInfoMapper.entityToDto(studentService.findByGroup(id));
-        return students;
+    public List<StudentInfoDto> getStudents(@PathVariable Long id) {
+        List<StudentInfo> students = studentService.retrieveByGroup(id);
+        List<StudentInfoDto> studentDtos = studentInfoMapper.entityToDto(students);
+        return studentDtos;
     }
 
     @GetMapping("/{id}/teachers")
-    public List<TeacherInfoDto> getTeachers(@PathVariable long id) {
-        List<TeacherInfoDto> teachers = teacherInfoMapper.entityToDto(teacherService.findByGroup(id));
-        return teachers;
+    public List<TeacherInfoDto> getTeachers(@PathVariable Long id) {
+        List<TeacherInfo> teachers = teacherService.retrieveByGroup(id);
+        List<TeacherInfoDto> teacherDtos = teacherInfoMapper.entityToDto(teachers);
+        return teacherDtos;
     }
 
     @PostMapping
@@ -83,14 +91,14 @@ public class GroupController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable long id) {
+    public void delete(@PathVariable Long id) {
         groupService.delete(id);
     }
 
     @PutMapping
     public GroupDto update(@RequestBody @Validated(OnUpdateGroup.class) GroupDto groupDto) {
         Group group = groupMapper.dtoToEntity(groupDto);
-        group = groupService.save(group);
+        group = groupService.update(group);
         groupDto = groupMapper.entityToDto(group);
         return groupDto;
     }

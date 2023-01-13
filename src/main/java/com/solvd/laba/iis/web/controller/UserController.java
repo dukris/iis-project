@@ -23,14 +23,16 @@ public class UserController {
 
     @GetMapping
     public List<UserInfoDto> getAll() {
-        List<UserInfoDto> users = userInfoMapper.entityToDto(userService.findAll());
-        return users;
+        List<UserInfo> users = userService.retrieveAll();
+        List<UserInfoDto> userDtos = userInfoMapper.entityToDto(users);
+        return userDtos;
     }
 
     @GetMapping("/{id}")
-    public UserInfoDto getById(@PathVariable long id) {
-        UserInfoDto user = userInfoMapper.entityToDto(userService.findById(id));
-        return user;
+    public UserInfoDto getById(@PathVariable Long id) {
+        UserInfo user = userService.retrieveById(id);
+        UserInfoDto userDto = userInfoMapper.entityToDto(user);
+        return userDto;
     }
 
     @PostMapping
@@ -44,14 +46,14 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable long id) {
+    public void delete(@PathVariable Long id) {
         userService.delete(id);
     }
 
     @PutMapping
     public UserInfoDto update(@RequestBody @Validated(OnUpdateGroup.class) UserInfoDto userInfoDto) {
         UserInfo userInfo = userInfoMapper.dtoToEntity(userInfoDto);
-        userInfo = userService.save(userInfo);
+        userInfo = userService.update(userInfo);
         userInfoDto = userInfoMapper.entityToDto(userInfo);
         return userInfoDto;
     }

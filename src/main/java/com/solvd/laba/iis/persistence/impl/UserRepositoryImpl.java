@@ -19,10 +19,12 @@ public class UserRepositoryImpl implements UserRepository {
     private static final String FIND_ALL_QUERY = """
             SELECT users_info.id as user_id,  users_info.name as user_name, users_info.surname as user_surname,
             users_info.email as user_email, users_info.password as user_password, users_info.role as user_role
-            FROM iis_schema.users_info""";
-    private static final String CREATE_QUERY = "INSERT INTO iis_schema.users_info (name, surname, email, password, role) VALUES(?, ?, ?, ?, ?)";
-    private static final String DELETE_QUERY = "DELETE FROM iis_schema.users_info WHERE id = ?";
-    private static final String SAVE_QUERY = "UPDATE iis_schema.users_info SET name = ?, surname = ?, email = ?, password = ?, role = ? WHERE id = ?";
+            FROM users_info""";
+    private static final String IS_EXIST_QUERY = "SELECT users_info.id as user_id FROM users_info WHERE email = ?";
+    private static final String CREATE_QUERY = "INSERT INTO users_info (name, surname, email, password, role) VALUES(?, ?, ?, ?, ?)";
+    private static final String DELETE_QUERY = "DELETE FROM users_info WHERE id = ?";
+    private static final String SAVE_QUERY = "UPDATE users_info SET name = ?, surname = ?, email = ?, password = ?, role = ? WHERE id = ?";
+
     private final DataSource dataSource;
 
     @Override
@@ -51,12 +53,12 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Optional<UserInfo> findByEmail(String email) {
+    public boolean isExist(String email) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + " WHERE email = ?")) {
+             PreparedStatement statement = connection.prepareStatement(IS_EXIST_QUERY)) {
             statement.setString(1, email);
             try (ResultSet rs = statement.executeQuery()) {
-                return rs.next() ? Optional.of(UserRowMapper.mapRow(rs)) : Optional.empty();
+                return rs.next();
             }
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while finding user by email = " + email, ex);
@@ -85,7 +87,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void save(UserInfo userInfo) {
+    public void update(UserInfo userInfo) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(SAVE_QUERY)) {
             statement.setString(1, userInfo.getName());

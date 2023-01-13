@@ -1,7 +1,7 @@
 package com.solvd.laba.iis.web.mapper.mark;
 
-import com.solvd.laba.iis.domain.mark.MarkSearchCriteria;
-import com.solvd.laba.iis.web.dto.mark.MarkSearchCriteriaDto;
+import com.solvd.laba.iis.domain.criteria.MarkSearchCriteria;
+import com.solvd.laba.iis.web.dto.criteria.MarkSearchCriteriaDto;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

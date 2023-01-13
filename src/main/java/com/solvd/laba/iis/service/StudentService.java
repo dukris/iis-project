@@ -1,28 +1,24 @@
 package com.solvd.laba.iis.service;
 
-import com.solvd.laba.iis.domain.student.StudentInfo;
-import com.solvd.laba.iis.domain.student.StudentSearchCriteria;
-import org.springframework.transaction.annotation.Transactional;
+import com.solvd.laba.iis.domain.StudentInfo;
+import com.solvd.laba.iis.domain.criteria.StudentSearchCriteria;
 
 import java.util.List;
 
 public interface StudentService {
 
-    List<StudentInfo> findAll();
+    List<StudentInfo> retrieveAll();
 
-    StudentInfo findById(Long id);
+    StudentInfo retrieveById(Long id);
 
-    List<StudentInfo> findByGroup(Long groupId);
+    List<StudentInfo> retrieveByGroup(Long groupId);
 
-    List<StudentInfo> findByCriteria(StudentSearchCriteria studentSearchCriteria);
+    List<StudentInfo> retrieveByCriteria(StudentSearchCriteria studentSearchCriteria);
 
-    @Transactional
     StudentInfo create(StudentInfo studentInfo);
 
-    @Transactional
-    StudentInfo save(StudentInfo studentInfo);
+    StudentInfo update(StudentInfo studentInfo);
 
-    @Transactional
     void delete(Long id);
 
 }

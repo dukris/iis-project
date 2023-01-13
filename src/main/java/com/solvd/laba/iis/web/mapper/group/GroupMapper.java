@@ -1,7 +1,7 @@
 package com.solvd.laba.iis.web.mapper.group;
 
-import com.solvd.laba.iis.domain.group.Group;
-import com.solvd.laba.iis.web.dto.group.GroupDto;
+import com.solvd.laba.iis.domain.Group;
+import com.solvd.laba.iis.web.dto.GroupDto;
 import org.mapstruct.Mapper;
 
 import java.util.List;

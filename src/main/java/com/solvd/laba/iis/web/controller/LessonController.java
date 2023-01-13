@@ -1,8 +1,8 @@
 package com.solvd.laba.iis.web.controller;
 
-import com.solvd.laba.iis.domain.lesson.Lesson;
+import com.solvd.laba.iis.domain.Lesson;
 import com.solvd.laba.iis.service.LessonService;
-import com.solvd.laba.iis.web.dto.lesson.LessonDto;
+import com.solvd.laba.iis.web.dto.LessonDto;
 import com.solvd.laba.iis.web.dto.validation.OnCreateLessonGroup;
 import com.solvd.laba.iis.web.dto.validation.OnUpdateGroup;
 import com.solvd.laba.iis.web.mapper.lesson.LessonMapper;
@@ -23,14 +23,16 @@ public class LessonController {
 
     @GetMapping
     public List<LessonDto> getAll() {
-        List<LessonDto> lessons = lessonMapper.entityToDto(lessonService.findAll());
-        return lessons;
+        List<Lesson> lessons = lessonService.retrieveAll();
+        List<LessonDto> lessonDtos = lessonMapper.entityToDto(lessons);
+        return lessonDtos;
     }
 
     @GetMapping("/{id}")
-    public LessonDto getById(@PathVariable long id) {
-        LessonDto lesson = lessonMapper.entityToDto(lessonService.findById(id));
-        return lesson;
+    public LessonDto getById(@PathVariable Long id) {
+        Lesson lesson = lessonService.retrieveById(id);
+        LessonDto lessonDto = lessonMapper.entityToDto(lesson);
+        return lessonDto;
     }
 
     @PostMapping
@@ -44,14 +46,14 @@ public class LessonController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable long id) {
+    public void delete(@PathVariable Long id) {
         lessonService.delete(id);
     }
 
     @PutMapping
     public LessonDto update(@RequestBody @Validated(OnUpdateGroup.class) LessonDto lessonDto) {
         Lesson lesson = lessonMapper.dtoToEntity(lessonDto);
-        lesson = lessonService.save(lesson);
+        lesson = lessonService.update(lesson);
         lessonDto = lessonMapper.entityToDto(lesson);
         return lessonDto;
     }

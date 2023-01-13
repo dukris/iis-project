@@ -1,6 +1,7 @@
 package com.solvd.laba.iis.web.controller;
 
 import com.solvd.laba.iis.domain.Subject;
+import com.solvd.laba.iis.domain.TeacherInfo;
 import com.solvd.laba.iis.service.SubjectService;
 import com.solvd.laba.iis.service.TeacherService;
 import com.solvd.laba.iis.web.dto.SubjectDto;
@@ -28,20 +29,23 @@ public class SubjectController {
 
     @GetMapping
     public List<SubjectDto> getAll() {
-        List<SubjectDto> subjects = subjectMapper.entityToDto(subjectService.findAll());
-        return subjects;
+        List<Subject> subjects = subjectService.retrieveAll();
+        List<SubjectDto> subjectDtos = subjectMapper.entityToDto(subjects);
+        return subjectDtos;
     }
 
     @GetMapping("/{id}")
-    public SubjectDto getById(@PathVariable long id) {
-        SubjectDto subject = subjectMapper.entityToDto(subjectService.findById(id));
-        return subject;
+    public SubjectDto getById(@PathVariable Long id) {
+        Subject subject = subjectService.retrieveById(id);
+        SubjectDto subjectDto = subjectMapper.entityToDto(subject);
+        return subjectDto;
     }
 
     @GetMapping("/{id}/teachers")
-    public List<TeacherInfoDto> getTeachers(@PathVariable long id) {
-        List<TeacherInfoDto> teachers = teacherInfoMapper.entityToDto(teacherService.findBySubject(id));
-        return teachers;
+    public List<TeacherInfoDto> getTeachers(@PathVariable Long id) {
+        List<TeacherInfo> teachers = teacherService.retrieveBySubject(id);
+        List<TeacherInfoDto> teacherDtos = teacherInfoMapper.entityToDto(teachers);
+        return teacherDtos;
     }
 
     @PostMapping
@@ -55,14 +59,14 @@ public class SubjectController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable long id) {
+    public void delete(@PathVariable Long id) {
         subjectService.delete(id);
     }
 
     @PutMapping
     public SubjectDto update(@RequestBody @Validated(OnUpdateGroup.class) SubjectDto subjectDto) {
         Subject subject = subjectMapper.dtoToEntity(subjectDto);
-        subject = subjectService.save(subject);
+        subject = subjectService.update(subject);
         subjectDto = subjectMapper.entityToDto(subject);
         return subjectDto;
     }

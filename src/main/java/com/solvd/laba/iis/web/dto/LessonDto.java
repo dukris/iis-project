@@ -1,9 +1,6 @@
-package com.solvd.laba.iis.web.dto.lesson;
+package com.solvd.laba.iis.web.dto;
 
-import com.solvd.laba.iis.domain.lesson.Lesson;
-import com.solvd.laba.iis.web.dto.SubjectDto;
-import com.solvd.laba.iis.web.dto.TeacherInfoDto;
-import com.solvd.laba.iis.web.dto.group.GroupDto;
+import com.solvd.laba.iis.domain.Lesson;
 import com.solvd.laba.iis.web.dto.validation.OnCreateLessonGroup;
 import com.solvd.laba.iis.web.dto.validation.OnUpdateGroup;
 import jakarta.validation.Valid;

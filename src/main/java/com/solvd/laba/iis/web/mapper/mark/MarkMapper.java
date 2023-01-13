@@ -1,7 +1,7 @@
 package com.solvd.laba.iis.web.mapper.mark;
 
-import com.solvd.laba.iis.domain.mark.Mark;
-import com.solvd.laba.iis.web.dto.mark.MarkDto;
+import com.solvd.laba.iis.domain.Mark;
+import com.solvd.laba.iis.web.dto.MarkDto;
 import com.solvd.laba.iis.web.mapper.student.StudentInfoMapper;
 import com.solvd.laba.iis.web.mapper.SubjectMapper;
 import com.solvd.laba.iis.web.mapper.TeacherInfoMapper;

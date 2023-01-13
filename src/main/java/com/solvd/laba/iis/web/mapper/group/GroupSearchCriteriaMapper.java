@@ -1,7 +1,7 @@
 package com.solvd.laba.iis.web.mapper.group;
 
-import com.solvd.laba.iis.domain.group.GroupSearchCriteria;
-import com.solvd.laba.iis.web.dto.group.GroupSearchCriteriaDto;
+import com.solvd.laba.iis.domain.criteria.GroupSearchCriteria;
+import com.solvd.laba.iis.web.dto.criteria.GroupSearchCriteriaDto;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

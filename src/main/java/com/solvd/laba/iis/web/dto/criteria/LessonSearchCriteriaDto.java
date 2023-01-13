@@ -1,4 +1,4 @@
-package com.solvd.laba.iis.web.dto.lesson;
+package com.solvd.laba.iis.web.dto.criteria;
 
 import lombok.*;
 

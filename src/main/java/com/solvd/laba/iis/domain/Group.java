@@ -1,4 +1,4 @@
-package com.solvd.laba.iis.domain.group;
+package com.solvd.laba.iis.domain;
 
 import lombok.*;
 

@@ -1,13 +1,11 @@
-package com.solvd.laba.iis.web.dto.student;
+package com.solvd.laba.iis.web.dto;
 
-import com.solvd.laba.iis.web.dto.UserInfoDto;
-import com.solvd.laba.iis.web.dto.group.GroupDto;
 import com.solvd.laba.iis.web.dto.validation.OnCreateMarkGroup;
 import com.solvd.laba.iis.web.dto.validation.OnCreateStudentGroup;
 import com.solvd.laba.iis.web.dto.validation.OnUpdateGroup;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import lombok.*;
+import lombok.Data;
 
 @Data
 public class StudentInfoDto {

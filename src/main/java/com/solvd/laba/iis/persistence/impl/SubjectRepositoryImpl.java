@@ -16,10 +16,12 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class SubjectRepositoryImpl implements SubjectRepository {
 
-    private static final String FIND_ALL_QUERY = "SELECT subjects.id as subject_id, subjects.name as subject_name FROM iis_schema.subjects ";
-    private static final String CREATE_QUERY = "INSERT INTO iis_schema.subjects (name) VALUES(?)";
-    private static final String DELETE_QUERY = "DELETE FROM iis_schema.subjects WHERE id = ?";
-    private static final String SAVE_QUERY = "UPDATE iis_schema.subjects SET name = ? WHERE id = ?";
+    private static final String FIND_ALL_QUERY = "SELECT subjects.id as subject_id, subjects.name as subject_name FROM subjects ";
+    private static final String IS_EXIST_QUERY = "SELECT subjects.id as subject_id FROM subjects WHERE name = ?";
+    private static final String CREATE_QUERY = "INSERT INTO subjects (name) VALUES(?)";
+    private static final String DELETE_QUERY = "DELETE FROM subjects WHERE id = ?";
+    private static final String SAVE_QUERY = "UPDATE subjects SET name = ? WHERE id = ?";
+
     private final DataSource dataSource;
 
     @Override
@@ -48,12 +50,12 @@ public class SubjectRepositoryImpl implements SubjectRepository {
     }
 
     @Override
-    public Optional<Subject> findByName(String name) {
+    public boolean isExist(String name) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + "WHERE name = ?")) {
+             PreparedStatement statement = connection.prepareStatement(IS_EXIST_QUERY)) {
             statement.setString(1, name);
             try (ResultSet rs = statement.executeQuery()) {
-                return rs.next() ? Optional.of(SubjectRowMapper.mapRow(rs)) : Optional.empty();
+                return rs.next();
             }
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while finding subject by name = " + name, ex);
@@ -77,7 +79,7 @@ public class SubjectRepositoryImpl implements SubjectRepository {
     }
 
     @Override
-    public void save(Subject subject) {
+    public void update(Subject subject) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(SAVE_QUERY)) {
             statement.setString(1, subject.getName());

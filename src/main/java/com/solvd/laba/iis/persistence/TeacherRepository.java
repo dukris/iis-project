@@ -17,7 +17,7 @@ public interface TeacherRepository {
 
     void create(TeacherInfo teacherInfo);
 
-    void save(TeacherInfo teacherInfo);
+    void update(TeacherInfo teacherInfo);
 
     void delete(Long id);
 

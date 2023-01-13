@@ -1,6 +1,8 @@
-CREATE SCHEMA IF NOT EXISTS iis_schema;
+CREATE SCHEMA IF NOT EXISTS iis;
 
-CREATE TABLE IF NOT EXISTS iis_schema.users_info
+SET SCHEMA 'iis';
+
+CREATE TABLE IF NOT EXISTS users_info
 (
     id       bigserial NOT NULL,
     name     varchar(50) NOT NULL,
@@ -11,76 +13,76 @@ CREATE TABLE IF NOT EXISTS iis_schema.users_info
     PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS iis_schema.teachers_info
+CREATE TABLE IF NOT EXISTS teachers_info
 (
     id      bigint NOT NULL,
-    PRIMARY KEY (id),
     user_id bigint NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES iis_schema.users_info (id) ON UPDATE CASCADE ON DELETE CASCADE
+    PRIMARY KEY (id),
+    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users_info (id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS iis_schema.groups
+CREATE TABLE IF NOT EXISTS groups
 (
     id     bigserial NOT NULL,
-    PRIMARY KEY (id),
-    number int NOT NULL UNIQUE
+    number int NOT NULL UNIQUE,
+    PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS iis_schema.students_info
+CREATE TABLE IF NOT EXISTS students_info
 (
     id         bigserial NOT NULL,
-    PRIMARY KEY (id),
     year       int NOT NULL,
     faculty    varchar(50) NOT NULL,
     speciality varchar(50) NOT NULL,
     user_id    bigint NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES iis_schema.users_info (id) ON UPDATE CASCADE ON DELETE CASCADE,
     group_id   bigint NOT NULL,
-    FOREIGN KEY (group_id) REFERENCES iis_schema.groups (id) ON UPDATE CASCADE ON DELETE CASCADE
+    PRIMARY KEY (id),
+    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users_info (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT fk_group FOREIGN KEY (group_id) REFERENCES groups (id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS iis_schema.subjects
+CREATE TABLE IF NOT EXISTS subjects
 (
     id   bigserial NOT NULL,
-    PRIMARY KEY (id),
-    name varchar(50) NOT NULL UNIQUE
+    name varchar(50) NOT NULL UNIQUE,
+    PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS iis_schema.teachers_subjects
+CREATE TABLE IF NOT EXISTS teachers_subjects
 (
     teacher_id bigint NOT NULL,
-    FOREIGN KEY (teacher_id) REFERENCES iis_schema.teachers_info (id) ON UPDATE CASCADE ON DELETE CASCADE,
     subject_id bigint NOT NULL,
-    FOREIGN KEY (subject_id) REFERENCES iis_schema.subjects (id) ON UPDATE CASCADE ON DELETE CASCADE,
-    PRIMARY KEY (teacher_id, subject_id)
+    PRIMARY KEY (teacher_id, subject_id),
+    CONSTRAINT fk_teacher FOREIGN KEY (teacher_id) REFERENCES teachers_info (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT fk_subject FOREIGN KEY (subject_id) REFERENCES subjects (id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS iis_schema.lessons
+CREATE TABLE IF NOT EXISTS lessons
 (
     id         bigserial NOT NULL,
-    PRIMARY KEY (id),
     room       int NOT NULL,
     weekday    varchar(50) NOT NULL,
     start_time time NOT NULL,
     end_time   time NOT NULL,
     subject_id bigint NOT NULL,
-    FOREIGN KEY (subject_id) REFERENCES iis_schema.subjects (id) ON UPDATE CASCADE ON DELETE CASCADE,
     group_id   bigint NOT NULL,
-    FOREIGN KEY (group_id) REFERENCES iis_schema.groups (id) ON UPDATE CASCADE ON DELETE CASCADE,
     teacher_id bigint NOT NULL,
-    FOREIGN KEY (teacher_id) REFERENCES iis_schema.teachers_info (id) ON UPDATE CASCADE ON DELETE CASCADE
+    PRIMARY KEY (id),
+    CONSTRAINT fk_subject FOREIGN KEY (subject_id) REFERENCES subjects (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT fk_group FOREIGN KEY (group_id) REFERENCES groups (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT fk_teacher FOREIGN KEY (teacher_id) REFERENCES teachers_info (id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS iis_schema.marks
+CREATE TABLE IF NOT EXISTS marks
 (
     id         bigserial NOT NULL,
-    PRIMARY KEY (id),
     date       date NOT NULL,
     value      int NOT NULL,
     student_id bigint NOT NULL,
-    FOREIGN KEY (student_id) REFERENCES iis_schema.students_info (id) ON UPDATE CASCADE ON DELETE CASCADE,
     teacher_id bigint NOT NULL,
-    FOREIGN KEY (teacher_id) REFERENCES iis_schema.teachers_info (id) ON UPDATE CASCADE ON DELETE CASCADE,
     subject_id bigint NOT NULL,
-    FOREIGN KEY (subject_id) REFERENCES iis_schema.subjects (id) ON UPDATE CASCADE ON DELETE CASCADE
+    PRIMARY KEY (id),
+    CONSTRAINT fk_student FOREIGN KEY (student_id) REFERENCES students_info (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT fk_teacher FOREIGN KEY (teacher_id) REFERENCES teachers_info (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT fk_subject FOREIGN KEY (subject_id) REFERENCES subjects (id) ON UPDATE CASCADE ON DELETE CASCADE
 );

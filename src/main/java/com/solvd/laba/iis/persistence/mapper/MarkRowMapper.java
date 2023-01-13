@@ -1,9 +1,9 @@
 package com.solvd.laba.iis.persistence.mapper;
 
 import com.solvd.laba.iis.domain.*;
-import com.solvd.laba.iis.domain.group.Group;
-import com.solvd.laba.iis.domain.mark.Mark;
-import com.solvd.laba.iis.domain.student.StudentInfo;
+import com.solvd.laba.iis.domain.Group;
+import com.solvd.laba.iis.domain.Mark;
+import com.solvd.laba.iis.domain.StudentInfo;
 import lombok.SneakyThrows;
 
 import java.sql.ResultSet;

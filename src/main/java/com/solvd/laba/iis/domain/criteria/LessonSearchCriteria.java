@@ -1,4 +1,4 @@
-package com.solvd.laba.iis.domain.lesson;
+package com.solvd.laba.iis.domain.criteria;
 
 import lombok.*;
 

@@ -1,7 +1,7 @@
 package com.solvd.laba.iis.persistence;
 
-import com.solvd.laba.iis.domain.lesson.Lesson;
-import com.solvd.laba.iis.domain.lesson.LessonSearchCriteria;
+import com.solvd.laba.iis.domain.Lesson;
+import com.solvd.laba.iis.domain.criteria.LessonSearchCriteria;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +18,7 @@ public interface LessonRepository {
 
     void create(Lesson lesson);
 
-    void save(Lesson lesson);
+    void update(Lesson lesson);
 
     void delete(Long id);
 

@@ -1,9 +1,9 @@
 package com.solvd.laba.iis.persistence.impl;
 
-import com.solvd.laba.iis.domain.group.Group;
+import com.solvd.laba.iis.domain.Group;
 import com.solvd.laba.iis.domain.exception.ResourceMappingException;
 import com.solvd.laba.iis.persistence.GroupRepository;
-import com.solvd.laba.iis.domain.group.GroupSearchCriteria;
+import com.solvd.laba.iis.domain.criteria.GroupSearchCriteria;
 import com.solvd.laba.iis.persistence.mapper.GroupRowMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -17,10 +17,12 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class GroupRepositoryImpl implements GroupRepository {
 
-    private static final String FIND_ALL_QUERY = "SELECT DISTINCT groups.id as group_id, groups.number as group_number FROM iis_schema.groups ";
-    private static final String CREATE_QUERY = "INSERT INTO iis_schema.groups (number) VALUES(?)";
-    private static final String DELETE_QUERY = "DELETE FROM iis_schema.groups WHERE id = ?";
-    private static final String SAVE_QUERY = "UPDATE iis_schema.groups SET number = ? WHERE id = ?";
+    private static final String FIND_ALL_QUERY = "SELECT DISTINCT groups.id as group_id, groups.number as group_number FROM groups ";
+    private static final String IS_EXIST_QUERY = "SELECT groups.id as group_id FROM groups WHERE number = ?";
+    private static final String CREATE_QUERY = "INSERT INTO groups (number) VALUES(?)";
+    private static final String DELETE_QUERY = "DELETE FROM groups WHERE id = ?";
+    private static final String SAVE_QUERY = "UPDATE groups SET number = ? WHERE id = ?";
+
     private final DataSource dataSource;
 
     @Override
@@ -49,12 +51,12 @@ public class GroupRepositoryImpl implements GroupRepository {
     }
 
     @Override
-    public Optional<Group> findByNumber(Integer number) {
+    public boolean isExist(Integer number) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + "WHERE number = ?")) {
+             PreparedStatement statement = connection.prepareStatement(IS_EXIST_QUERY)) {
             statement.setInt(1, number);
             try (ResultSet rs = statement.executeQuery()) {
-                return rs.next() ? Optional.of(GroupRowMapper.mapRow(rs)) : Optional.empty();
+                return rs.next();
             }
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while finding group by number = " + number, ex);
@@ -74,7 +76,7 @@ public class GroupRepositoryImpl implements GroupRepository {
     }
 
     private String updateQuery(Long teacherId, GroupSearchCriteria groupSearchCriteria) {
-        String joinQuery = "LEFT JOIN iis_schema.lessons ON (lessons.group_id = groups.id) ";
+        String joinQuery = "LEFT JOIN lessons ON (lessons.group_id = groups.id) ";
         return groupSearchCriteria.getSubjectId() != 0 ?
                 FIND_ALL_QUERY + joinQuery + "WHERE lessons.teacher_id = " + teacherId + " AND lessons.subject_id = " + groupSearchCriteria.getSubjectId() :
                 FIND_ALL_QUERY + joinQuery + "WHERE lessons.teacher_id = " + teacherId;
@@ -98,7 +100,7 @@ public class GroupRepositoryImpl implements GroupRepository {
     }
 
     @Override
-    public void save(Group group) {
+    public void update(Group group) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(SAVE_QUERY)) {
             statement.setInt(1, group.getNumber());

@@ -1,8 +1,5 @@
-package com.solvd.laba.iis.web.dto.mark;
+package com.solvd.laba.iis.web.dto;
 
-import com.solvd.laba.iis.web.dto.student.StudentInfoDto;
-import com.solvd.laba.iis.web.dto.SubjectDto;
-import com.solvd.laba.iis.web.dto.TeacherInfoDto;
 import com.solvd.laba.iis.web.dto.validation.OnCreateMarkGroup;
 import com.solvd.laba.iis.web.dto.validation.OnUpdateGroup;
 import jakarta.validation.Valid;

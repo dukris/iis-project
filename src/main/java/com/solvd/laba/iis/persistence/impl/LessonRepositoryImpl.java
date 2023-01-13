@@ -1,9 +1,9 @@
 package com.solvd.laba.iis.persistence.impl;
 
-import com.solvd.laba.iis.domain.lesson.Lesson;
+import com.solvd.laba.iis.domain.Lesson;
 import com.solvd.laba.iis.domain.exception.ResourceMappingException;
 import com.solvd.laba.iis.persistence.LessonRepository;
-import com.solvd.laba.iis.domain.lesson.LessonSearchCriteria;
+import com.solvd.laba.iis.domain.criteria.LessonSearchCriteria;
 import com.solvd.laba.iis.persistence.mapper.LessonRowMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -24,14 +24,15 @@ public class LessonRepositoryImpl implements LessonRepository {
             groups.id as group_id, groups.number as group_number,
             teachers_info.id as teacher_id,
             users_info.id as user_id, users_info.name as user_name, users_info.surname as user_surname, users_info.email as user_email, users_info.password as user_password, users_info.role as user_role
-            FROM iis_schema.lessons
-            LEFT JOIN iis_schema.subjects ON (lessons.subject_id = subjects.id)
-            LEFT JOIN iis_schema.groups ON (lessons.group_id = groups.id)
-            LEFT JOIN iis_schema.teachers_info ON (lessons.teacher_id = teachers_info.id)
-            LEFT JOIN iis_schema.users_info ON (teachers_info.user_id = users_info.id) """;
-    private static final String CREATE_QUERY = "INSERT INTO iis_schema.lessons (room, weekday, start_time, end_time, subject_id, group_id, teacher_id) VALUES(?, ?, ?, ?, ?, ?, ?)";
-    private static final String DELETE_QUERY = "DELETE FROM iis_schema.lessons WHERE id = ?";
-    private static final String SAVE_QUERY = "UPDATE iis_schema.lessons SET room = ?, weekday = ?, start_time = ?, end_time = ?, subject_id = ?, group_id = ?, teacher_id = ? WHERE id = ?";
+            FROM lessons
+            LEFT JOIN subjects ON (lessons.subject_id = subjects.id)
+            LEFT JOIN groups ON (lessons.group_id = groups.id)
+            LEFT JOIN teachers_info ON (lessons.teacher_id = teachers_info.id)
+            LEFT JOIN users_info ON (teachers_info.user_id = users_info.id) """;
+    private static final String CREATE_QUERY = "INSERT INTO lessons (room, weekday, start_time, end_time, subject_id, group_id, teacher_id) VALUES(?, ?, ?, ?, ?, ?, ?)";
+    private static final String DELETE_QUERY = "DELETE FROM lessons WHERE id = ?";
+    private static final String SAVE_QUERY = "UPDATE lessons SET room = ?, weekday = ?, start_time = ?, end_time = ?, subject_id = ?, group_id = ?, teacher_id = ? WHERE id = ?";
+
     private final DataSource dataSource;
 
     @Override
@@ -119,7 +120,7 @@ public class LessonRepositoryImpl implements LessonRepository {
     }
 
     @Override
-    public void save(Lesson lesson) {
+    public void update(Lesson lesson) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(SAVE_QUERY)) {
             statement.setInt(1, lesson.getRoom());

@@ -1,4 +1,4 @@
-package com.solvd.laba.iis.domain.student;
+package com.solvd.laba.iis.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,10 +9,13 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class StudentSearchCriteria {
+public class StudentInfo {
 
-    private String speciality;
+    private Long id;
+    private Integer admissionYear;
     private String faculty;
-    private int year;
+    private String speciality;
+    private UserInfo user;
+    private Group group;
 
 }

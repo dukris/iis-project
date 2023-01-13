@@ -1,9 +1,9 @@
 package com.solvd.laba.iis.persistence.impl;
 
-import com.solvd.laba.iis.domain.student.StudentInfo;
+import com.solvd.laba.iis.domain.StudentInfo;
 import com.solvd.laba.iis.domain.exception.ResourceMappingException;
 import com.solvd.laba.iis.persistence.StudentRepository;
-import com.solvd.laba.iis.domain.student.StudentSearchCriteria;
+import com.solvd.laba.iis.domain.criteria.StudentSearchCriteria;
 import com.solvd.laba.iis.persistence.mapper.StudentRowMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -23,12 +23,13 @@ public class StudentRepositoryImpl implements StudentRepository {
             users_info.id as user_id,  users_info.name as user_name, users_info.surname as user_surname,
             users_info.email as user_email, users_info.password as user_password, users_info.role as user_role,
             groups.id as group_id, groups.number as group_number
-            FROM iis_schema.students_info
-            LEFT JOIN iis_schema.users_info ON (students_info.user_id = users_info.id)
-            LEFT JOIN iis_schema.groups ON (students_info.group_id = groups.id) """;
-    private static final String CREATE_QUERY = "INSERT INTO iis_schema.students_info (year, faculty, speciality, user_id, group_id) VALUES(?, ?, ?, ?, ?)";
-    private static final String DELETE_QUERY = "DELETE FROM iis_schema.students_info WHERE id = ?";
-    private static final String SAVE_QUERY = "UPDATE iis_schema.students_info SET year = ?, faculty = ?, speciality = ?, user_id = ?, group_id = ? WHERE id = ?";
+            FROM students_info
+            LEFT JOIN users_info ON (students_info.user_id = users_info.id)
+            LEFT JOIN groups ON (students_info.group_id = groups.id) """;
+    private static final String CREATE_QUERY = "INSERT INTO students_info (year, faculty, speciality, user_id, group_id) VALUES(?, ?, ?, ?, ?)";
+    private static final String DELETE_QUERY = "DELETE FROM students_info WHERE id = ?";
+    private static final String SAVE_QUERY = "UPDATE students_info SET year = ?, faculty = ?, speciality = ?, user_id = ?, group_id = ? WHERE id = ?";
+
     private final DataSource dataSource;
 
     @Override
@@ -111,7 +112,7 @@ public class StudentRepositoryImpl implements StudentRepository {
     }
 
     @Override
-    public void save(StudentInfo studentInfo) {
+    public void update(StudentInfo studentInfo) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(SAVE_QUERY)) {
             statement.setInt(1, studentInfo.getAdmissionYear());

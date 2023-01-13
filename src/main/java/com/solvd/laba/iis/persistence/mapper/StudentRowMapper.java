@@ -1,7 +1,7 @@
 package com.solvd.laba.iis.persistence.mapper;
 
-import com.solvd.laba.iis.domain.group.Group;
-import com.solvd.laba.iis.domain.student.StudentInfo;
+import com.solvd.laba.iis.domain.Group;
+import com.solvd.laba.iis.domain.StudentInfo;
 import com.solvd.laba.iis.domain.UserInfo;
 import lombok.SneakyThrows;
 

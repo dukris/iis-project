@@ -1,4 +1,4 @@
-package com.solvd.laba.iis.web.dto.student;
+package com.solvd.laba.iis.web.dto.criteria;
 
 import lombok.*;
 
@@ -7,6 +7,6 @@ public class StudentSearchCriteriaDto {
 
     private String speciality;
     private String faculty;
-    private int year;
+    private Integer year;
 
 }
