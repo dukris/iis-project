@@ -21,6 +21,6 @@ public interface GroupService {
     Group save(Group group);
 
     @Transactional
-    void delete(Group group);
+    void delete(long id);
 
 }

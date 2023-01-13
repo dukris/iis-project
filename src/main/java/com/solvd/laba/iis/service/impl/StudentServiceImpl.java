@@ -1,7 +1,7 @@
 package com.solvd.laba.iis.service.impl;
 
 import com.solvd.laba.iis.domain.StudentInfo;
-import com.solvd.laba.iis.domain.exception.ResourceNotFoundException;
+import com.solvd.laba.iis.domain.exception.ResourceDoesNotExistException;
 import com.solvd.laba.iis.persistence.StudentRepository;
 import com.solvd.laba.iis.domain.criteria.StudentSearchCriteria;
 import com.solvd.laba.iis.service.StudentService;
@@ -24,7 +24,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public StudentInfo getById(long id) {
         return studentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Student with id = " + id + " not found"));
+                .orElseThrow(() -> new ResourceDoesNotExistException("Student with id = " + id + " not found"));
     }
 
     @Override
@@ -51,8 +51,8 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public void delete(StudentInfo studentInfo) {
-        studentRepository.delete(studentInfo);
+    public void delete(long id) {
+        studentRepository.delete(id);
     }
 
 }

@@ -1,6 +1,5 @@
 package com.solvd.laba.iis.persistence.mapper;
 
-import com.solvd.laba.iis.domain.Role;
 import com.solvd.laba.iis.domain.UserInfo;
 import lombok.SneakyThrows;
 
@@ -18,7 +17,7 @@ public abstract class UserRowMapper {
         userInfo.setSurname(rs.getString("user_surname"));
         userInfo.setEmail(rs.getString("user_email"));
         userInfo.setPassword(rs.getString("user_password"));
-        userInfo.setRole(Role.valueOf(rs.getString("user_role").toUpperCase()));
+        userInfo.setRole(UserInfo.Role.valueOf(rs.getString("user_role").toUpperCase()));
         return userInfo;
     }
 

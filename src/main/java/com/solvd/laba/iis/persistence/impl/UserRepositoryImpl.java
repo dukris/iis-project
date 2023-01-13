@@ -101,13 +101,13 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void delete(UserInfo userInfo) {
+    public void delete(long id) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)) {
-            statement.setLong(1, userInfo.getId());
+            statement.setLong(1, id);
             statement.executeUpdate();
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while deleting user with id = " + userInfo.getId());
+            throw new ResourceMappingException("Exception occurred while deleting user with id = " + id);
         }
     }
 

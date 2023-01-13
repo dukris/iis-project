@@ -23,6 +23,6 @@ public interface LessonService {
     Lesson save(Lesson lesson);
 
     @Transactional
-    void delete(Lesson lesson);
+    void delete(long id);
 
 }

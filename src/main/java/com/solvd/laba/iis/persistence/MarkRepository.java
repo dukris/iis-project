@@ -20,6 +20,6 @@ public interface MarkRepository {
 
     void save(Mark mark);
 
-    void delete(Mark mark);
+    void delete(long id);
 
 }

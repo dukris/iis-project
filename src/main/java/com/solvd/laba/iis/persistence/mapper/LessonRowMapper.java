@@ -14,7 +14,7 @@ public abstract class LessonRowMapper {
         Lesson lesson = new Lesson();
         lesson.setId(rs.getLong("lesson_id"));
         lesson.setRoom(rs.getInt("lesson_room"));
-        lesson.setWeekday(Weekday.valueOf(rs.getString("lesson_weekday").toUpperCase()));
+        lesson.setWeekday(Lesson.Weekday.valueOf(rs.getString("lesson_weekday").toUpperCase()));
         lesson.setStartTime(rs.getTime("start_time").toLocalTime());
         lesson.setEndTime(rs.getTime("end_time").toLocalTime());
 

@@ -2,7 +2,7 @@ package com.solvd.laba.iis.service.impl;
 
 import com.solvd.laba.iis.domain.Group;
 import com.solvd.laba.iis.domain.exception.ResourceAlreadyExistsException;
-import com.solvd.laba.iis.domain.exception.ResourceNotFoundException;
+import com.solvd.laba.iis.domain.exception.ResourceDoesNotExistException;
 import com.solvd.laba.iis.persistence.GroupRepository;
 import com.solvd.laba.iis.domain.criteria.GroupSearchCriteria;
 import com.solvd.laba.iis.service.GroupService;
@@ -25,7 +25,7 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public Group getById(long id) {
         return groupRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Group with id = " + id + " not found"));
+                .orElseThrow(() -> new ResourceDoesNotExistException("Group with id = " + id + " not found"));
     }
 
     @Override
@@ -51,8 +51,8 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public void delete(Group group) {
-        groupRepository.delete(group);
+    public void delete(long id) {
+        groupRepository.delete(id);
     }
 
 }

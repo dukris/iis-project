@@ -19,7 +19,7 @@ public interface TeacherRepository {
 
     void save(TeacherInfo teacherInfo);
 
-    void delete(TeacherInfo teacherInfo);
+    void delete(long id);
 
     void deleteSubject(long teacherId, long subjectId);
 

@@ -23,6 +23,6 @@ public interface MarkService {
     Mark save(Mark mark);
 
     @Transactional
-    void delete(Mark mark);
+    void delete(long id);
 
 }

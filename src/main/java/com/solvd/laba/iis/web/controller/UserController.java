@@ -41,11 +41,10 @@ public class UserController {
         return userInfoMapper.userToUserDto(userInfo);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@RequestBody @Validated(OnUpdateAndDeleteGroup.class) UserInfoDto userInfoDto) {
-        UserInfo userInfo = userInfoMapper.userDtoToUser(userInfoDto);
-        userService.delete(userInfo);
+    public void delete(@PathVariable long id) {
+        userService.delete(id);
     }
 
     @PutMapping

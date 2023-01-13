@@ -20,6 +20,6 @@ public interface GroupRepository {
 
     void save(Group group);
 
-    void delete(Group group);
+    void delete(long id);
 
 }

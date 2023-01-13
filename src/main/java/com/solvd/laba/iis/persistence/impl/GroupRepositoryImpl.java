@@ -110,13 +110,13 @@ public class GroupRepositoryImpl implements GroupRepository {
     }
 
     @Override
-    public void delete(Group group) {
+    public void delete(long id) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)) {
-            statement.setLong(1, group.getId());
+            statement.setLong(1, id);
             statement.executeUpdate();
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while deleting group with id = " + group.getId());
+            throw new ResourceMappingException("Exception occurred while deleting group with id = " + id);
         }
     }
 

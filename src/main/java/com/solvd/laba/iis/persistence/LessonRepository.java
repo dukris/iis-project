@@ -20,6 +20,6 @@ public interface LessonRepository {
 
     void save(Lesson lesson);
 
-    void delete(Lesson lesson);
+    void delete(long id);
 
 }

@@ -2,7 +2,7 @@ package com.solvd.laba.iis.web.controller;
 
 import com.solvd.laba.iis.domain.exception.ResourceAlreadyExistsException;
 import com.solvd.laba.iis.domain.exception.ResourceMappingException;
-import com.solvd.laba.iis.domain.exception.ResourceNotFoundException;
+import com.solvd.laba.iis.domain.exception.ResourceDoesNotExistException;
 import com.solvd.laba.iis.web.dto.ErrorDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -27,9 +27,9 @@ public class ControllerAdvice {
         return errorDto;
     }
 
-    @ExceptionHandler(ResourceNotFoundException.class)
+    @ExceptionHandler(ResourceDoesNotExistException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorDto handleResourceNotFoundException(ResourceNotFoundException ex) {
+    public ErrorDto handleResourceNotFoundException(ResourceDoesNotExistException ex) {
         ErrorDto errorDto = new ErrorDto();
         errorDto.setMessage(ex.getMessage());
         return errorDto;

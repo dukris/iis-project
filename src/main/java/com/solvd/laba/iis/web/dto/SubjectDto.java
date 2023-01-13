@@ -24,7 +24,7 @@ public class SubjectDto {
     private Long id;
 
     @NotBlank(message = "Name of subject should be filled")
-    @Size(max = 50, message = "Max length of name of subject is 50")
+    @Size(max = 50, message = "Max length of name of subject is {max}")
     private String name;
 
 }

@@ -18,6 +18,6 @@ public interface UserService {
     UserInfo save(UserInfo userInfo);
 
     @Transactional
-    void delete(UserInfo userInfo);
+    void delete(long id);
 
 }

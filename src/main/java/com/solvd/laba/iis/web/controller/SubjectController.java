@@ -52,11 +52,10 @@ public class SubjectController {
         return subjectMapper.subjectToSubjectDto(subject);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@RequestBody @Validated(OnUpdateAndDeleteGroup.class) SubjectDto subjectDto) {
-        Subject subject = subjectMapper.subjectDtoToSubject(subjectDto);
-        subjectService.delete(subject);
+    public void delete(@PathVariable long id) {
+        subjectService.delete(id);
     }
 
     @PutMapping

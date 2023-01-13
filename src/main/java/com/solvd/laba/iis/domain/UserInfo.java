@@ -15,4 +15,12 @@ public class UserInfo {
     private String password;
     private Role role;
 
+    public enum Role {
+
+        TEACHER,
+        STUDENT,
+        ADMIN
+
+    }
+
 }

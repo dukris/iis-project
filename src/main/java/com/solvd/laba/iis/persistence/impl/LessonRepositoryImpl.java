@@ -137,13 +137,13 @@ public class LessonRepositoryImpl implements LessonRepository {
     }
 
     @Override
-    public void delete(Lesson lesson) {
+    public void delete(long id) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)) {
-            statement.setLong(1, lesson.getId());
+            statement.setLong(1, id);
             statement.executeUpdate();
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while deleting lesson with id = " + lesson.getId());
+            throw new ResourceMappingException("Exception occurred while deleting lesson with id = " + id);
         }
     }
 

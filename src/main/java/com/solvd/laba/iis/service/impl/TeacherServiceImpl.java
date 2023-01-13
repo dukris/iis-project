@@ -1,7 +1,7 @@
 package com.solvd.laba.iis.service.impl;
 
 import com.solvd.laba.iis.domain.TeacherInfo;
-import com.solvd.laba.iis.domain.exception.ResourceNotFoundException;
+import com.solvd.laba.iis.domain.exception.ResourceDoesNotExistException;
 import com.solvd.laba.iis.persistence.TeacherRepository;
 import com.solvd.laba.iis.service.TeacherService;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public TeacherInfo getById(long id) {
         return teacherRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Teacher with id = " + id + " not found"));
+                .orElseThrow(() -> new ResourceDoesNotExistException("Teacher with id = " + id + " not found"));
     }
 
     @Override
@@ -50,8 +50,8 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public void delete(TeacherInfo teacherInfo) {
-        teacherRepository.delete(teacherInfo);
+    public void delete(long id) {
+        teacherRepository.delete(id);
     }
 
     @Override

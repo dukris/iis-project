@@ -80,11 +80,10 @@ public class GroupController {
         return groupMapper.groupToGroupDto(group);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@RequestBody @Validated(OnUpdateAndDeleteGroup.class) GroupDto groupDto) {
-        Group group = groupMapper.groupDtoToGroup(groupDto);
-        groupService.delete(group);
+    public void delete(@PathVariable long id) {
+        groupService.delete(id);
     }
 
     @PutMapping

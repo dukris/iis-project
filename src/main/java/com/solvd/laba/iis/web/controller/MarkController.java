@@ -41,11 +41,10 @@ public class MarkController {
         return markMapper.markToMarkDto(mark);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@RequestBody @Validated(OnUpdateAndDeleteGroup.class) MarkDto markDto) {
-        Mark mark = markMapper.markDtoToMark(markDto);
-        markService.delete(mark);
+    public void delete(@PathVariable long id) {
+        markService.delete(id);
     }
 
     @PutMapping

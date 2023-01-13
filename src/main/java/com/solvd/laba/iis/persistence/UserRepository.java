@@ -17,7 +17,7 @@ public interface UserRepository {
 
     void save(UserInfo userInfo);
 
-    void delete(UserInfo userInfo);
+    void delete(long id);
 
 
 }

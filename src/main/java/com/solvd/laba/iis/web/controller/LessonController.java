@@ -41,11 +41,10 @@ public class LessonController {
         return lessonMapper.lessonToLessonDto(lesson);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@RequestBody @Validated(OnUpdateAndDeleteGroup.class) LessonDto lessonDto) {
-        Lesson lesson = lessonMapper.lessonDtoToLesson(lessonDto);
-        lessonService.delete(lesson);
+    public void delete(@PathVariable long id) {
+        lessonService.delete(id);
     }
 
     @PutMapping

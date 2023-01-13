@@ -22,7 +22,7 @@ public interface TeacherService {
     TeacherInfo save(TeacherInfo teacherInfo);
 
     @Transactional
-    void delete(TeacherInfo teacherInfo);
+    void delete(long id);
 
     @Transactional
     void deleteSubject(long teacherId, long subjectId);

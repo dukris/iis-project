@@ -1,6 +1,6 @@
 package com.solvd.laba.iis.web.dto;
 
-import com.solvd.laba.iis.domain.Role;
+import com.solvd.laba.iis.domain.UserInfo;
 import com.solvd.laba.iis.web.dto.validation.OnCreateGroup;
 import com.solvd.laba.iis.web.dto.validation.OnCreateStudentGroup;
 import com.solvd.laba.iis.web.dto.validation.OnCreateTeacherGroup;
@@ -22,22 +22,22 @@ public class UserInfoDto {
     private Long id;
 
     @NotBlank(message = "Name should be filled")
-    @Size(max = 50, message = "Max length of name is 50")
+    @Size(max = 50, message = "Max length of name is {max}")
     private String name;
 
     @NotBlank(message = "Surname should be filled")
-    @Size(max = 50, message = "Max length of name is 50")
+    @Size(max = 50, message = "Max length of name is {max}")
     private String surname;
 
     @NotBlank(message = "Email should be filled")
-    @Size(max = 50, message = "Max length of name is 50")
+    @Size(max = 50, message = "Max length of name is {max}")
     private String email;
 
     @NotBlank(message = "Password should be filled")
-    @Size(max = 75, message = "Max length of password is 75")
+    @Size(max = 75, message = "Max length of password is {max}")
     private String password;
 
     @NotNull(message = "Role of user should be filled")
-    private Role role;
+    private UserInfo.Role role;
 
 }

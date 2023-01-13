@@ -127,13 +127,13 @@ public class StudentRepositoryImpl implements StudentRepository {
     }
 
     @Override
-    public void delete(StudentInfo studentInfo) {
+    public void delete(long id) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)) {
-            statement.setLong(1, studentInfo.getId());
+            statement.setLong(1, id);
             statement.executeUpdate();
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while deleting student with id = " + studentInfo.getId());
+            throw new ResourceMappingException("Exception occurred while deleting student with id = " + id);
         }
     }
 

@@ -4,10 +4,7 @@ import com.solvd.laba.iis.web.dto.validation.OnCreateMarkGroup;
 import com.solvd.laba.iis.web.dto.validation.OnCreateStudentGroup;
 import com.solvd.laba.iis.web.dto.validation.OnUpdateAndDeleteGroup;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Null;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -24,14 +21,15 @@ public class StudentInfoDto {
     private Long id;
 
     @NotNull(message = "Year of admission should be filled")
+    @Digits(integer = 5, fraction = 0)
     private Integer admissionYear;
 
     @NotBlank(message = "Faculty should be filled")
-    @Size(max = 50, message = "Max length of faculty is 50")
+    @Size(max = 50, message = "Max length of faculty is {max}")
     private String faculty;
 
     @NotBlank(message = "Speciality should be filled")
-    @Size(max = 50, message = "Max length of speciality is 50")
+    @Size(max = 50, message = "Max length of speciality is {max}")
     private String speciality;
 
     @NotNull(message = "Student should contain user")

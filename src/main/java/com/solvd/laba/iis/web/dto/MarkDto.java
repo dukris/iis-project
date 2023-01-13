@@ -3,8 +3,7 @@ package com.solvd.laba.iis.web.dto;
 import com.solvd.laba.iis.web.dto.validation.OnCreateMarkGroup;
 import com.solvd.laba.iis.web.dto.validation.OnUpdateAndDeleteGroup;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Null;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -23,10 +22,12 @@ public class MarkDto {
     private Long id;
 
     @NotNull(message = "Date of mark should be filled")
-//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate date;
 
     @NotNull(message = "Value of mark should be filled")
+    @Digits(integer = 3, fraction = 0)
+    @Min(value = 1, message = "Min value of mark is {min}")
+    @Max(value = 10, message = "Min value of mark is {max}")
     private Integer value;
 
     @NotNull(message = "Mark should contain student")

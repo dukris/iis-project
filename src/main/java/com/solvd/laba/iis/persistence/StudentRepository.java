@@ -20,6 +20,6 @@ public interface StudentRepository {
 
     void save(StudentInfo studentInfo);
 
-    void delete(StudentInfo studentInfo);
+    void delete(long id);
 
 }

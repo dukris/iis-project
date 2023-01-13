@@ -27,7 +27,7 @@ public abstract class MarkRowMapper {
         student.setSurname(rs.getString("student_user_surname"));
         student.setEmail(rs.getString("student_user_email"));
         student.setPassword(rs.getString("student_user_password"));
-        student.setRole(Role.valueOf(rs.getString("student_user_role").toUpperCase()));
+        student.setRole(UserInfo.Role.valueOf(rs.getString("student_user_role").toUpperCase()));
         studentInfo.setUser(student);
         Group group = GroupRowMapper.mapGroup(rs);
         studentInfo.setGroup(group);
@@ -41,7 +41,7 @@ public abstract class MarkRowMapper {
         teacher.setSurname(rs.getString("teacher_user_surname"));
         teacher.setEmail(rs.getString("teacher_user_email"));
         teacher.setPassword(rs.getString("teacher_user_password"));
-        teacher.setRole(Role.valueOf(rs.getString("teacher_user_role").toUpperCase()));
+        teacher.setRole(UserInfo.Role.valueOf(rs.getString("teacher_user_role").toUpperCase()));
         teacherInfo.setUser(teacher);
         mark.setTeacher(teacherInfo);
 

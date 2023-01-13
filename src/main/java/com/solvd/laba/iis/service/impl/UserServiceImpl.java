@@ -2,7 +2,7 @@ package com.solvd.laba.iis.service.impl;
 
 import com.solvd.laba.iis.domain.UserInfo;
 import com.solvd.laba.iis.domain.exception.ResourceAlreadyExistsException;
-import com.solvd.laba.iis.domain.exception.ResourceNotFoundException;
+import com.solvd.laba.iis.domain.exception.ResourceDoesNotExistException;
 import com.solvd.laba.iis.persistence.UserRepository;
 import com.solvd.laba.iis.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserInfo getById(long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User with id = " + id + " not found"));
+                .orElseThrow(() -> new ResourceDoesNotExistException("User with id = " + id + " not found"));
     }
 
     @Override
@@ -45,8 +45,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(UserInfo userInfo) {
-        userRepository.delete(userInfo);
+    public void delete(long id) {
+        userRepository.delete(id);
     }
 
 }

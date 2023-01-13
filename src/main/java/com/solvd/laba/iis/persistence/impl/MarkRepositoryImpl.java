@@ -134,13 +134,13 @@ public class MarkRepositoryImpl implements MarkRepository {
     }
 
     @Override
-    public void delete(Mark mark) {
+    public void delete(long id) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)) {
-            statement.setLong(1, mark.getId());
+            statement.setLong(1, id);
             statement.executeUpdate();
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while deleting mark with id = " + mark.getId());
+            throw new ResourceMappingException("Exception occurred while deleting mark with id = " + id);
         }
     }
 

@@ -1,7 +1,7 @@
 package com.solvd.laba.iis.service.impl;
 
 import com.solvd.laba.iis.domain.Lesson;
-import com.solvd.laba.iis.domain.exception.ResourceNotFoundException;
+import com.solvd.laba.iis.domain.exception.ResourceDoesNotExistException;
 import com.solvd.laba.iis.persistence.LessonRepository;
 import com.solvd.laba.iis.domain.criteria.LessonSearchCriteria;
 import com.solvd.laba.iis.service.LessonService;
@@ -24,7 +24,7 @@ public class LessonServiceImpl implements LessonService {
     @Override
     public Lesson getById(long id) {
         return lessonRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Lesson with id = " + id + " not found"));
+                .orElseThrow(() -> new ResourceDoesNotExistException("Lesson with id = " + id + " not found"));
     }
 
     @Override
@@ -51,8 +51,8 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
-    public void delete(Lesson lesson) {
-        lessonRepository.delete(lesson);
+    public void delete(long id) {
+        lessonRepository.delete(id);
     }
 
 }

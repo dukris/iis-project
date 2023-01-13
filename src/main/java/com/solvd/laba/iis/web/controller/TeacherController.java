@@ -87,11 +87,10 @@ public class TeacherController {
         return teacherInfoMapper.teacherInfoToTeacherInfoDto(teacherInfo);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@RequestBody @Validated(OnUpdateAndDeleteGroup.class) TeacherInfoDto teacherInfoDto) {
-        TeacherInfo teacherInfo = teacherInfoMapper.teacherInfoDtoToTeacherInfo(teacherInfoDto);
-        teacherService.delete(teacherInfo);
+    public void delete(@PathVariable long id) {
+        teacherService.delete(id);
     }
 
     @PutMapping

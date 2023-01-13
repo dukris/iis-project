@@ -22,4 +22,16 @@ public class Lesson {
     private Group group;
     private TeacherInfo teacher;
 
+    public enum Weekday {
+
+        SUNDAY,
+        MONDAY,
+        TUESDAY,
+        WEDNESDAY,
+        THURSDAY,
+        FRIDAY,
+        SATURDAY
+
+    }
+
 }

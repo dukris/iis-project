@@ -2,7 +2,7 @@ package com.solvd.laba.iis.service.impl;
 
 import com.solvd.laba.iis.domain.Subject;
 import com.solvd.laba.iis.domain.exception.ResourceAlreadyExistsException;
-import com.solvd.laba.iis.domain.exception.ResourceNotFoundException;
+import com.solvd.laba.iis.domain.exception.ResourceDoesNotExistException;
 import com.solvd.laba.iis.persistence.SubjectRepository;
 import com.solvd.laba.iis.service.SubjectService;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ public class SubjectServiceImpl implements SubjectService {
     @Override
     public Subject getById(long id) {
         return subjectRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Subject with id = " + id + " not found"));
+                .orElseThrow(() -> new ResourceDoesNotExistException("Subject with id = " + id + " not found"));
     }
 
     @Override
@@ -45,8 +45,8 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public void delete(Subject subject) {
-        subjectRepository.delete(subject);
+    public void delete(long id) {
+        subjectRepository.delete(id);
     }
 
 }

@@ -18,6 +18,6 @@ public interface SubjectService {
     Subject save(Subject subject);
 
     @Transactional
-    void delete(Subject subject);
+    void delete(long id);
 
 }

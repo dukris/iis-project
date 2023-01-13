@@ -23,6 +23,6 @@ public interface StudentService {
     StudentInfo save(StudentInfo studentInfo);
 
     @Transactional
-    void delete(StudentInfo studentInfo);
+    void delete(long id);
 
 }
