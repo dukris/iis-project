@@ -11,10 +11,7 @@ import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 public class UserInfoDto {
 
     @Null(groups = OnCreateGroup.class, message = "User's id should be empty")

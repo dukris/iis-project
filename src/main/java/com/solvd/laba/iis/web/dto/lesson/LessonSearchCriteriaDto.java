@@ -1,14 +1,8 @@
 package com.solvd.laba.iis.web.dto.lesson;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@RequiredArgsConstructor
+@Data
 public class LessonSearchCriteriaDto {
 
     private String weekday;

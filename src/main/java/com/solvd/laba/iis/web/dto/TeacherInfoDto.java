@@ -7,17 +7,11 @@ import com.solvd.laba.iis.web.dto.validation.OnUpdateGroup;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@RequiredArgsConstructor
+@Data
 public class TeacherInfoDto {
 
     @Null(groups = OnCreateTeacherGroup.class, message = "Teacher's id should be empty")

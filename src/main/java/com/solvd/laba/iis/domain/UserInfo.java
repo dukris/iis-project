@@ -2,10 +2,7 @@ package com.solvd.laba.iis.domain;
 
 import lombok.*;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 public class UserInfo {
 
     private Long id;

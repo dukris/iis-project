@@ -7,17 +7,11 @@ import com.solvd.laba.iis.web.dto.validation.OnCreateMarkGroup;
 import com.solvd.laba.iis.web.dto.validation.OnUpdateGroup;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@RequiredArgsConstructor
+@Data
 public class MarkDto {
 
     @Null(groups = OnCreateMarkGroup.class, message = "Mark's id should be empty")

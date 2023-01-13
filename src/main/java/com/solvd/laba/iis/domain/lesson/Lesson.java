@@ -3,17 +3,11 @@ package com.solvd.laba.iis.domain.lesson;
 import com.solvd.laba.iis.domain.Subject;
 import com.solvd.laba.iis.domain.TeacherInfo;
 import com.solvd.laba.iis.domain.group.Group;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalTime;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@RequiredArgsConstructor
+@Data
 public class Lesson {
 
     private Long id;
