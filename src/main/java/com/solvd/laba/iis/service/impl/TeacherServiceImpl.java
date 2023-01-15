@@ -2,7 +2,7 @@ package com.solvd.laba.iis.service.impl;
 
 import com.solvd.laba.iis.domain.TeacherInfo;
 import com.solvd.laba.iis.domain.exception.ResourceDoesNotExistException;
-import com.solvd.laba.iis.persistence.TeacherRepository;
+import com.solvd.laba.iis.persistence.jdbc.TeacherRepository;
 import com.solvd.laba.iis.service.TeacherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

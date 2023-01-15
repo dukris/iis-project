@@ -3,7 +3,7 @@ package com.solvd.laba.iis.service.impl;
 import com.solvd.laba.iis.domain.UserInfo;
 import com.solvd.laba.iis.domain.exception.ResourceAlreadyExistsException;
 import com.solvd.laba.iis.domain.exception.ResourceDoesNotExistException;
-import com.solvd.laba.iis.persistence.UserRepository;
+import com.solvd.laba.iis.persistence.jdbc.UserRepository;
 import com.solvd.laba.iis.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

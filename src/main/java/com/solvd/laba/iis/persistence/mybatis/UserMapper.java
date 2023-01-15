@@ -1,11 +1,11 @@
-package com.solvd.laba.iis.persistence;
+package com.solvd.laba.iis.persistence.mybatis;
 
 import com.solvd.laba.iis.domain.UserInfo;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface UserRepository {
+public interface UserMapper {
 
     List<UserInfo> findAll();
 

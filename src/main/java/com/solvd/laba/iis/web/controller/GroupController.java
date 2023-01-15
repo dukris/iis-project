@@ -34,6 +34,7 @@ import java.util.List;
 public class GroupController {
 
     private final GroupService groupService;
+    private final com.solvd.laba.iis.persistence.mybatis.GroupMapper groupMap;
     private final LessonService lessonService;
     private final StudentService studentService;
     private final TeacherService teacherService;
@@ -45,7 +46,8 @@ public class GroupController {
 
     @GetMapping
     public List<GroupDto> getAll() {
-        List<Group> groups = groupService.retrieveAll();
+//        List<Group> groups = groupService.retrieveAll();
+        List<Group> groups = groupMap.findAll();
         List<GroupDto> groupDtos = groupMapper.entityToDto(groups);
         return groupDtos;
     }

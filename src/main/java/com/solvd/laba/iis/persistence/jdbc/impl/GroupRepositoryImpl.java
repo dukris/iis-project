@@ -1,10 +1,10 @@
-package com.solvd.laba.iis.persistence.impl;
+package com.solvd.laba.iis.persistence.jdbc.impl;
 
 import com.solvd.laba.iis.domain.Group;
 import com.solvd.laba.iis.domain.exception.ResourceMappingException;
-import com.solvd.laba.iis.persistence.GroupRepository;
+import com.solvd.laba.iis.persistence.jdbc.GroupRepository;
 import com.solvd.laba.iis.domain.criteria.GroupSearchCriteria;
-import com.solvd.laba.iis.persistence.mapper.GroupRowMapper;
+import com.solvd.laba.iis.persistence.jdbc.mapper.GroupRowMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

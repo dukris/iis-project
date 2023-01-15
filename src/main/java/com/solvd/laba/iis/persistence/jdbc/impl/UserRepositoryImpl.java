@@ -1,9 +1,9 @@
-package com.solvd.laba.iis.persistence.impl;
+package com.solvd.laba.iis.persistence.jdbc.impl;
 
 import com.solvd.laba.iis.domain.UserInfo;
 import com.solvd.laba.iis.domain.exception.ResourceMappingException;
-import com.solvd.laba.iis.persistence.UserRepository;
-import com.solvd.laba.iis.persistence.mapper.UserRowMapper;
+import com.solvd.laba.iis.persistence.jdbc.UserRepository;
+import com.solvd.laba.iis.persistence.jdbc.mapper.UserRowMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

@@ -1,4 +1,4 @@
-package com.solvd.laba.iis.persistence;
+package com.solvd.laba.iis.persistence.jdbc;
 
 import com.solvd.laba.iis.domain.Subject;
 

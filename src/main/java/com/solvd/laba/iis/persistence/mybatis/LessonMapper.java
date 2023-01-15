@@ -1,4 +1,4 @@
-package com.solvd.laba.iis.persistence;
+package com.solvd.laba.iis.persistence.mybatis;
 
 import com.solvd.laba.iis.domain.Lesson;
 import com.solvd.laba.iis.domain.criteria.LessonSearchCriteria;
@@ -6,7 +6,7 @@ import com.solvd.laba.iis.domain.criteria.LessonSearchCriteria;
 import java.util.List;
 import java.util.Optional;
 
-public interface LessonRepository {
+public interface LessonMapper {
 
     List<Lesson> findAll();
 
