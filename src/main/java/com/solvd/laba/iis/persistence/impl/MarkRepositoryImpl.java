@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Repository
@@ -36,7 +37,7 @@ public class MarkRepositoryImpl implements MarkRepository {
             LEFT JOIN users_info student on (student.id = students_info.user_id) """;
     private static final String CREATE_QUERY = "INSERT INTO marks (date, value, student_id, teacher_id, subject_id) VALUES(?, ?, ?, ?, ?)";
     private static final String DELETE_QUERY = "DELETE FROM marks WHERE id = ?";
-    private static final String SAVE_QUERY = "UPDATE marks SET date = ?, value = ?, student_id = ?, teacher_id = ?, subject_id = ? WHERE id = ?";
+    private static final String UPDATE_QUERY = "UPDATE marks SET date = ?, value = ?, student_id = ?, teacher_id = ?, subject_id = ? WHERE id = ?";
 
     private final DataSource dataSource;
 
@@ -92,7 +93,7 @@ public class MarkRepositoryImpl implements MarkRepository {
     }
 
     private String updateQuery(Long studentId, MarkSearchCriteria markSearchCriteria) {
-        return markSearchCriteria.getSubjectId() != 0 ?
+        return Objects.nonNull(markSearchCriteria.getSubjectId()) ?
                 FIND_ALL_QUERY + "WHERE marks.student_id = " + studentId + " AND marks.subject_id = " + markSearchCriteria.getSubjectId() :
                 FIND_ALL_QUERY + "WHERE marks.student_id = " + studentId;
     }
@@ -121,7 +122,7 @@ public class MarkRepositoryImpl implements MarkRepository {
     @Override
     public void update(Mark mark) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(SAVE_QUERY)) {
+             PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY)) {
             statement.setDate(1, Date.valueOf(mark.getDate()));
             statement.setInt(2, mark.getValue());
             statement.setLong(3, mark.getStudent().getId());

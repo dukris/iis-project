@@ -20,7 +20,7 @@ public class SubjectRepositoryImpl implements SubjectRepository {
     private static final String IS_EXIST_QUERY = "SELECT subjects.id as subject_id FROM subjects WHERE name = ?";
     private static final String CREATE_QUERY = "INSERT INTO subjects (name) VALUES(?)";
     private static final String DELETE_QUERY = "DELETE FROM subjects WHERE id = ?";
-    private static final String SAVE_QUERY = "UPDATE subjects SET name = ? WHERE id = ?";
+    private static final String UPDATE_QUERY = "UPDATE subjects SET name = ? WHERE id = ?";
 
     private final DataSource dataSource;
 
@@ -81,7 +81,7 @@ public class SubjectRepositoryImpl implements SubjectRepository {
     @Override
     public void update(Subject subject) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(SAVE_QUERY)) {
+             PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY)) {
             statement.setString(1, subject.getName());
             statement.setLong(2, subject.getId());
             statement.executeUpdate();

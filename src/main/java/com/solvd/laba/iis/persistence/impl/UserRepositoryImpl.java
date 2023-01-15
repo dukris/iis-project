@@ -23,7 +23,7 @@ public class UserRepositoryImpl implements UserRepository {
     private static final String IS_EXIST_QUERY = "SELECT users_info.id as user_id FROM users_info WHERE email = ?";
     private static final String CREATE_QUERY = "INSERT INTO users_info (name, surname, email, password, role) VALUES(?, ?, ?, ?, ?)";
     private static final String DELETE_QUERY = "DELETE FROM users_info WHERE id = ?";
-    private static final String SAVE_QUERY = "UPDATE users_info SET name = ?, surname = ?, email = ?, password = ?, role = ? WHERE id = ?";
+    private static final String UPDATE_QUERY = "UPDATE users_info SET name = ?, surname = ?, email = ?, password = ?, role = ? WHERE id = ?";
 
     private final DataSource dataSource;
 
@@ -89,7 +89,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public void update(UserInfo userInfo) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(SAVE_QUERY)) {
+             PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY)) {
             statement.setString(1, userInfo.getName());
             statement.setString(2, userInfo.getSurname());
             statement.setString(3, userInfo.getEmail());
