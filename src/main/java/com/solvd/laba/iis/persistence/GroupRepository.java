@@ -1,7 +1,8 @@
-package com.solvd.laba.iis.persistence.jdbc;
+package com.solvd.laba.iis.persistence;
 
 import com.solvd.laba.iis.domain.Group;
 import com.solvd.laba.iis.domain.criteria.GroupSearchCriteria;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,7 +15,7 @@ public interface GroupRepository {
 
     boolean isExist(Integer number);
 
-    List<Group> findByCriteria(Long teacherId, GroupSearchCriteria groupSearchCriteria);
+    List<Group> findByCriteria(@Param("teacherId") Long teacherId, @Param("groupSearchCriteria") GroupSearchCriteria groupSearchCriteria);
 
     void create(Group group);
 

@@ -1,0 +1,165 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.solvd.laba.iis.persistence.LessonRepository">
+
+    <resultMap id="lesson" type="com.solvd.laba.iis.domain.Lesson">
+        <id property="id" column="id"/>
+        <result property="room" column="room"/>
+        <result property="weekday" column="weekday"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+        <association
+                property="subject" column="subject_id" javaType="com.solvd.laba.iis.domain.Subject"
+                select="com.solvd.laba.iis.persistence.SubjectRepository.findById"/>
+        <association
+                property="group" column="group_id" javaType="com.solvd.laba.iis.domain.Group"
+                select="com.solvd.laba.iis.persistence.GroupRepository.findById"/>
+        <association
+                property="teacher" column="teacher_id" javaType="com.solvd.laba.iis.domain.TeacherInfo"
+                select="com.solvd.laba.iis.persistence.TeacherRepository.findById"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="lesson">
+        SELECT lessons.id,
+               lessons.room,
+               lessons.weekday,
+               lessons.start_time,
+               lessons.end_time,
+               lessons.subject_id,
+               lessons.group_id,
+               lessons.teacher_id
+        FROM lessons
+    </select>
+
+    <select id="findById" parameterType="java.lang.Long" resultMap="lesson">
+        SELECT lessons.id,
+               lessons.room,
+               lessons.weekday,
+               lessons.start_time,
+               lessons.end_time,
+               lessons.subject_id,
+               lessons.group_id,
+               lessons.teacher_id
+        FROM lessons
+        WHERE id = #{id}
+    </select>
+
+    <select id="findByStudentCriteria" resultMap="lesson">
+        SELECT lessons.id,
+               lessons.room,
+               lessons.weekday,
+               lessons.start_time,
+               lessons.end_time,
+               lessons.subject_id,
+               lessons.group_id,
+               lessons.teacher_id
+        FROM lessons
+        LEFT JOIN groups ON (lessons.group_id = groups.id)
+        WHERE groups.id = #{groupId}
+        <if test="lessonSearchCriteria.weekday != null">
+            AND lessons.weekday = #{lessonSearchCriteria.weekday}
+        </if>
+    </select>
+
+    <select id="findByTeacherCriteria" resultMap="lesson">
+        SELECT lessons.id,
+        lessons.room,
+        lessons.weekday,
+        lessons.start_time,
+        lessons.end_time,
+        lessons.subject_id,
+        lessons.group_id,
+        lessons.teacher_id
+        FROM lessons
+        WHERE lessons.teacher_id = #{teacherId}
+        <if test="lessonSearchCriteria.weekday != null">
+            AND lessons.weekday = #{lessonSearchCriteria.weekday}
+        </if>
+    </select>
+
+    <update id="update" parameterType="com.solvd.laba.iis.domain.Lesson">
+        UPDATE lessons
+        <set>
+            <if test="room != null">
+                room = #{room},
+            </if>
+            <if test="weekday != null">
+                weekday = #{weekday},
+            </if>
+            <if test="startTime != null">
+                start_time = #{startTime},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime},
+            </if>
+            <if test="subject != null">
+                subject_id = #{subject.id},
+            </if>
+            <if test="group != null">
+                group_id = #{group.id},
+            </if>
+            <if test="teacher != null">
+                teacher_id = #{teacher.id}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Long">
+        DELETE
+        FROM lessons
+        WHERE id = #{id}
+    </delete>
+
+    <insert id="create" parameterType="com.solvd.laba.iis.domain.Lesson" useGeneratedKeys="true" keyProperty="id"
+            keyColumn="id">
+        INSERT INTO lessons
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="room != null">
+                room,
+            </if>
+            <if test="weekday != null">
+                weekday,
+            </if>
+            <if test="startTime != null">
+                start_time,
+            </if>
+            <if test="endTime != null">
+                end_time,
+            </if>
+            <if test="subject != null">
+                subject_id,
+            </if>
+            <if test="group != null">
+                group_id,
+            </if>
+            <if test="teacher != null">
+                teacher_id
+            </if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="room != null">
+                #{room},
+            </if>
+            <if test="weekday != null">
+                #{weekday},
+            </if>
+            <if test="startTime != null">
+                #{startTime},
+            </if>
+            <if test="endTime != null">
+                #{endTime},
+            </if>
+            <if test="subject != null">
+                #{subject.id},
+            </if>
+            <if test="group != null">
+                #{group.id},
+            </if>
+            <if test="teacher != null">
+                #{teacher.id}
+            </if>
+        </trim>
+    </insert>
+
+</mapper>

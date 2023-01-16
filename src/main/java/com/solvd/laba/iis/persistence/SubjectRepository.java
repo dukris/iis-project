@@ -1,16 +1,17 @@
-package com.solvd.laba.iis.persistence.mybatis;
+package com.solvd.laba.iis.persistence;
 
 import com.solvd.laba.iis.domain.Subject;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface SubjectMapper {
-    //TODO add mapper.xml
+public interface SubjectRepository {
 
     List<Subject> findAll();
 
     Optional<Subject> findById(Long id);
+
+    List<Subject> findByTeacher(Long teacherId);
 
     boolean isExist(String name);
 

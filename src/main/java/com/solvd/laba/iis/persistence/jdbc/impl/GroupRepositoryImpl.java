@@ -2,10 +2,11 @@ package com.solvd.laba.iis.persistence.jdbc.impl;
 
 import com.solvd.laba.iis.domain.Group;
 import com.solvd.laba.iis.domain.exception.ResourceMappingException;
-import com.solvd.laba.iis.persistence.jdbc.GroupRepository;
+import com.solvd.laba.iis.persistence.GroupRepository;
 import com.solvd.laba.iis.domain.criteria.GroupSearchCriteria;
 import com.solvd.laba.iis.persistence.jdbc.mapper.GroupRowMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -16,6 +17,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
+@ConditionalOnProperty(prefix = "application", name = "repository", havingValue = "jdbc")
 public class GroupRepositoryImpl implements GroupRepository {
 
     private static final String FIND_ALL_QUERY = "SELECT DISTINCT groups.id as group_id, groups.number as group_number FROM iis.groups ";

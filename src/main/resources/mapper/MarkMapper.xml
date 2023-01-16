@@ -1,0 +1,133 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.solvd.laba.iis.persistence.MarkRepository">
+
+    <resultMap id="mark" type="com.solvd.laba.iis.domain.Mark">
+        <id property="id" column="id"/>
+        <result property="date" column="date"/>
+        <result property="value" column="value"/>
+        <association
+                property="subject" column="subject_id" javaType="com.solvd.laba.iis.domain.Subject"
+                select="com.solvd.laba.iis.persistence.SubjectRepository.findById"/>
+        <association
+                property="student" column="student_id" javaType="com.solvd.laba.iis.domain.StudentInfo"
+                select="com.solvd.laba.iis.persistence.StudentRepository.findById"/>
+        <association
+                property="teacher" column="teacher_id" javaType="com.solvd.laba.iis.domain.TeacherInfo"
+                select="com.solvd.laba.iis.persistence.TeacherRepository.findById"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="mark">
+        SELECT marks.id,
+               marks.date,
+               marks.value,
+               marks.student_id,
+               marks.teacher_id,
+               marks.subject_id
+        FROM marks
+    </select>
+
+    <select id="findById" parameterType="java.lang.Long" resultMap="mark">
+        SELECT marks.id,
+               marks.date,
+               marks.value,
+               marks.student_id,
+               marks.teacher_id,
+               marks.subject_id
+        FROM marks
+        WHERE id = #{id}
+    </select>
+
+    <select id="findByCriteria" resultMap="mark">
+        SELECT marks.id,
+        marks.date,
+        marks.value,
+        marks.student_id,
+        marks.teacher_id,
+        marks.subject_id
+        FROM marks
+        WHERE marks.student_id = #{studentId}
+        <if test="markSearchCriteria.subjectId != null">
+            AND marks.subject_id = #{markSearchCriteria.subjectId}
+        </if>
+    </select>
+
+    <select id="findBySubjectAndTeacher" resultMap="mark">
+        SELECT marks.id,
+               marks.date,
+               marks.value,
+               marks.student_id,
+               marks.teacher_id,
+               marks.subject_id
+        FROM marks
+        WHERE marks.subject_id = #{subjectId} AND marks.teacher_id = #{teacherId}
+    </select>
+
+    <update id="update" parameterType="com.solvd.laba.iis.domain.Mark">
+        UPDATE marks
+        <set>
+            <if test="date != null">
+                date = #{date},
+            </if>
+            <if test="value != null">
+                value = #{value},
+            </if>
+            <if test="subject != null">
+                subject_id = #{subject.id},
+            </if>
+            <if test="student != null">
+                student_id = #{student.id},
+            </if>
+            <if test="teacher != null">
+                teacher_id = #{teacher.id}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Long">
+        DELETE
+        FROM marks
+        WHERE id = #{id}
+    </delete>
+
+    <insert id="create" parameterType="com.solvd.laba.iis.domain.Mark" useGeneratedKeys="true" keyProperty="id"
+            keyColumn="id">
+        INSERT INTO marks
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="date != null">
+                date,
+            </if>
+            <if test="value != null">
+                value,
+            </if>
+            <if test="subject != null">
+                subject_id,
+            </if>
+            <if test="student != null">
+                student_id,
+            </if>
+            <if test="teacher != null">
+                teacher_id
+            </if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="date != null">
+                #{date},
+            </if>
+            <if test="value != null">
+                #{value},
+            </if>
+            <if test="subject != null">
+                #{subject.id},
+            </if>
+            <if test="student != null">
+                #{student.id},
+            </if>
+            <if test="teacher != null">
+                #{teacher.id}
+            </if>
+        </trim>
+    </insert>
+
+</mapper>

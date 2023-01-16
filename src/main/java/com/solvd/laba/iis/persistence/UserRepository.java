@@ -1,4 +1,4 @@
-package com.solvd.laba.iis.persistence.jdbc;
+package com.solvd.laba.iis.persistence;
 
 import com.solvd.laba.iis.domain.UserInfo;
 

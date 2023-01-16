@@ -2,7 +2,7 @@ package com.solvd.laba.iis.service.impl;
 
 import com.solvd.laba.iis.domain.Mark;
 import com.solvd.laba.iis.domain.exception.ResourceDoesNotExistException;
-import com.solvd.laba.iis.persistence.jdbc.MarkRepository;
+import com.solvd.laba.iis.persistence.MarkRepository;
 import com.solvd.laba.iis.domain.criteria.MarkSearchCriteria;
 import com.solvd.laba.iis.service.MarkService;
 import lombok.RequiredArgsConstructor;

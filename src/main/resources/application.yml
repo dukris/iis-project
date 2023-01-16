@@ -9,3 +9,5 @@ spring:
       mode: always
   jackson:
     default-property-inclusion: NON_NULL
+application:
+  repository: mybatis

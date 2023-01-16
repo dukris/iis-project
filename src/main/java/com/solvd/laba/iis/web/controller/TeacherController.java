@@ -18,12 +18,12 @@ import com.solvd.laba.iis.web.dto.criteria.GroupSearchCriteriaDto;
 import com.solvd.laba.iis.web.dto.criteria.LessonSearchCriteriaDto;
 import com.solvd.laba.iis.web.dto.validation.OnCreateTeacherGroup;
 import com.solvd.laba.iis.web.dto.validation.OnUpdateGroup;
-import com.solvd.laba.iis.web.mapper.group.GroupMapper;
-import com.solvd.laba.iis.web.mapper.lesson.LessonMapper;
-import com.solvd.laba.iis.web.mapper.mark.MarkMapper;
+import com.solvd.laba.iis.web.mapper.GroupMapper;
+import com.solvd.laba.iis.web.mapper.LessonMapper;
+import com.solvd.laba.iis.web.mapper.MarkMapper;
 import com.solvd.laba.iis.web.mapper.TeacherInfoMapper;
-import com.solvd.laba.iis.web.mapper.group.GroupSearchCriteriaMapper;
-import com.solvd.laba.iis.web.mapper.lesson.LessonSearchCriteriaMapper;
+import com.solvd.laba.iis.web.mapper.criteria.GroupSearchCriteriaMapper;
+import com.solvd.laba.iis.web.mapper.criteria.LessonSearchCriteriaMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -42,7 +42,6 @@ public class TeacherController {
     private final MarkService markService;
     private final TeacherInfoMapper teacherInfoMapper;
     private final GroupMapper groupMapper;
-    private final com.solvd.laba.iis.persistence.mybatis.GroupMapper groupMap;
     private final GroupSearchCriteriaMapper groupSearchCriteriaMapper;
     private final LessonMapper lessonMapper;
     private final LessonSearchCriteriaMapper lessonSearchCriteriaMapper;
@@ -66,7 +65,7 @@ public class TeacherController {
     public List<GroupDto> getGroups(@PathVariable Long id,
                                     GroupSearchCriteriaDto groupSearchCriteriaDto) {
         GroupSearchCriteria groupSearchCriteria = groupSearchCriteriaMapper.dtoToEntity(groupSearchCriteriaDto);
-        List<Group> groups = groupMap.findByCriteria(id, groupSearchCriteria); //groupService.retrieveByCriteria(id, groupSearchCriteria);
+        List<Group> groups = groupService.retrieveByCriteria(id, groupSearchCriteria);
         List<GroupDto> groupDtos = groupMapper.entityToDto(groups);
         return groupDtos;
     }

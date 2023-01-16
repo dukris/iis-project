@@ -1,10 +1,7 @@
-package com.solvd.laba.iis.web.mapper.mark;
+package com.solvd.laba.iis.web.mapper;
 
 import com.solvd.laba.iis.domain.Mark;
 import com.solvd.laba.iis.web.dto.MarkDto;
-import com.solvd.laba.iis.web.mapper.student.StudentInfoMapper;
-import com.solvd.laba.iis.web.mapper.SubjectMapper;
-import com.solvd.laba.iis.web.mapper.TeacherInfoMapper;
 import org.mapstruct.Mapper;
 
 import java.util.List;

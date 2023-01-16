@@ -1,0 +1,105 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.solvd.laba.iis.persistence.UserRepository">
+
+    <resultMap id="user" type="com.solvd.laba.iis.domain.UserInfo">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="surname" column="surname"/>
+        <result property="email" column="password"/>
+        <result property="role" column="role"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="user">
+        SELECT users_info.id,
+               users_info.name,
+               users_info.surname,
+               users_info.email,
+               users_info.password,
+               users_info.role
+        FROM users_info
+    </select>
+
+    <select id="findById" parameterType="java.lang.Long" resultMap="user">
+        SELECT users_info.id,
+               users_info.name,
+               users_info.surname,
+               users_info.email,
+               users_info.password,
+               users_info.role
+        FROM users_info
+        WHERE id = #{id}
+    </select>
+
+    <select id="isExist" parameterType="java.lang.String" resultType="java.lang.Boolean">
+        SELECT EXISTS(SELECT 1 FROM users_info WHERE email = #{email})
+    </select>
+
+    <update id="update" parameterType="com.solvd.laba.iis.domain.UserInfo">
+        UPDATE users_info
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="surname != null">
+                surname = #{surname},
+            </if>
+            <if test="email != null">
+                email = #{email},
+            </if>
+            <if test="password != null">
+                password = #{password},
+            </if>
+            <if test="role != null">
+                role = #{role}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Long">
+        DELETE
+        FROM users_info
+        WHERE id = #{id}
+    </delete>
+
+    <insert id="create" parameterType="com.solvd.laba.iis.domain.UserInfo" useGeneratedKeys="true" keyProperty="id"
+            keyColumn="id">
+        INSERT INTO users_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                name,
+            </if>
+            <if test="surname != null">
+                surname,
+            </if>
+            <if test="email != null">
+                email,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="role != null">
+                role
+            </if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="surname != null">
+                #{surname},
+            </if>
+            <if test="email != null">
+                #{email},
+            </if>
+            <if test="password != null">
+                #{password},
+            </if>
+            <if test="role != null">
+                #{role}
+            </if>
+        </trim>
+    </insert>
+
+</mapper>

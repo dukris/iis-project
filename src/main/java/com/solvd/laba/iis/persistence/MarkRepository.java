@@ -1,7 +1,8 @@
-package com.solvd.laba.iis.persistence.jdbc;
+package com.solvd.laba.iis.persistence;
 
 import com.solvd.laba.iis.domain.Mark;
 import com.solvd.laba.iis.domain.criteria.MarkSearchCriteria;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,9 +13,9 @@ public interface MarkRepository {
 
     Optional<Mark> findById(Long id);
 
-    List<Mark> findBySubjectAndTeacher(Long subjectId, Long teacherId);
+    List<Mark> findBySubjectAndTeacher(@Param("subjectId") Long subjectId, @Param("teacherId") Long teacherId);
 
-    List<Mark> findByCriteria(Long studentId, MarkSearchCriteria markSearchCriteria);
+    List<Mark> findByCriteria(@Param("studentId") Long studentId, @Param("markSearchCriteria") MarkSearchCriteria markSearchCriteria);
 
     void create(Mark mark);
 

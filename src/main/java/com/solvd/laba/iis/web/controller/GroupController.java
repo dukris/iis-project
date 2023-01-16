@@ -16,11 +16,11 @@ import com.solvd.laba.iis.web.dto.TeacherInfoDto;
 import com.solvd.laba.iis.web.dto.criteria.LessonSearchCriteriaDto;
 import com.solvd.laba.iis.web.dto.validation.OnCreateGroup;
 import com.solvd.laba.iis.web.dto.validation.OnUpdateGroup;
-import com.solvd.laba.iis.web.mapper.group.GroupMapper;
-import com.solvd.laba.iis.web.mapper.lesson.LessonMapper;
-import com.solvd.laba.iis.web.mapper.student.StudentInfoMapper;
+import com.solvd.laba.iis.web.mapper.GroupMapper;
+import com.solvd.laba.iis.web.mapper.LessonMapper;
+import com.solvd.laba.iis.web.mapper.StudentInfoMapper;
 import com.solvd.laba.iis.web.mapper.TeacherInfoMapper;
-import com.solvd.laba.iis.web.mapper.lesson.LessonSearchCriteriaMapper;
+import com.solvd.laba.iis.web.mapper.criteria.LessonSearchCriteriaMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -34,7 +34,6 @@ import java.util.List;
 public class GroupController {
 
     private final GroupService groupService;
-    private final com.solvd.laba.iis.persistence.mybatis.GroupMapper groupMap;
     private final LessonService lessonService;
     private final StudentService studentService;
     private final TeacherService teacherService;
@@ -46,20 +45,14 @@ public class GroupController {
 
     @GetMapping
     public List<GroupDto> getAll() {
-        List<Group> groups = groupMap.findAll(); //groupService.retrieveAll();
+        List<Group> groups = groupService.retrieveAll();
         List<GroupDto> groupDtos = groupMapper.entityToDto(groups);
         return groupDtos;
     }
 
-//    @GetMapping("/is")
-//    public Integer get() {
-//        Integer b = groupMap.isExist(951005);
-//        return b;
-//    }
-
     @GetMapping("/{id}")
     public GroupDto getById(@PathVariable Long id) {
-        Group group = groupMap.findById(id).orElseThrow(); //groupService.retrieveById(id);
+        Group group = groupService.retrieveById(id);
         GroupDto groupDto = groupMapper.entityToDto(group);
         return groupDto;
     }

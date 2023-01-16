@@ -5,7 +5,7 @@ import com.solvd.laba.iis.service.MarkService;
 import com.solvd.laba.iis.web.dto.MarkDto;
 import com.solvd.laba.iis.web.dto.validation.OnCreateMarkGroup;
 import com.solvd.laba.iis.web.dto.validation.OnUpdateGroup;
-import com.solvd.laba.iis.web.mapper.mark.MarkMapper;
+import com.solvd.laba.iis.web.mapper.MarkMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;

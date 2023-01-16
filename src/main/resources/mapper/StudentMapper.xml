@@ -1,0 +1,136 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.solvd.laba.iis.persistence.StudentRepository">
+
+    <resultMap id="student" type="com.solvd.laba.iis.domain.StudentInfo">
+        <id property="id" column="id"/>
+        <result property="admissionYear" column="year"/>
+        <result property="faculty" column="faculty"/>
+        <result property="speciality" column="speciality"/>
+        <association
+                property="user" column="user_id" javaType="com.solvd.laba.iis.domain.UserInfo"
+                select="com.solvd.laba.iis.persistence.UserRepository.findById"/>
+        <association
+                property="group" column="group_id" javaType="com.solvd.laba.iis.domain.Group"
+                select="com.solvd.laba.iis.persistence.GroupRepository.findById"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="student">
+        SELECT students_info.id,
+               students_info.year,
+               students_info.faculty,
+               students_info.speciality,
+               students_info.user_id,
+               students_info.group_id
+        FROM students_info
+    </select>
+
+    <select id="findById" parameterType="java.lang.Long" resultMap="student">
+        SELECT students_info.id,
+               students_info.year,
+               students_info.faculty,
+               students_info.speciality,
+               students_info.user_id,
+               students_info.group_id
+        FROM students_info
+        WHERE id = #{id}
+    </select>
+
+    <select id="findByGroup" parameterType="java.lang.Long" resultMap="student">
+        SELECT students_info.id,
+               students_info.year,
+               students_info.faculty,
+               students_info.speciality,
+               students_info.user_id,
+               students_info.group_id
+        FROM students_info
+        WHERE students_info.group_id = #{groupId}
+    </select>
+
+    <select id="findByCriteria" resultMap="student">
+        SELECT students_info.id,
+        students_info.year,
+        students_info.faculty,
+        students_info.speciality,
+        students_info.user_id,
+        students_info.group_id
+        FROM students_info
+        <if test="studentSearchCriteria.faculty != null">
+            WHERE students_info.faculty = #{studentSearchCriteria.faculty}
+        </if>
+        <if test="studentSearchCriteria.speciality != null">
+            WHERE students_info.speciality = #{studentSearchCriteria.speciality}
+        </if>
+        <if test="studentSearchCriteria.year != null">
+            WHERE students_info.year = #{studentSearchCriteria.year}
+        </if>
+    </select>
+
+    <update id="update" parameterType="com.solvd.laba.iis.domain.StudentInfo">
+        UPDATE students_info
+        <set>
+            <if test="admissionYear != null">
+                year = #{admissionYear},
+            </if>
+            <if test="faculty != null">
+                faculty = #{faculty},
+            </if>
+            <if test="speciality != null">
+                speciality = #{speciality},
+            </if>
+            <if test="user != null">
+                user_id = #{user.id},
+            </if>
+            <if test="group != null">
+                group_id = #{group.id}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Long">
+        DELETE
+        FROM students_info
+        WHERE id = #{id}
+    </delete>
+
+    <insert id="create" parameterType="com.solvd.laba.iis.domain.StudentInfo" useGeneratedKeys="true" keyProperty="id"
+            keyColumn="id">
+        INSERT INTO students_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="admissionYear != null">
+                year,
+            </if>
+            <if test="faculty != null">
+                faculty,
+            </if>
+            <if test="speciality != null">
+                speciality,
+            </if>
+            <if test="user != null">
+                user_id,
+            </if>
+            <if test="group != null">
+                group_id
+            </if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="admissionYear != null">
+                #{admissionYear},
+            </if>
+            <if test="faculty != null">
+                #{faculty},
+            </if>
+            <if test="speciality != null">
+                #{speciality},
+            </if>
+            <if test="user != null">
+                #{user.id},
+            </if>
+            <if test="group != null">
+                #{group.id}
+            </if>
+        </trim>
+    </insert>
+
+</mapper>

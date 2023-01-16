@@ -1,4 +1,4 @@
-package com.solvd.laba.iis.web.mapper.group;
+package com.solvd.laba.iis.web.mapper;
 
 import com.solvd.laba.iis.domain.Group;
 import com.solvd.laba.iis.web.dto.GroupDto;

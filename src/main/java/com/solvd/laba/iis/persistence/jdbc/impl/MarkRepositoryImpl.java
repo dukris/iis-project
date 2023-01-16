@@ -2,10 +2,11 @@ package com.solvd.laba.iis.persistence.jdbc.impl;
 
 import com.solvd.laba.iis.domain.Mark;
 import com.solvd.laba.iis.domain.exception.ResourceMappingException;
-import com.solvd.laba.iis.persistence.jdbc.MarkRepository;
+import com.solvd.laba.iis.persistence.MarkRepository;
 import com.solvd.laba.iis.domain.criteria.MarkSearchCriteria;
 import com.solvd.laba.iis.persistence.jdbc.mapper.MarkRowMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -16,6 +17,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
+@ConditionalOnProperty(prefix = "application", name = "repository", havingValue = "jdbc")
 public class MarkRepositoryImpl implements MarkRepository {
 
     private static final String FIND_ALL_QUERY = """

@@ -2,7 +2,7 @@ package com.solvd.laba.iis.service.impl;
 
 import com.solvd.laba.iis.domain.StudentInfo;
 import com.solvd.laba.iis.domain.exception.ResourceDoesNotExistException;
-import com.solvd.laba.iis.persistence.jdbc.StudentRepository;
+import com.solvd.laba.iis.persistence.StudentRepository;
 import com.solvd.laba.iis.domain.criteria.StudentSearchCriteria;
 import com.solvd.laba.iis.service.StudentService;
 import lombok.RequiredArgsConstructor;

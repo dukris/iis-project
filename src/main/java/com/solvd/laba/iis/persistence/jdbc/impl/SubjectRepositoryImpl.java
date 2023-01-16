@@ -2,9 +2,10 @@ package com.solvd.laba.iis.persistence.jdbc.impl;
 
 import com.solvd.laba.iis.domain.Subject;
 import com.solvd.laba.iis.domain.exception.ResourceMappingException;
-import com.solvd.laba.iis.persistence.jdbc.SubjectRepository;
+import com.solvd.laba.iis.persistence.SubjectRepository;
 import com.solvd.laba.iis.persistence.jdbc.mapper.SubjectRowMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -14,6 +15,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
+@ConditionalOnProperty(prefix = "application", name = "repository", havingValue = "jdbc")
 public class SubjectRepositoryImpl implements SubjectRepository {
 
     private static final String FIND_ALL_QUERY = "SELECT subjects.id as subject_id, subjects.name as subject_name FROM subjects ";
@@ -46,6 +48,20 @@ public class SubjectRepositoryImpl implements SubjectRepository {
             }
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while finding subject by id = " + id, ex);
+        }
+    }
+
+    @Override
+    public List<Subject> findByTeacher(Long teacherId) {
+        String joinQuery = "LEFT JOIN teachers_subjects ON (teachers_subjects.subject_id = subjects.id) ";
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + joinQuery + "WHERE teachers_subjects.teacher_id = ?")) {
+            statement.setLong(1, teacherId);
+            try (ResultSet rs = statement.executeQuery()) {
+                return SubjectRowMapper.mapRows(rs);
+            }
+        } catch (SQLException ex) {
+            throw new ResourceMappingException("Exception occurred while finding subject by teacher's id = " + teacherId, ex);
         }
     }
 

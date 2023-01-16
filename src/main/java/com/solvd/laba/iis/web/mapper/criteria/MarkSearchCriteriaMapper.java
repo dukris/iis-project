@@ -1,4 +1,4 @@
-package com.solvd.laba.iis.web.mapper.mark;
+package com.solvd.laba.iis.web.mapper.criteria;
 
 import com.solvd.laba.iis.domain.criteria.MarkSearchCriteria;
 import com.solvd.laba.iis.web.dto.criteria.MarkSearchCriteriaDto;

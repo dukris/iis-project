@@ -1,4 +1,4 @@
-package com.solvd.laba.iis.web.mapper.student;
+package com.solvd.laba.iis.web.mapper.criteria;
 
 import com.solvd.laba.iis.domain.criteria.StudentSearchCriteria;
 import com.solvd.laba.iis.web.dto.criteria.StudentSearchCriteriaDto;
