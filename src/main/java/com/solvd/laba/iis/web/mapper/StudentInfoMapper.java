@@ -1,9 +1,7 @@
-package com.solvd.laba.iis.web.mapper.student;
+package com.solvd.laba.iis.web.mapper;
 
 import com.solvd.laba.iis.domain.StudentInfo;
 import com.solvd.laba.iis.web.dto.StudentInfoDto;
-import com.solvd.laba.iis.web.mapper.UserInfoMapper;
-import com.solvd.laba.iis.web.mapper.group.GroupMapper;
 import org.mapstruct.Mapper;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.solvd.laba.iis.web.mapper.group;
+package com.solvd.laba.iis.web.mapper.criteria;
 
 import com.solvd.laba.iis.domain.criteria.GroupSearchCriteria;
 import com.solvd.laba.iis.web.dto.criteria.GroupSearchCriteriaDto;

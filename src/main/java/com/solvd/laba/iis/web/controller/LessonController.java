@@ -5,7 +5,7 @@ import com.solvd.laba.iis.service.LessonService;
 import com.solvd.laba.iis.web.dto.LessonDto;
 import com.solvd.laba.iis.web.dto.validation.OnCreateLessonGroup;
 import com.solvd.laba.iis.web.dto.validation.OnUpdateGroup;
-import com.solvd.laba.iis.web.mapper.lesson.LessonMapper;
+import com.solvd.laba.iis.web.mapper.LessonMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;

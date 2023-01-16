@@ -1,10 +1,7 @@
-package com.solvd.laba.iis.web.mapper.lesson;
+package com.solvd.laba.iis.web.mapper;
 
 import com.solvd.laba.iis.domain.Lesson;
 import com.solvd.laba.iis.web.dto.LessonDto;
-import com.solvd.laba.iis.web.mapper.SubjectMapper;
-import com.solvd.laba.iis.web.mapper.TeacherInfoMapper;
-import com.solvd.laba.iis.web.mapper.group.GroupMapper;
 import org.mapstruct.Mapper;
 
 import java.util.List;
