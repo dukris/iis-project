@@ -27,7 +27,7 @@ public class TeacherRepositoryImpl implements TeacherRepository {
             LEFT JOIN subjects ON (teachers_subjects.subject_id = subjects.id) """;
     private static final String CREATE_QUERY = "INSERT INTO teachers_info (user_id) VALUES(?)";
     private static final String DELETE_QUERY = "DELETE FROM teachers_info WHERE id = ?";
-    private static final String SAVE_QUERY = "UPDATE teachers_info SET user_id = ? WHERE id = ?";
+    private static final String UPDATE_QUERY = "UPDATE teachers_info SET user_id = ? WHERE id = ?";
     private static final String ADD_SUBJECT_QUERY = "INSERT INTO teachers_subjects (teacher_id, subject_id) VALUES(?,?)";
     private static final String DELETE_SUBJECT_QUERY = "DELETE FROM teachers_subjects WHERE teacher_id = ? AND subject_id = ?";
 
@@ -105,7 +105,7 @@ public class TeacherRepositoryImpl implements TeacherRepository {
     @Override
     public void update(TeacherInfo teacherInfo) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(SAVE_QUERY)) {
+             PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY)) {
             statement.setLong(1, teacherInfo.getUser().getId());
             statement.setLong(2, teacherInfo.getId());
             statement.executeUpdate();

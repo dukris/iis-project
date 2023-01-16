@@ -31,7 +31,7 @@ public class LessonRepositoryImpl implements LessonRepository {
             LEFT JOIN users_info ON (teachers_info.user_id = users_info.id) """;
     private static final String CREATE_QUERY = "INSERT INTO lessons (room, weekday, start_time, end_time, subject_id, group_id, teacher_id) VALUES(?, ?, ?, ?, ?, ?, ?)";
     private static final String DELETE_QUERY = "DELETE FROM lessons WHERE id = ?";
-    private static final String SAVE_QUERY = "UPDATE lessons SET room = ?, weekday = ?, start_time = ?, end_time = ?, subject_id = ?, group_id = ?, teacher_id = ? WHERE id = ?";
+    private static final String UPDATE_QUERY = "UPDATE lessons SET room = ?, weekday = ?, start_time = ?, end_time = ?, subject_id = ?, group_id = ?, teacher_id = ? WHERE id = ?";
 
     private final DataSource dataSource;
 
@@ -122,7 +122,7 @@ public class LessonRepositoryImpl implements LessonRepository {
     @Override
     public void update(Lesson lesson) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(SAVE_QUERY)) {
+             PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY)) {
             statement.setInt(1, lesson.getRoom());
             statement.setString(2, lesson.getWeekday().toString());
             statement.setTime(3, Time.valueOf(lesson.getStartTime()));

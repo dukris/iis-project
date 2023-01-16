@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MarkMapper {
+    //TODO add mapper.xml
 
     List<Mark> findAll();
 

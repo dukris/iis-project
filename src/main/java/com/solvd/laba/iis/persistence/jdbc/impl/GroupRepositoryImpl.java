@@ -11,17 +11,18 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
 public class GroupRepositoryImpl implements GroupRepository {
 
-    private static final String FIND_ALL_QUERY = "SELECT DISTINCT groups.id as group_id, groups.number as group_number FROM groups ";
-    private static final String IS_EXIST_QUERY = "SELECT groups.id as group_id FROM groups WHERE number = ?";
-    private static final String CREATE_QUERY = "INSERT INTO groups (number) VALUES(?)";
-    private static final String DELETE_QUERY = "DELETE FROM groups WHERE id = ?";
-    private static final String SAVE_QUERY = "UPDATE groups SET number = ? WHERE id = ?";
+    private static final String FIND_ALL_QUERY = "SELECT DISTINCT groups.id as group_id, groups.number as group_number FROM iis.groups ";
+    private static final String IS_EXIST_QUERY = "SELECT groups.id as group_id FROM iis.groups WHERE number = ?";
+    private static final String CREATE_QUERY = "INSERT INTO iis.groups (number) VALUES (?)";
+    private static final String DELETE_QUERY = "DELETE FROM iis.groups WHERE id = ?";
+    private static final String UPDATE_QUERY = "UPDATE iis.groups SET number = ? WHERE id = ?";
 
     private final DataSource dataSource;
 
@@ -77,7 +78,7 @@ public class GroupRepositoryImpl implements GroupRepository {
 
     private String updateQuery(Long teacherId, GroupSearchCriteria groupSearchCriteria) {
         String joinQuery = "LEFT JOIN lessons ON (lessons.group_id = groups.id) ";
-        return groupSearchCriteria.getSubjectId() != 0 ?
+        return Objects.nonNull(groupSearchCriteria.getSubjectId()) ?
                 FIND_ALL_QUERY + joinQuery + "WHERE lessons.teacher_id = " + teacherId + " AND lessons.subject_id = " + groupSearchCriteria.getSubjectId() :
                 FIND_ALL_QUERY + joinQuery + "WHERE lessons.teacher_id = " + teacherId;
     }
@@ -102,7 +103,7 @@ public class GroupRepositoryImpl implements GroupRepository {
     @Override
     public void update(Group group) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(SAVE_QUERY)) {
+             PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY)) {
             statement.setInt(1, group.getNumber());
             statement.setLong(2, group.getId());
             statement.executeUpdate();

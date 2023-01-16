@@ -7,16 +7,20 @@
         <result property="number" column="number" javaType="java.lang.Integer" jdbcType="INTEGER"/>
     </resultMap>
 
-    <select id="findAll" parameterType="list" resultMap="group">
+    <select id="findAll" resultMap="group">
         SELECT DISTINCT groups.id, groups.number
         FROM groups
     </select>
 
     <select id="findById" parameterType="java.lang.Long" resultMap="group">
-        SELECT DISTINCT groups.id, groups.number
+        SELECT groups.id, groups.number
         FROM groups
         WHERE id = #{id}
     </select>
+
+<!--    <select id="isExist" parameterType="java.lang.Integer" resultMap="java.lang.Integer">-->
+<!--        SELECT EXISTS(SELECT 1 FROM groups WHERE number = #{number})-->
+<!--    </select>-->
 
     <select id="findByCriteria" resultMap="group">
         SELECT DISTINCT groups.id, groups.number
@@ -24,7 +28,7 @@
         LEFT JOIN lessons ON (lessons.group_id = groups.id)
         WHERE lessons.teacher_id = #{teacherId}
         <if test="groupSearchCriteria.getSubjectId() != null">
-            AND lessons.subject_id = #{groupSearchCriteria.getSubjectId()}
+            AND lessons.subject_id = #{groupSearchCriteria.subjectId}
         </if>
     </select>
 
@@ -32,7 +36,7 @@
         UPDATE groups
         <set>
             <if test="number != null">
-                number = #{name}
+                number = #{number}
             </if>
         </set>
         WHERE id = #{id}
@@ -44,11 +48,12 @@
         WHERE id = #{id}
     </delete>
 
-    <insert id="insert" parameterType="com.solvd.laba.iis.domain.Group">
+    <insert id="create" parameterType="com.solvd.laba.iis.domain.Group" useGeneratedKeys="true" keyProperty="id"
+            keyColumn="id">
         INSERT INTO groups
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="number != null">
-                name
+                number
             </if>
         </trim>
         <trim prefix="VALUES (" suffix=")" suffixOverrides=",">

@@ -28,7 +28,7 @@ public class StudentRepositoryImpl implements StudentRepository {
             LEFT JOIN groups ON (students_info.group_id = groups.id) """;
     private static final String CREATE_QUERY = "INSERT INTO students_info (year, faculty, speciality, user_id, group_id) VALUES(?, ?, ?, ?, ?)";
     private static final String DELETE_QUERY = "DELETE FROM students_info WHERE id = ?";
-    private static final String SAVE_QUERY = "UPDATE students_info SET year = ?, faculty = ?, speciality = ?, user_id = ?, group_id = ? WHERE id = ?";
+    private static final String UPDATE_QUERY = "UPDATE students_info SET year = ?, faculty = ?, speciality = ?, user_id = ?, group_id = ? WHERE id = ?";
 
     private final DataSource dataSource;
 
@@ -114,7 +114,7 @@ public class StudentRepositoryImpl implements StudentRepository {
     @Override
     public void update(StudentInfo studentInfo) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(SAVE_QUERY)) {
+             PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY)) {
             statement.setInt(1, studentInfo.getAdmissionYear());
             statement.setString(2, studentInfo.getFaculty());
             statement.setString(3, studentInfo.getSpeciality());

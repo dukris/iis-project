@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface SubjectMapper {
+    //TODO add mapper.xml
 
     List<Subject> findAll();
 

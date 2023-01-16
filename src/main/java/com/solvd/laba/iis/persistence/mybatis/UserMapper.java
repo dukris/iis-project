@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserMapper {
+    //TODO add mapper.xml
 
     List<UserInfo> findAll();
 

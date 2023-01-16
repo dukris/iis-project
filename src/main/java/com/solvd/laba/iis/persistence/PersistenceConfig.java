@@ -23,4 +23,6 @@ public class PersistenceConfig {
         return factoryBean.getObject();
     }
 
+    //TODO @ConditionalOnProperty
+
 }

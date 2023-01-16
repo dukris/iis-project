@@ -46,15 +46,20 @@ public class GroupController {
 
     @GetMapping
     public List<GroupDto> getAll() {
-//        List<Group> groups = groupService.retrieveAll();
-        List<Group> groups = groupMap.findAll();
+        List<Group> groups = groupMap.findAll(); //groupService.retrieveAll();
         List<GroupDto> groupDtos = groupMapper.entityToDto(groups);
         return groupDtos;
     }
 
+//    @GetMapping("/is")
+//    public Integer get() {
+//        Integer b = groupMap.isExist(951005);
+//        return b;
+//    }
+
     @GetMapping("/{id}")
     public GroupDto getById(@PathVariable Long id) {
-        Group group = groupService.retrieveById(id);
+        Group group = groupMap.findById(id).orElseThrow(); //groupService.retrieveById(id);
         GroupDto groupDto = groupMapper.entityToDto(group);
         return groupDto;
     }
