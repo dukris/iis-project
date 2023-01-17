@@ -62,7 +62,8 @@
         <id property="id" column="user_id"/>
         <result property="name" column="user_name" />
         <result property="surname" column="user_surname"/>
-        <result property="email" column="user_password"/>
+        <result property="email" column="user_email"/>
+        <result property="password" column="user_password"/>
         <result property="role" column="user_role"/>
     </resultMap>
 

@@ -49,20 +49,6 @@ public class SubjectRepositoryImpl implements SubjectRepository {
     }
 
     @Override
-    public List<Subject> findByTeacher(Long teacherId) {
-        String joinQuery = "LEFT JOIN teachers_subjects ON (teachers_subjects.subject_id = subjects.id) ";
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + joinQuery + "WHERE teachers_subjects.teacher_id = ?")) {
-            statement.setLong(1, teacherId);
-            try (ResultSet rs = statement.executeQuery()) {
-                return SubjectRowMapper.mapRows(rs);
-            }
-        } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while finding subject by teacher's id = " + teacherId, ex);
-        }
-    }
-
-    @Override
     public boolean isExist(String name) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(IS_EXIST_QUERY)) {
