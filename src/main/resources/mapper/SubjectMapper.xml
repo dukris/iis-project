@@ -9,17 +9,23 @@
         VALUES (#{name})
     </insert>
 
+    <sql id="SetFields">
+        SELECT subjects.id   as subject_id,
+               subjects.name as subject_name
+        FROM subjects
+    </sql>
+
     <select id="findAll" resultMap="SubjectResultMap">
-        <include refid="SetFields"></include>
+        <include refid="SetFields"/>
     </select>
 
     <select id="findById" parameterType="java.lang.Long" resultMap="SubjectResultMap">
-        <include refid="SetFields"></include>
-        WHERE id = #{id}
+        <include refid="SetFields"/>
+        WHERE subjects.id = #{id}
     </select>
 
     <select id="isExist" parameterType="java.lang.Integer" resultType="java.lang.Boolean">
-        SELECT EXISTS(SELECT 1 FROM subjects WHERE name = #{name})
+        SELECT EXISTS(SELECT 1 FROM subjects WHERE subjects.name = #{name})
     </select>
 
     <update id="update" parameterType="com.solvd.laba.iis.domain.Subject">
@@ -27,20 +33,14 @@
         <set>
             name = #{name}
         </set>
-        WHERE id = #{id}
+        WHERE subjects.id = #{id}
     </update>
 
     <delete id="delete" parameterType="java.lang.Long">
         DELETE
         FROM subjects
-        WHERE id = #{id}
+        WHERE subjects.id = #{id}
     </delete>
-
-    <sql id="SetFields">
-        SELECT subjects.id   as subject_id,
-               subjects.name as subject_name
-        FROM subjects
-    </sql>
 
     <resultMap id="SubjectResultMap" type="com.solvd.laba.iis.domain.Subject">
         <id property="id" column="subject_id"/>

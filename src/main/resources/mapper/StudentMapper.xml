@@ -17,53 +17,6 @@
                 #{group.id})
     </insert>
 
-    <select id="findAll" resultMap="StudentResultMap">
-        <include refid="SetFields"></include>
-    </select>
-
-    <select id="findById" parameterType="java.lang.Long" resultMap="StudentResultMap">
-        <include refid="SetFields"></include>
-        WHERE students_info.id = #{id}
-    </select>
-
-    <select id="findByGroup" parameterType="java.lang.Long" resultMap="StudentResultMap">
-        <include refid="SetFields"></include>
-        WHERE students_info.group_id = #{groupId}
-    </select>
-
-    <select id="findByCriteria" resultMap="StudentResultMap">
-        <include refid="SetFields"></include>
-        <choose>
-            <when test="studentSearchCriteria.faculty != null">
-                WHERE students_info.faculty = #{studentSearchCriteria.faculty}
-            </when>
-            <when test="studentSearchCriteria.speciality != null">
-                WHERE students_info.speciality = #{studentSearchCriteria.speciality}
-            </when>
-            <when test="studentSearchCriteria.year != null">
-                WHERE students_info.year = #{studentSearchCriteria.year}
-            </when>
-        </choose>
-    </select>
-
-    <update id="update" parameterType="com.solvd.laba.iis.domain.StudentInfo">
-        UPDATE students_info
-        <set>
-            year = #{admissionYear},
-            faculty = #{faculty},
-            speciality = #{speciality},
-            user_id = #{user.id},
-            group_id = #{group.id}
-        </set>
-        WHERE id = #{id}
-    </update>
-
-    <delete id="delete" parameterType="java.lang.Long">
-        DELETE
-        FROM students_info
-        WHERE id = #{id}
-    </delete>
-
     <sql id="SetFields">
         SELECT students_info.id         as student_id,
                students_info.year       as student_year,
@@ -78,17 +31,64 @@
                groups.id                as group_id,
                groups.number            as group_number
         FROM students_info
-        LEFT JOIN users_info ON (students_info.user_id = users_info.id)
-        LEFT JOIN groups ON (students_info.group_id = groups.id)
+                 LEFT JOIN users_info ON students_info.user_id = users_info.id
+                 LEFT JOIN groups ON students_info.group_id = groups.id
     </sql>
+
+    <select id="findAll" resultMap="StudentResultMap">
+        <include refid="SetFields"/>
+    </select>
+
+    <select id="findById" parameterType="java.lang.Long" resultMap="StudentResultMap">
+        <include refid="SetFields"/>
+        WHERE students_info.id = #{id}
+    </select>
+
+    <select id="findByGroup" parameterType="java.lang.Long" resultMap="StudentResultMap">
+        <include refid="SetFields"/>
+        WHERE students_info.group_id = #{groupId}
+    </select>
+
+    <select id="findByCriteria" resultMap="StudentResultMap">
+        <include refid="SetFields"/>
+        <choose>
+            <when test="studentSearchCriteria.faculty != null">
+                <where>students_info.faculty = #{studentSearchCriteria.faculty}</where>
+            </when>
+            <when test="studentSearchCriteria.speciality != null">
+                <where>students_info.speciality = #{studentSearchCriteria.speciality}</where>
+            </when>
+            <when test="studentSearchCriteria.year != null">
+                <where>students_info.year = #{studentSearchCriteria.year}</where>
+            </when>
+        </choose>
+    </select>
+
+    <update id="update" parameterType="com.solvd.laba.iis.domain.StudentInfo">
+        UPDATE students_info
+        <set>
+            year = #{admissionYear},
+            faculty = #{faculty},
+            speciality = #{speciality},
+            user_id = #{user.id},
+            group_id = #{group.id}
+        </set>
+        WHERE students_info.id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Long">
+        DELETE
+        FROM students_info
+        WHERE students_info.id = #{id}
+    </delete>
 
     <resultMap id="StudentResultMap" type="com.solvd.laba.iis.domain.StudentInfo" autoMapping="false">
         <id property="id" column="student_id"/>
         <result property="admissionYear" column="student_year"/>
         <result property="faculty" column="student_faculty"/>
         <result property="speciality" column="student_speciality"/>
-        <association property="user" column="user_id" javaType="com.solvd.laba.iis.domain.UserInfo" resultMap="com.solvd.laba.iis.persistence.UserRepository.UserResultMap"/>
-        <association property="group" column="group_id" javaType="com.solvd.laba.iis.domain.Group" resultMap="com.solvd.laba.iis.persistence.GroupRepository.GroupResultMap"/>
+        <association property="user" resultMap="com.solvd.laba.iis.persistence.UserRepository.UserResultMap"/>
+        <association property="group" resultMap="com.solvd.laba.iis.persistence.GroupRepository.GroupResultMap"/>
     </resultMap>
 
 </mapper>

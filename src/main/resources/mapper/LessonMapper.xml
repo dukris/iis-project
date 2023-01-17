@@ -21,51 +21,6 @@
                 #{teacher.id})
     </insert>
 
-    <select id="findAll" resultMap="LessonResultMap">
-        <include refid="SetFields"></include>
-    </select>
-
-    <select id="findById" parameterType="java.lang.Long" resultMap="LessonResultMap">
-        <include refid="SetFields"></include>
-        WHERE lessons.id = #{id}
-    </select>
-
-    <select id="findByStudentCriteria" resultMap="LessonResultMap">
-        <include refid="SetFields"></include>
-        WHERE groups.id = #{groupId}
-        <if test="lessonSearchCriteria.weekday != null">
-            AND lessons.weekday = #{lessonSearchCriteria.weekday}
-        </if>
-    </select>
-
-    <select id="findByTeacherCriteria" resultMap="LessonResultMap">
-        <include refid="SetFields"></include>
-        WHERE lessons.teacher_id = #{teacherId}
-        <if test="lessonSearchCriteria.weekday != null">
-            AND lessons.weekday = #{lessonSearchCriteria.weekday}
-        </if>
-    </select>
-
-    <update id="update" parameterType="com.solvd.laba.iis.domain.Lesson">
-        UPDATE lessons
-        <set>
-            room = #{room},
-            weekday = #{weekday},
-            start_time = #{startTime},
-            end_time = #{endTime},
-            subject_id = #{subject.id},
-            group_id = #{group.id},
-            teacher_id = #{teacher.id}
-        </set>
-        WHERE id = #{id}
-    </update>
-
-    <delete id="delete" parameterType="java.lang.Long">
-        DELETE
-        FROM lessons
-        WHERE id = #{id}
-    </delete>
-
     <sql id="SetFields">
         SELECT lessons.id          as lesson_id,
                lessons.room        as lesson_room,
@@ -84,11 +39,56 @@
                users_info.password as user_password,
                users_info.role     as user_role
         FROM lessons
-        LEFT JOIN subjects ON (lessons.subject_id = subjects.id)
-        LEFT JOIN groups ON (lessons.group_id = groups.id)
-        LEFT JOIN teachers_info ON (lessons.teacher_id = teachers_info.id)
-        LEFT JOIN users_info ON (teachers_info.user_id = users_info.id)
+                 LEFT JOIN subjects ON lessons.subject_id = subjects.id
+                 LEFT JOIN groups ON lessons.group_id = groups.id
+                 LEFT JOIN teachers_info ON lessons.teacher_id = teachers_info.id
+                 LEFT JOIN users_info ON teachers_info.user_id = users_info.id
     </sql>
+
+    <select id="findAll" resultMap="LessonResultMap">
+        <include refid="SetFields"/>
+    </select>
+
+    <select id="findById" parameterType="java.lang.Long" resultMap="LessonResultMap">
+        <include refid="SetFields"/>
+        WHERE lessons.id = #{id}
+    </select>
+
+    <select id="findByStudentCriteria" resultMap="LessonResultMap">
+        <include refid="SetFields"/>
+        WHERE groups.id = #{groupId}
+        <if test="lessonSearchCriteria.weekday != null">
+            AND lessons.weekday = #{lessonSearchCriteria.weekday}
+        </if>
+    </select>
+
+    <select id="findByTeacherCriteria" resultMap="LessonResultMap">
+        <include refid="SetFields"/>
+        WHERE lessons.teacher_id = #{teacherId}
+        <if test="lessonSearchCriteria.weekday != null">
+            AND lessons.weekday = #{lessonSearchCriteria.weekday}
+        </if>
+    </select>
+
+    <update id="update" parameterType="com.solvd.laba.iis.domain.Lesson">
+        UPDATE lessons
+        <set>
+            room = #{room},
+            weekday = #{weekday},
+            start_time = #{startTime},
+            end_time = #{endTime},
+            subject_id = #{subject.id},
+            group_id = #{group.id},
+            teacher_id = #{teacher.id}
+        </set>
+        WHERE lessons.id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Long">
+        DELETE
+        FROM lessons
+        WHERE lessons.id = #{id}
+    </delete>
 
     <resultMap id="LessonResultMap" type="com.solvd.laba.iis.domain.Lesson" autoMapping="false">
         <id property="id" column="lesson_id"/>
@@ -96,9 +96,9 @@
         <result property="weekday" column="lesson_weekday"/>
         <result property="startTime" column="lesson_start_time"/>
         <result property="endTime" column="lesson_end_time"/>
-        <association property="subject" column="subject_id" javaType="com.solvd.laba.iis.domain.Subject" resultMap="com.solvd.laba.iis.persistence.SubjectRepository.SubjectResultMap"/>
-        <association property="group" column="group_id" javaType="com.solvd.laba.iis.domain.Group" resultMap="com.solvd.laba.iis.persistence.GroupRepository.GroupResultMap"/>
-        <association property="teacher" column="teacher_id" javaType="com.solvd.laba.iis.domain.TeacherInfo" resultMap="com.solvd.laba.iis.persistence.TeacherRepository.TeacherResultMap"/>
+        <association property="subject" resultMap="com.solvd.laba.iis.persistence.SubjectRepository.SubjectResultMap"/>
+        <association property="group" resultMap="com.solvd.laba.iis.persistence.GroupRepository.GroupResultMap"/>
+        <association property="teacher" resultMap="com.solvd.laba.iis.persistence.TeacherRepository.TeacherResultMap"/>
     </resultMap>
 
 </mapper>

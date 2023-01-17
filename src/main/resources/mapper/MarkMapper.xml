@@ -17,47 +17,6 @@
                 #{teacher.id})
     </insert>
 
-    <select id="findAll" resultMap="MarkResultMap">
-        <include refid="SetFields"></include>
-    </select>
-
-    <select id="findById" parameterType="java.lang.Long" resultMap="MarkResultMap">
-        <include refid="SetFields"></include>
-        WHERE marks.id = #{id}
-    </select>
-
-    <select id="findByCriteria" resultMap="MarkResultMap">
-        <include refid="SetFields"></include>
-        WHERE marks.student_id = #{studentId}
-        <if test="markSearchCriteria.subjectId != null">
-            AND marks.subject_id = #{markSearchCriteria.subjectId}
-        </if>
-    </select>
-
-    <select id="findBySubjectAndTeacher" resultMap="MarkResultMap">
-        <include refid="SetFields"></include>
-        WHERE marks.subject_id = #{subjectId}
-        AND marks.teacher_id = #{teacherId}
-    </select>
-
-    <update id="update" parameterType="com.solvd.laba.iis.domain.Mark">
-        UPDATE marks
-        <set>
-            date = #{date},
-            value = #{value},
-            subject_id = #{subject.id},
-            student_id = #{student.id},
-            teacher_id = #{teacher.id}
-        </set>
-        WHERE id = #{id}
-    </update>
-
-    <delete id="delete" parameterType="java.lang.Long">
-        DELETE
-        FROM marks
-        WHERE id = #{id}
-    </delete>
-
     <sql id="SetFields">
         SELECT marks.id                 as mark_id,
                marks.date               as mark_date,
@@ -84,25 +43,63 @@
                subjects.id              as subject_id,
                subjects.name            as subject_name
         FROM marks
-                 LEFT JOIN subjects ON (marks.subject_id = subjects.id)
-                 LEFT JOIN students_info ON (marks.student_id = students_info.id)
-                 LEFT JOIN teachers_info ON (marks.teacher_id = teachers_info.id)
-                 LEFT JOIN groups ON (students_info.group_id = groups.id)
-                 LEFT JOIN users_info teacher on (teacher.id = teachers_info.user_id)
-                 LEFT JOIN users_info student on (student.id = students_info.user_id)
+                 LEFT JOIN subjects ON marks.subject_id = subjects.id
+                 LEFT JOIN students_info ON marks.student_id = students_info.id
+                 LEFT JOIN teachers_info ON marks.teacher_id = teachers_info.id
+                 LEFT JOIN groups ON students_info.group_id = groups.id
+                 LEFT JOIN users_info teacher on teacher.id = teachers_info.user_id
+                 LEFT JOIN users_info student on student.id = students_info.user_id
     </sql>
+
+    <select id="findAll" resultMap="MarkResultMap">
+        <include refid="SetFields"/>
+    </select>
+
+    <select id="findById" parameterType="java.lang.Long" resultMap="MarkResultMap">
+        <include refid="SetFields"/>
+        WHERE marks.id = #{id}
+    </select>
+
+    <select id="findByCriteria" resultMap="MarkResultMap">
+        <include refid="SetFields"/>
+        WHERE marks.student_id = #{studentId}
+        <if test="markSearchCriteria.subjectId != null">
+            AND marks.subject_id = #{markSearchCriteria.subjectId}
+        </if>
+    </select>
+
+    <select id="findBySubjectAndTeacher" resultMap="MarkResultMap">
+        <include refid="SetFields"/>
+        WHERE marks.subject_id = #{subjectId}
+        AND marks.teacher_id = #{teacherId}
+    </select>
+
+    <update id="update" parameterType="com.solvd.laba.iis.domain.Mark">
+        UPDATE marks
+        <set>
+            date = #{date},
+            value = #{value},
+            subject_id = #{subject.id},
+            student_id = #{student.id},
+            teacher_id = #{teacher.id}
+        </set>
+        WHERE marks.id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Long">
+        DELETE
+        FROM marks
+        WHERE marks.id = #{id}
+    </delete>
 
     <resultMap id="MarkResultMap" type="com.solvd.laba.iis.domain.Mark" autoMapping="false">
         <id property="id" column="mark_id"/>
         <result property="date" column="mark_date"/>
         <result property="value" column="mark_value"/>
-        <association property="subject" column="subject_id" javaType="com.solvd.laba.iis.domain.Subject"
-                     resultMap="com.solvd.laba.iis.persistence.SubjectRepository.SubjectResultMap"/>
-        <association property="student" column="student_id" javaType="com.solvd.laba.iis.domain.StudentInfo"
-                     resultMap="com.solvd.laba.iis.persistence.StudentRepository.StudentResultMap"
+        <association property="subject" resultMap="com.solvd.laba.iis.persistence.SubjectRepository.SubjectResultMap"/>
+        <association property="student" resultMap="com.solvd.laba.iis.persistence.StudentRepository.StudentResultMap"
                      columnPrefix="student_"/>
-        <association property="teacher" column="teacher_id" javaType="com.solvd.laba.iis.domain.TeacherInfo"
-                     resultMap="com.solvd.laba.iis.persistence.TeacherRepository.TeacherResultMap"
+        <association property="teacher" resultMap="com.solvd.laba.iis.persistence.TeacherRepository.TeacherResultMap"
                      columnPrefix="teacher_"/>
     </resultMap>
 

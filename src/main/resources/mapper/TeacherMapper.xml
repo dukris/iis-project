@@ -17,47 +17,6 @@
                 #{subjectId})
     </insert>
 
-    <select id="findAll" resultMap="TeacherResultMap">
-        <include refid="SetFields"></include>
-    </select>
-
-    <select id="findById" parameterType="java.lang.Long" resultMap="TeacherResultMap">
-        <include refid="SetFields"></include>
-        WHERE teachers_info.id = #{id}
-    </select>
-
-    <select id="findByGroup" parameterType="java.lang.Long" resultMap="TeacherResultMap">
-        <include refid="SetFields"></include>
-        LEFT JOIN lessons ON (teachers_info.id = lessons.teacher_id)
-        WHERE lessons.group_id = #{groupId}
-    </select>
-
-    <select id="findBySubject" parameterType="java.lang.Long" resultMap="TeacherResultMap">
-        <include refid="SetFields"></include>
-        WHERE subjects.id = #{subjectId}
-    </select>
-
-    <update id="update" parameterType="com.solvd.laba.iis.domain.TeacherInfo">
-        UPDATE teachers_info
-        <set>
-            user_id = #{user.id}
-        </set>
-        WHERE id = #{id}
-    </update>
-
-    <delete id="delete" parameterType="java.lang.Long">
-        DELETE
-        FROM teachers_info
-        WHERE id = #{id}
-    </delete>
-
-    <delete id="deleteSubject">
-        DELETE
-        FROM teachers_subjects
-        WHERE teacher_id = #{teacherId}
-          AND subject_id = #{subjectId}
-    </delete>
-
     <sql id="SetFields">
         SELECT teachers_info.id    as teacher_id,
                users_info.id       as user_id,
@@ -69,15 +28,56 @@
                subjects.id         as subject_id,
                subjects.name       as subject_name
         FROM teachers_info
-        LEFT JOIN users_info ON (teachers_info.user_id = users_info.id)
-        LEFT JOIN teachers_subjects ON (teachers_info.id = teachers_subjects.teacher_id)
-        LEFT JOIN subjects ON (teachers_subjects.subject_id = subjects.id)
+        LEFT JOIN users_info ON teachers_info.user_id = users_info.id
+        LEFT JOIN teachers_subjects ON teachers_info.id = teachers_subjects.teacher_id
+        LEFT JOIN subjects ON teachers_subjects.subject_id = subjects.id
     </sql>
+
+    <select id="findAll" resultMap="TeacherResultMap">
+        <include refid="SetFields"/>
+    </select>
+
+    <select id="findById" parameterType="java.lang.Long" resultMap="TeacherResultMap">
+        <include refid="SetFields"/>
+        WHERE teachers_info.id = #{id}
+    </select>
+
+    <select id="findByGroup" parameterType="java.lang.Long" resultMap="TeacherResultMap">
+        <include refid="SetFields"/>
+        LEFT JOIN lessons ON (teachers_info.id = lessons.teacher_id)
+        WHERE lessons.group_id = #{groupId}
+    </select>
+
+    <select id="findBySubject" parameterType="java.lang.Long" resultMap="TeacherResultMap">
+        <include refid="SetFields"/>
+        WHERE subjects.id = #{subjectId}
+    </select>
+
+    <update id="update" parameterType="com.solvd.laba.iis.domain.TeacherInfo">
+        UPDATE teachers_info
+        <set>
+            user_id = #{user.id}
+        </set>
+        WHERE teachers_info.id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Long">
+        DELETE
+        FROM teachers_info
+        WHERE teachers_info.id = #{id}
+    </delete>
+
+    <delete id="deleteSubject">
+        DELETE
+        FROM teachers_subjects
+        WHERE teachers_subjects.teacher_id = #{teacherId}
+          AND teachers_subjects.subject_id = #{subjectId}
+    </delete>
 
     <resultMap id="TeacherResultMap" type="com.solvd.laba.iis.domain.TeacherInfo" autoMapping="false">
         <id property="id" column="teacher_id"/>
-        <association property="user" column="user_id" javaType="com.solvd.laba.iis.domain.UserInfo" resultMap="com.solvd.laba.iis.persistence.UserRepository.UserResultMap"/>
-        <collection property="subjects" column="id" javaType="List" ofType="com.solvd.laba.iis.domain.Subject" resultMap="com.solvd.laba.iis.persistence.SubjectRepository.SubjectResultMap"/>
+        <association property="user" resultMap="com.solvd.laba.iis.persistence.UserRepository.UserResultMap"/>
+        <collection property="subjects" resultMap="com.solvd.laba.iis.persistence.SubjectRepository.SubjectResultMap"/>
     </resultMap>
 
 </mapper>

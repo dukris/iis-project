@@ -17,17 +17,27 @@
                 #{role})
     </insert>
 
+    <sql id="SetFields">
+        SELECT users_info.id       as user_id,
+               users_info.name     as user_name,
+               users_info.surname  as user_surname,
+               users_info.email    as user_email,
+               users_info.password as user_password,
+               users_info.role     as user_role
+        FROM users_info
+    </sql>
+
     <select id="findAll" resultMap="UserResultMap">
-        <include refid="SetFields"></include>
+        <include refid="SetFields"/>
     </select>
 
     <select id="findById" parameterType="java.lang.Long" resultMap="UserResultMap">
-        <include refid="SetFields"></include>
-        WHERE id = #{id}
+        <include refid="SetFields"/>
+        WHERE users_info.id = #{id}
     </select>
 
     <select id="isExist" parameterType="java.lang.String" resultType="java.lang.Boolean">
-        SELECT EXISTS(SELECT 1 FROM users_info WHERE email = #{email})
+        SELECT EXISTS(SELECT 1 FROM users_info WHERE users_info.email = #{email})
     </select>
 
     <update id="update" parameterType="com.solvd.laba.iis.domain.UserInfo">
@@ -39,24 +49,14 @@
             password = #{password},
             role = #{role}
         </set>
-        WHERE id = #{id}
+        WHERE users_info.id = #{id}
     </update>
 
     <delete id="delete" parameterType="java.lang.Long">
         DELETE
         FROM users_info
-        WHERE id = #{id}
+        WHERE users_info.id = #{id}
     </delete>
-
-    <sql id="SetFields">
-        SELECT users_info.id       as user_id,
-               users_info.name     as user_name,
-               users_info.surname  as user_surname,
-               users_info.email    as user_email,
-               users_info.password as user_password,
-               users_info.role     as user_role
-        FROM users_info
-    </sql>
 
     <resultMap id="UserResultMap" type="com.solvd.laba.iis.domain.UserInfo">
         <id property="id" column="user_id"/>

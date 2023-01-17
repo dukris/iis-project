@@ -8,22 +8,28 @@
         VALUES (#{number})
     </insert>
 
+    <sql id="SetFields">
+        SELECT groups.id     as group_id,
+               groups.number as group_number
+        FROM groups
+    </sql>
+
     <select id="findAll" resultMap="GroupResultMap">
-        <include refid="SetFields"></include>
+        <include refid="SetFields"/>
     </select>
 
     <select id="findById" parameterType="java.lang.Long" resultMap="GroupResultMap">
-        <include refid="SetFields"></include>
-        WHERE id = #{id}
+        <include refid="SetFields"/>
+        WHERE groups.id = #{id}
     </select>
 
     <select id="isExist" parameterType="java.lang.Integer" resultType="java.lang.Boolean">
-        SELECT EXISTS(SELECT 1 FROM groups WHERE number = #{number})
+        SELECT EXISTS(SELECT 1 FROM groups WHERE groups.number = #{number})
     </select>
 
     <select id="findByCriteria" resultMap="GroupResultMap">
-        <include refid="SetFields"></include>
-        LEFT JOIN lessons ON (lessons.group_id = groups.id)
+        <include refid="SetFields"/>
+        LEFT JOIN lessons ON lessons.group_id = groups.id
         WHERE lessons.teacher_id = #{teacherId}
         <if test="groupSearchCriteria.subjectId != null">
             AND lessons.subject_id = #{groupSearchCriteria.subjectId}
@@ -35,20 +41,14 @@
         <set>
             number = #{number}
         </set>
-        WHERE id = #{id}
+        WHERE groups.id = #{id}
     </update>
 
     <delete id="delete" parameterType="java.lang.Long">
         DELETE
         FROM groups
-        WHERE id = #{id}
+        WHERE groups.id = #{id}
     </delete>
-
-    <sql id="SetFields">
-        SELECT DISTINCT groups.id     as group_id,
-                        groups.number as group_number
-        FROM groups
-    </sql>
 
     <resultMap id="GroupResultMap" type="com.solvd.laba.iis.domain.Group" autoMapping="false">
         <id property="id" column="group_id"/>
