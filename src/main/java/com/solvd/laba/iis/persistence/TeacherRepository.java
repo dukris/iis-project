@@ -1,11 +1,13 @@
 package com.solvd.laba.iis.persistence;
 
 import com.solvd.laba.iis.domain.TeacherInfo;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Optional;
 
+@Mapper
 public interface TeacherRepository {
 
     List<TeacherInfo> findAll();

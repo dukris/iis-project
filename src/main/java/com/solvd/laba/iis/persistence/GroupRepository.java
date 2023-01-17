@@ -2,11 +2,13 @@ package com.solvd.laba.iis.persistence;
 
 import com.solvd.laba.iis.domain.Group;
 import com.solvd.laba.iis.domain.criteria.GroupSearchCriteria;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Optional;
 
+@Mapper
 public interface GroupRepository {
 
     List<Group> findAll();

@@ -2,75 +2,132 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.solvd.laba.iis.persistence.LessonRepository">
 
-    <resultMap id="lesson" type="com.solvd.laba.iis.domain.Lesson">
-        <id property="id" column="id"/>
-        <result property="room" column="room"/>
-        <result property="weekday" column="weekday"/>
-        <result property="startTime" column="start_time"/>
-        <result property="endTime" column="end_time"/>
-        <association
-                property="subject" column="subject_id" javaType="com.solvd.laba.iis.domain.Subject"
-                select="com.solvd.laba.iis.persistence.SubjectRepository.findById"/>
-        <association
-                property="group" column="group_id" javaType="com.solvd.laba.iis.domain.Group"
-                select="com.solvd.laba.iis.persistence.GroupRepository.findById"/>
-        <association
-                property="teacher" column="teacher_id" javaType="com.solvd.laba.iis.domain.TeacherInfo"
-                select="com.solvd.laba.iis.persistence.TeacherRepository.findById"/>
+    <resultMap id="LessonResultSet" type="com.solvd.laba.iis.domain.Lesson" autoMapping="false">
+        <id property="id" column="lesson_id"/>
+        <result property="room" column="lesson_room"/>
+        <result property="weekday" column="lesson_weekday"/>
+        <result property="startTime" column="lesson_start_time"/>
+        <result property="endTime" column="lesson_end_time"/>
+        <association property="subject" column="subject_id" javaType="com.solvd.laba.iis.domain.Subject">
+            <id property="id" column="subject_id"/>
+            <result property="name" column="subject_name"/>
+        </association>
+        <association property="group" column="group_id" javaType="com.solvd.laba.iis.domain.Group">
+            <id property="id" column="group_id"/>
+            <result property="number" column="group_number"/>
+        </association>
+        <association property="teacher" column="teacher_id" javaType="com.solvd.laba.iis.domain.TeacherInfo">
+            <id property="id" column="teacher_id"/>
+            <association property="user" column="user_id" javaType="com.solvd.laba.iis.domain.UserInfo">
+                <id property="id" column="user_id"/>
+                <result property="name" column="user_name"/>
+                <result property="surname" column="user_surname"/>
+                <result property="email" column="user_email"/>
+                <result property="password" column="user_password"/>
+                <result property="role" column="user_role"/>
+            </association>
+        </association>
     </resultMap>
 
-    <select id="findAll" resultMap="lesson">
-        SELECT lessons.id,
-               lessons.room,
-               lessons.weekday,
-               lessons.start_time,
-               lessons.end_time,
-               lessons.subject_id,
-               lessons.group_id,
-               lessons.teacher_id
+    <select id="findAll" resultMap="LessonResultSet">
+        SELECT lessons.id          as lesson_id,
+               lessons.room        as lesson_room,
+               lessons.weekday     as lesson_weekday,
+               lessons.start_time  as start_time,
+               lessons.end_time    as end_time,
+               subjects.id         as subject_id,
+               subjects.name       as subject_name,
+               groups.id           as group_id,
+               groups.number       as group_number,
+               teachers_info.id    as teacher_id,
+               users_info.id       as user_id,
+               users_info.name     as user_name,
+               users_info.surname  as user_surname,
+               users_info.email    as user_email,
+               users_info.password as user_password,
+               users_info.role     as user_role
         FROM lessons
-    </select>
-
-    <select id="findById" parameterType="java.lang.Long" resultMap="lesson">
-        SELECT lessons.id,
-               lessons.room,
-               lessons.weekday,
-               lessons.start_time,
-               lessons.end_time,
-               lessons.subject_id,
-               lessons.group_id,
-               lessons.teacher_id
-        FROM lessons
-        WHERE id = #{id}
-    </select>
-
-    <select id="findByStudentCriteria" resultMap="lesson">
-        SELECT lessons.id,
-               lessons.room,
-               lessons.weekday,
-               lessons.start_time,
-               lessons.end_time,
-               lessons.subject_id,
-               lessons.group_id,
-               lessons.teacher_id
-        FROM lessons
+        LEFT JOIN subjects ON (lessons.subject_id = subjects.id)
         LEFT JOIN groups ON (lessons.group_id = groups.id)
+        LEFT JOIN teachers_info ON (lessons.teacher_id = teachers_info.id)
+        LEFT JOIN users_info ON (teachers_info.user_id = users_info.id)
+    </select>
+
+    <select id="findById" parameterType="java.lang.Long" resultMap="LessonResultSet">
+        SELECT lessons.id          as lesson_id,
+               lessons.room        as lesson_room,
+               lessons.weekday     as lesson_weekday,
+               lessons.start_time  as start_time,
+               lessons.end_time    as end_time,
+               subjects.id         as subject_id,
+               subjects.name       as subject_name,
+               groups.id           as group_id,
+               groups.number       as group_number,
+               teachers_info.id    as teacher_id,
+               users_info.id       as user_id,
+               users_info.name     as user_name,
+               users_info.surname  as user_surname,
+               users_info.email    as user_email,
+               users_info.password as user_password,
+               users_info.role     as user_role
+        FROM lessons
+        LEFT JOIN subjects ON (lessons.subject_id = subjects.id)
+        LEFT JOIN groups ON (lessons.group_id = groups.id)
+        LEFT JOIN teachers_info ON (lessons.teacher_id = teachers_info.id)
+        LEFT JOIN users_info ON (teachers_info.user_id = users_info.id)
+        WHERE lessons.id = #{id}
+    </select>
+
+    <select id="findByStudentCriteria" resultMap="LessonResultSet">
+        SELECT lessons.id          as lesson_id,
+        lessons.room        as lesson_room,
+        lessons.weekday     as lesson_weekday,
+        lessons.start_time  as start_time,
+        lessons.end_time    as end_time,
+        subjects.id         as subject_id,
+        subjects.name       as subject_name,
+        groups.id           as group_id,
+        groups.number       as group_number,
+        teachers_info.id    as teacher_id,
+        users_info.id       as user_id,
+        users_info.name     as user_name,
+        users_info.surname  as user_surname,
+        users_info.email    as user_email,
+        users_info.password as user_password,
+        users_info.role     as user_role
+        FROM lessons
+        LEFT JOIN subjects ON (lessons.subject_id = subjects.id)
+        LEFT JOIN groups ON (lessons.group_id = groups.id)
+        LEFT JOIN teachers_info ON (lessons.teacher_id = teachers_info.id)
+        LEFT JOIN users_info ON (teachers_info.user_id = users_info.id)
         WHERE groups.id = #{groupId}
         <if test="lessonSearchCriteria.weekday != null">
             AND lessons.weekday = #{lessonSearchCriteria.weekday}
         </if>
     </select>
 
-    <select id="findByTeacherCriteria" resultMap="lesson">
-        SELECT lessons.id,
-        lessons.room,
-        lessons.weekday,
-        lessons.start_time,
-        lessons.end_time,
-        lessons.subject_id,
-        lessons.group_id,
-        lessons.teacher_id
+    <select id="findByTeacherCriteria" resultMap="LessonResultSet">
+        SELECT lessons.id   as lesson_id,
+        lessons.room        as lesson_room,
+        lessons.weekday     as lesson_weekday,
+        lessons.start_time  as start_time,
+        lessons.end_time    as end_time,
+        subjects.id         as subject_id,
+        subjects.name       as subject_name,
+        groups.id           as group_id,
+        groups.number       as group_number,
+        teachers_info.id    as teacher_id,
+        users_info.id       as user_id,
+        users_info.name     as user_name,
+        users_info.surname  as user_surname,
+        users_info.email    as user_email,
+        users_info.password as user_password,
+        users_info.role     as user_role
         FROM lessons
+        LEFT JOIN subjects ON (lessons.subject_id = subjects.id)
+        LEFT JOIN groups ON (lessons.group_id = groups.id)
+        LEFT JOIN teachers_info ON (lessons.teacher_id = teachers_info.id)
+        LEFT JOIN users_info ON (teachers_info.user_id = users_info.id)
         WHERE lessons.teacher_id = #{teacherId}
         <if test="lessonSearchCriteria.weekday != null">
             AND lessons.weekday = #{lessonSearchCriteria.weekday}

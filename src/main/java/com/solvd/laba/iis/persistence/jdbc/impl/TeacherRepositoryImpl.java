@@ -5,17 +5,14 @@ import com.solvd.laba.iis.domain.exception.ResourceMappingException;
 import com.solvd.laba.iis.persistence.TeacherRepository;
 import com.solvd.laba.iis.persistence.jdbc.mapper.TeacherRowMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
+//@Repository
 @RequiredArgsConstructor
-@ConditionalOnProperty(prefix = "application", name = "repository", havingValue = "jdbc")
 public class TeacherRepositoryImpl implements TeacherRepository {
 
     private static final String FIND_ALL_QUERY = """

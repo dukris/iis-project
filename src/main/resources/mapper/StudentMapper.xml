@@ -2,59 +2,97 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.solvd.laba.iis.persistence.StudentRepository">
 
-    <resultMap id="student" type="com.solvd.laba.iis.domain.StudentInfo">
-        <id property="id" column="id"/>
-        <result property="admissionYear" column="year"/>
-        <result property="faculty" column="faculty"/>
-        <result property="speciality" column="speciality"/>
-        <association
-                property="user" column="user_id" javaType="com.solvd.laba.iis.domain.UserInfo"
-                select="com.solvd.laba.iis.persistence.UserRepository.findById"/>
-        <association
-                property="group" column="group_id" javaType="com.solvd.laba.iis.domain.Group"
-                select="com.solvd.laba.iis.persistence.GroupRepository.findById"/>
+    <resultMap id="StudentResultMap" type="com.solvd.laba.iis.domain.StudentInfo" autoMapping="false">
+        <id property="id" column="student_id"/>
+        <result property="admissionYear" column="student_year"/>
+        <result property="faculty" column="student_faculty"/>
+        <result property="speciality" column="student_speciality"/>
+        <association property="user" column="user_id" javaType="com.solvd.laba.iis.domain.UserInfo">
+            <id property="id" column="user_id"/>
+            <result property="name" column="user_name"/>
+            <result property="surname" column="user_surname"/>
+            <result property="email" column="user_email"/>
+            <result property="password" column="user_password"/>
+            <result property="role" column="user_role"/>
+        </association>
+        <association property="group" column="group_id" javaType="com.solvd.laba.iis.domain.Group">
+            <id property="id" column="group_id"/>
+            <result property="number" column="group_number"/>
+        </association>
     </resultMap>
 
-    <select id="findAll" resultMap="student">
-        SELECT students_info.id,
-               students_info.year,
-               students_info.faculty,
-               students_info.speciality,
-               students_info.user_id,
-               students_info.group_id
+    <select id="findAll" resultMap="StudentResultMap">
+        SELECT students_info.id         as student_id,
+               students_info.year       as student_year,
+               students_info.faculty    as student_faculty,
+               students_info.speciality as student_speciality,
+               users_info.id            as user_id,
+               users_info.name          as user_name,
+               users_info.surname       as user_surname,
+               users_info.email         as user_email,
+               users_info.password      as user_password,
+               users_info.role          as user_role,
+               groups.id                as group_id,
+               groups.number            as group_number
         FROM students_info
+        LEFT JOIN users_info ON (students_info.user_id = users_info.id)
+        LEFT JOIN groups ON (students_info.group_id = groups.id)
     </select>
 
-    <select id="findById" parameterType="java.lang.Long" resultMap="student">
-        SELECT students_info.id,
-               students_info.year,
-               students_info.faculty,
-               students_info.speciality,
-               students_info.user_id,
-               students_info.group_id
+    <select id="findById" parameterType="java.lang.Long" resultMap="StudentResultMap">
+        SELECT students_info.id         as student_id,
+               students_info.year       as student_year,
+               students_info.faculty    as student_faculty,
+               students_info.speciality as student_speciality,
+               users_info.id            as user_id,
+               users_info.name          as user_name,
+               users_info.surname       as user_surname,
+               users_info.email         as user_email,
+               users_info.password      as user_password,
+               users_info.role          as user_role,
+               groups.id                as group_id,
+               groups.number            as group_number
         FROM students_info
-        WHERE id = #{id}
+        LEFT JOIN users_info ON (students_info.user_id = users_info.id)
+        LEFT JOIN groups ON (students_info.group_id = groups.id)
+        WHERE students_info.id = #{id}
     </select>
 
-    <select id="findByGroup" parameterType="java.lang.Long" resultMap="student">
-        SELECT students_info.id,
-               students_info.year,
-               students_info.faculty,
-               students_info.speciality,
-               students_info.user_id,
-               students_info.group_id
+    <select id="findByGroup" parameterType="java.lang.Long" resultMap="StudentResultMap">
+        SELECT students_info.id         as student_id,
+               students_info.year       as student_year,
+               students_info.faculty    as student_faculty,
+               students_info.speciality as student_speciality,
+               users_info.id            as user_id,
+               users_info.name          as user_name,
+               users_info.surname       as user_surname,
+               users_info.email         as user_email,
+               users_info.password      as user_password,
+               users_info.role          as user_role,
+               groups.id                as group_id,
+               groups.number            as group_number
         FROM students_info
+        LEFT JOIN users_info ON (students_info.user_id = users_info.id)
+        LEFT JOIN groups ON (students_info.group_id = groups.id)
         WHERE students_info.group_id = #{groupId}
     </select>
 
-    <select id="findByCriteria" resultMap="student">
-        SELECT students_info.id,
-        students_info.year,
-        students_info.faculty,
-        students_info.speciality,
-        students_info.user_id,
-        students_info.group_id
+    <select id="findByCriteria" resultMap="StudentResultMap">
+        SELECT students_info.id         as student_id,
+               students_info.year       as student_year,
+               students_info.faculty    as student_faculty,
+               students_info.speciality as student_speciality,
+               users_info.id            as user_id,
+               users_info.name          as user_name,
+               users_info.surname       as user_surname,
+               users_info.email         as user_email,
+               users_info.password      as user_password,
+               users_info.role          as user_role,
+               groups.id                as group_id,
+               groups.number            as group_number
         FROM students_info
+        LEFT JOIN users_info ON (students_info.user_id = users_info.id)
+        LEFT JOIN groups ON (students_info.group_id = groups.id)
         <if test="studentSearchCriteria.faculty != null">
             WHERE students_info.faculty = #{studentSearchCriteria.faculty}
         </if>

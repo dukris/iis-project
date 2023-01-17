@@ -2,11 +2,13 @@ package com.solvd.laba.iis.persistence;
 
 import com.solvd.laba.iis.domain.Mark;
 import com.solvd.laba.iis.domain.criteria.MarkSearchCriteria;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Optional;
 
+@Mapper
 public interface MarkRepository {
 
     List<Mark> findAll();

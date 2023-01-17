@@ -2,18 +2,20 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.solvd.laba.iis.persistence.SubjectRepository">
 
-    <resultMap id="subject" type="com.solvd.laba.iis.domain.Subject">
-        <id property="id" column="id"/>
-        <result property="name" column="name"/>
+    <resultMap id="SubjectResultMap" type="com.solvd.laba.iis.domain.Subject">
+        <id property="id" column="subject_id"/>
+        <result property="name" column="subject_name"/>
     </resultMap>
 
-    <select id="findAll" resultMap="subject">
-        SELECT subjects.id, subjects.name
+    <select id="findAll" resultMap="SubjectResultMap">
+        SELECT subjects.id   as subject_id,
+               subjects.name as subject_name
         FROM subjects
     </select>
 
-    <select id="findById" parameterType="java.lang.Long" resultMap="subject">
-        SELECT subjects.id, subjects.name
+    <select id="findById" parameterType="java.lang.Long" resultMap="SubjectResultMap">
+        SELECT subjects.id   as subject_id,
+               subjects.name as subject_name
         FROM subjects
         WHERE id = #{id}
     </select>
@@ -22,8 +24,9 @@
         SELECT EXISTS(SELECT 1 FROM subjects WHERE name = #{name})
     </select>
 
-    <select id="findByTeacher" parameterType="java.lang.Long" resultMap="subject">
-        SELECT subjects.id, subjects.name
+    <select id="findByTeacher" parameterType="java.lang.Long" resultMap="SubjectResultMap">
+        SELECT subjects.id   as subject_id,
+               subjects.name as subject_name
         FROM subjects
         LEFT JOIN teachers_subjects ON (teachers_subjects.subject_id = subjects.id)
         WHERE teachers_subjects.teacher_id = #{teacherId}

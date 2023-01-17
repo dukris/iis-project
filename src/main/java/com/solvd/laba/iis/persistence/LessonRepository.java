@@ -2,11 +2,13 @@ package com.solvd.laba.iis.persistence;
 
 import com.solvd.laba.iis.domain.Lesson;
 import com.solvd.laba.iis.domain.criteria.LessonSearchCriteria;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Optional;
 
+@Mapper
 public interface LessonRepository {
 
     List<Lesson> findAll();

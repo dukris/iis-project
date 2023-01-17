@@ -2,65 +2,183 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.solvd.laba.iis.persistence.MarkRepository">
 
-    <resultMap id="mark" type="com.solvd.laba.iis.domain.Mark">
-        <id property="id" column="id"/>
-        <result property="date" column="date"/>
-        <result property="value" column="value"/>
-        <association
-                property="subject" column="subject_id" javaType="com.solvd.laba.iis.domain.Subject"
-                select="com.solvd.laba.iis.persistence.SubjectRepository.findById"/>
-        <association
-                property="student" column="student_id" javaType="com.solvd.laba.iis.domain.StudentInfo"
-                select="com.solvd.laba.iis.persistence.StudentRepository.findById"/>
-        <association
-                property="teacher" column="teacher_id" javaType="com.solvd.laba.iis.domain.TeacherInfo"
-                select="com.solvd.laba.iis.persistence.TeacherRepository.findById"/>
+    <resultMap id="MarkResultSet" type="com.solvd.laba.iis.domain.Mark" autoMapping="false">
+        <id property="id" column="mark_id"/>
+        <result property="date" column="mark_date"/>
+        <result property="value" column="mark_value"/>
+        <association property="subject" column="subject_id" javaType="com.solvd.laba.iis.domain.Subject">
+            <id property="id" column="subject_id"/>
+            <result property="name" column="subject_name"/>
+        </association>
+        <association property="student" column="student_id" javaType="com.solvd.laba.iis.domain.StudentInfo">
+            <id property="id" column="student_id"/>
+            <association property="user" column="user_id" javaType="com.solvd.laba.iis.domain.UserInfo">
+                <id property="id" column="student_user_id"/>
+                <result property="name" column="student_user_name"/>
+                <result property="surname" column="student_user_surname"/>
+                <result property="email" column="student_user_email"/>
+                <result property="password" column="student_user_password"/>
+                <result property="role" column="student_user_role"/>
+            </association>
+            <association property="group" column="group_id" javaType="com.solvd.laba.iis.domain.Group">
+                <id property="id" column="group_id"/>
+                <result property="number" column="group_number"/>
+            </association>
+        </association>
+        <association property="teacher" column="teacher_id" javaType="com.solvd.laba.iis.domain.TeacherInfo">
+            <id property="id" column="teacher_id"/>
+            <association property="user" column="user_id" javaType="com.solvd.laba.iis.domain.UserInfo">
+                <id property="id" column="teacher_user_id"/>
+                <result property="name" column="teacher_user_name"/>
+                <result property="surname" column="teacher_user_surname"/>
+                <result property="email" column="teacher_user_email"/>
+                <result property="password" column="teacher_user_password"/>
+                <result property="role" column="teacher_user_role"/>
+            </association>
+        </association>
     </resultMap>
 
-    <select id="findAll" resultMap="mark">
-        SELECT marks.id,
-               marks.date,
-               marks.value,
-               marks.student_id,
-               marks.teacher_id,
-               marks.subject_id
+    <select id="findAll" resultMap="MarkResultSet">
+        SELECT marks.id                 as mark_id,
+               marks.date               as mark_date,
+               marks.value              as mark_value,
+               marks.student_id         as student_id,
+               students_info.year       as student_year,
+               students_info.faculty    as student_faculty,
+               students_info.speciality as student_speciality,
+               student.id               as student_user_id,
+               student.name             as student_user_name,
+               student.surname          as student_user_surname,
+               student.email            as student_user_email,
+               student.password         as student_user_password,
+               student.role             as student_user_role,
+               marks.teacher_id         as teacher_id,
+               teacher.id               as teacher_user_id,
+               teacher.name             as teacher_user_name,
+               teacher.surname          as teacher_user_surname,
+               teacher.email            as teacher_user_email,
+               teacher.password         as teacher_user_password,
+               teacher.role             as teacher_user_role,
+               groups.id                as group_id,
+               groups.number            as group_number,
+               subjects.id              as subject_id,
+               subjects.name            as subject_name
         FROM marks
+        LEFT JOIN subjects ON (marks.subject_id = subjects.id)
+        LEFT JOIN students_info ON (marks.student_id = students_info.id)
+        LEFT JOIN teachers_info ON (marks.teacher_id = teachers_info.id)
+        LEFT JOIN groups ON (students_info.group_id = groups.id)
+        LEFT JOIN users_info teacher on (teacher.id = teachers_info.user_id)
+        LEFT JOIN users_info student on (student.id = students_info.user_id)
     </select>
 
-    <select id="findById" parameterType="java.lang.Long" resultMap="mark">
-        SELECT marks.id,
-               marks.date,
-               marks.value,
-               marks.student_id,
-               marks.teacher_id,
-               marks.subject_id
+    <select id="findById" parameterType="java.lang.Long" resultMap="MarkResultSet">
+        SELECT marks.id                 as mark_id,
+               marks.date               as mark_date,
+               marks.value              as mark_value,
+               marks.student_id         as student_id,
+               students_info.year       as student_year,
+               students_info.faculty    as student_faculty,
+               students_info.speciality as student_speciality,
+               student.id               as student_user_id,
+               student.name             as student_user_name,
+               student.surname          as student_user_surname,
+               student.email            as student_user_email,
+               student.password         as student_user_password,
+               student.role             as student_user_role,
+               marks.teacher_id         as teacher_id,
+               teacher.id               as teacher_user_id,
+               teacher.name             as teacher_user_name,
+               teacher.surname          as teacher_user_surname,
+               teacher.email            as teacher_user_email,
+               teacher.password         as teacher_user_password,
+               teacher.role             as teacher_user_role,
+               groups.id                as group_id,
+               groups.number            as group_number,
+               subjects.id              as subject_id,
+               subjects.name            as subject_name
         FROM marks
-        WHERE id = #{id}
+        LEFT JOIN subjects ON (marks.subject_id = subjects.id)
+        LEFT JOIN students_info ON (marks.student_id = students_info.id)
+        LEFT JOIN teachers_info ON (marks.teacher_id = teachers_info.id)
+        LEFT JOIN groups ON (students_info.group_id = groups.id)
+        LEFT JOIN users_info teacher on (teacher.id = teachers_info.user_id)
+        LEFT JOIN users_info student on (student.id = students_info.user_id)
+        WHERE marks.id = #{id}
     </select>
 
-    <select id="findByCriteria" resultMap="mark">
-        SELECT marks.id,
-        marks.date,
-        marks.value,
-        marks.student_id,
-        marks.teacher_id,
-        marks.subject_id
+    <select id="findByCriteria" resultMap="MarkResultSet">
+        SELECT marks.id                 as mark_id,
+               marks.date               as mark_date,
+               marks.value              as mark_value,
+               marks.student_id         as student_id,
+               students_info.year       as student_year,
+               students_info.faculty    as student_faculty,
+               students_info.speciality as student_speciality,
+               student.id               as student_user_id,
+               student.name             as student_user_name,
+               student.surname          as student_user_surname,
+               student.email            as student_user_email,
+               student.password         as student_user_password,
+               student.role             as student_user_role,
+               marks.teacher_id         as teacher_id,
+               teacher.id               as teacher_user_id,
+               teacher.name             as teacher_user_name,
+               teacher.surname          as teacher_user_surname,
+               teacher.email            as teacher_user_email,
+               teacher.password         as teacher_user_password,
+               teacher.role             as teacher_user_role,
+               groups.id                as group_id,
+               groups.number            as group_number,
+               subjects.id              as subject_id,
+               subjects.name            as subject_name
         FROM marks
+        LEFT JOIN subjects ON (marks.subject_id = subjects.id)
+        LEFT JOIN students_info ON (marks.student_id = students_info.id)
+        LEFT JOIN teachers_info ON (marks.teacher_id = teachers_info.id)
+        LEFT JOIN groups ON (students_info.group_id = groups.id)
+        LEFT JOIN users_info teacher on (teacher.id = teachers_info.user_id)
+        LEFT JOIN users_info student on (student.id = students_info.user_id)
         WHERE marks.student_id = #{studentId}
         <if test="markSearchCriteria.subjectId != null">
             AND marks.subject_id = #{markSearchCriteria.subjectId}
         </if>
     </select>
 
-    <select id="findBySubjectAndTeacher" resultMap="mark">
-        SELECT marks.id,
-               marks.date,
-               marks.value,
-               marks.student_id,
-               marks.teacher_id,
-               marks.subject_id
+    <select id="findBySubjectAndTeacher" resultMap="MarkResultSet">
+        SELECT marks.id                 as mark_id,
+               marks.date               as mark_date,
+               marks.value              as mark_value,
+               marks.student_id         as student_id,
+               students_info.year       as student_year,
+               students_info.faculty    as student_faculty,
+               students_info.speciality as student_speciality,
+               student.id               as student_user_id,
+               student.name             as student_user_name,
+               student.surname          as student_user_surname,
+               student.email            as student_user_email,
+               student.password         as student_user_password,
+               student.role             as student_user_role,
+               marks.teacher_id         as teacher_id,
+               teacher.id               as teacher_user_id,
+               teacher.name             as teacher_user_name,
+               teacher.surname          as teacher_user_surname,
+               teacher.email            as teacher_user_email,
+               teacher.password         as teacher_user_password,
+               teacher.role             as teacher_user_role,
+               groups.id                as group_id,
+               groups.number            as group_number,
+               subjects.id              as subject_id,
+               subjects.name            as subject_name
         FROM marks
-        WHERE marks.subject_id = #{subjectId} AND marks.teacher_id = #{teacherId}
+        LEFT JOIN subjects ON (marks.subject_id = subjects.id)
+        LEFT JOIN students_info ON (marks.student_id = students_info.id)
+        LEFT JOIN teachers_info ON (marks.teacher_id = teachers_info.id)
+        LEFT JOIN groups ON (students_info.group_id = groups.id)
+        LEFT JOIN users_info teacher on (teacher.id = teachers_info.user_id)
+        LEFT JOIN users_info student on (student.id = students_info.user_id)
+        WHERE marks.subject_id = #{subjectId}
+          AND marks.teacher_id = #{teacherId}
     </select>
 
     <update id="update" parameterType="com.solvd.laba.iis.domain.Mark">

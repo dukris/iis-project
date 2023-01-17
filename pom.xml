@@ -19,8 +19,7 @@
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
         <revision>0.0.1-SNAPSHOT</revision>
         <slf4j.version>2.0.6</slf4j.version>
-        <mybatis.version>3.5.11</mybatis.version>
-        <mybatis-spring.version>3.0.1</mybatis-spring.version>
+        <org.mybatis.spring.boot.version>3.0.1</org.mybatis.spring.boot.version>
     </properties>
 
     <dependencies>
@@ -64,16 +63,11 @@
         </dependency>
 
         <dependency>
-            <groupId>org.mybatis</groupId>
-            <artifactId>mybatis</artifactId>
-            <version>${mybatis.version}</version>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>${org.mybatis.spring.boot.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.mybatis</groupId>
-            <artifactId>mybatis-spring</artifactId>
-            <version>${mybatis-spring.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>org.slf4j</groupId>
