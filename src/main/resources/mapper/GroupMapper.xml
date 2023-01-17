@@ -2,21 +2,18 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.solvd.laba.iis.persistence.GroupRepository">
 
-    <resultMap id="GroupResultMap" type="com.solvd.laba.iis.domain.Group" autoMapping="false">
-        <id property="id" column="group_id"/>
-        <result property="number" column="group_number"/>
-    </resultMap>
+    <insert id="create" parameterType="com.solvd.laba.iis.domain.Group" useGeneratedKeys="true" keyProperty="id"
+            keyColumn="id">
+        INSERT INTO groups (number)
+        VALUES (#{number})
+    </insert>
 
     <select id="findAll" resultMap="GroupResultMap">
-        SELECT DISTINCT groups.id     as group_id,
-                        groups.number as group_number
-        FROM groups
+        <include refid="SetFields"></include>
     </select>
 
     <select id="findById" parameterType="java.lang.Long" resultMap="GroupResultMap">
-        SELECT groups.id     as group_id,
-               groups.number as group_number
-        FROM groups
+        <include refid="SetFields"></include>
         WHERE id = #{id}
     </select>
 
@@ -25,9 +22,7 @@
     </select>
 
     <select id="findByCriteria" resultMap="GroupResultMap">
-        SELECT DISTINCT groups.id     as group_id,
-                        groups.number as group_number
-        FROM groups
+        <include refid="SetFields"></include>
         LEFT JOIN lessons ON (lessons.group_id = groups.id)
         WHERE lessons.teacher_id = #{teacherId}
         <if test="groupSearchCriteria.subjectId != null">
@@ -38,9 +33,7 @@
     <update id="update" parameterType="com.solvd.laba.iis.domain.Group">
         UPDATE groups
         <set>
-            <if test="number != null">
-                number = #{number}
-            </if>
+            number = #{number}
         </set>
         WHERE id = #{id}
     </update>
@@ -51,19 +44,15 @@
         WHERE id = #{id}
     </delete>
 
-    <insert id="create" parameterType="com.solvd.laba.iis.domain.Group" useGeneratedKeys="true" keyProperty="id"
-            keyColumn="id">
-        INSERT INTO groups
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="number != null">
-                number
-            </if>
-        </trim>
-        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
-            <if test="number != null">
-                #{number}
-            </if>
-        </trim>
-    </insert>
+    <sql id="SetFields">
+        SELECT DISTINCT groups.id     as group_id,
+                        groups.number as group_number
+        FROM groups
+    </sql>
+
+    <resultMap id="GroupResultMap" type="com.solvd.laba.iis.domain.Group" autoMapping="false">
+        <id property="id" column="group_id"/>
+        <result property="number" column="group_number"/>
+    </resultMap>
 
 </mapper>

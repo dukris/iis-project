@@ -2,96 +2,45 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.solvd.laba.iis.persistence.TeacherRepository">
 
-    <resultMap id="TeacherResultMap" type="com.solvd.laba.iis.domain.TeacherInfo" autoMapping="false">
-        <id property="id" column="teacher_id"/>
-        <association property="user" column="user_id" javaType="com.solvd.laba.iis.domain.UserInfo">
-            <id property="id" column="user_id"/>
-            <result property="name" column="user_name"/>
-            <result property="surname" column="user_surname"/>
-            <result property="email" column="user_email"/>
-            <result property="password" column="user_password"/>
-            <result property="role" column="user_role"/>
-        </association>
-        <collection property="subjects" column="id" javaType="List" ofType="com.solvd.laba.iis.domain.Subject">
-            <id property="id" column="subject_id"/>
-            <result property="name" column="subject_name"/>
-        </collection>
-    </resultMap>
+    <insert id="create" parameterType="com.solvd.laba.iis.domain.TeacherInfo" useGeneratedKeys="true" keyProperty="id"
+            keyColumn="id">
+        INSERT INTO teachers_info
+            (user_id)
+        VALUES (#{user.id})
+    </insert>
+
+    <insert id="addSubject">
+        INSERT INTO teachers_subjects
+        (teacher_id,
+         subject_id)
+        VALUES (#{teacherId},
+                #{subjectId})
+    </insert>
 
     <select id="findAll" resultMap="TeacherResultMap">
-        SELECT teachers_info.id    as teacher_id,
-               users_info.id       as user_id,
-               users_info.name     as user_name,
-               users_info.surname  as user_surname,
-               users_info.email    as user_email,
-               users_info.password as user_password,
-               users_info.role     as user_role,
-               subjects.id         as subject_id,
-               subjects.name       as subject_name
-        FROM teachers_info
-        LEFT JOIN users_info ON (teachers_info.user_id = users_info.id)
-        LEFT JOIN teachers_subjects ON (teachers_info.id = teachers_subjects.teacher_id)
-        LEFT JOIN subjects ON (teachers_subjects.subject_id = subjects.id)
+        <include refid="SetFields"></include>
     </select>
 
     <select id="findById" parameterType="java.lang.Long" resultMap="TeacherResultMap">
-        SELECT teachers_info.id    as teacher_id,
-               users_info.id       as user_id,
-               users_info.name     as user_name,
-               users_info.surname  as user_surname,
-               users_info.email    as user_email,
-               users_info.password as user_password,
-               users_info.role     as user_role,
-               subjects.id         as subject_id,
-               subjects.name       as subject_name
-        FROM teachers_info
-        LEFT JOIN users_info ON (teachers_info.user_id = users_info.id)
-        LEFT JOIN teachers_subjects ON (teachers_info.id = teachers_subjects.teacher_id)
-        LEFT JOIN subjects ON (teachers_subjects.subject_id = subjects.id)
+        <include refid="SetFields"></include>
         WHERE teachers_info.id = #{id}
     </select>
 
     <select id="findByGroup" parameterType="java.lang.Long" resultMap="TeacherResultMap">
-        SELECT teachers_info.id    as teacher_id,
-               users_info.id       as user_id,
-               users_info.name     as user_name,
-               users_info.surname  as user_surname,
-               users_info.email    as user_email,
-               users_info.password as user_password,
-               users_info.role     as user_role,
-               subjects.id         as subject_id,
-               subjects.name       as subject_name
-        FROM teachers_info
-        LEFT JOIN users_info ON (teachers_info.user_id = users_info.id)
-        LEFT JOIN teachers_subjects ON (teachers_info.id = teachers_subjects.teacher_id)
-        LEFT JOIN subjects ON (teachers_subjects.subject_id = subjects.id)
+        <include refid="SetFields"></include>
         LEFT JOIN lessons ON (teachers_info.id = lessons.teacher_id)
         WHERE lessons.group_id = #{groupId}
     </select>
 
     <select id="findBySubject" parameterType="java.lang.Long" resultMap="TeacherResultMap">
-        SELECT teachers_info.id    as teacher_id,
-               users_info.id       as user_id,
-               users_info.name     as user_name,
-               users_info.surname  as user_surname,
-               users_info.email    as user_email,
-               users_info.password as user_password,
-               users_info.role     as user_role,
-               subjects.id         as subject_id,
-               subjects.name       as subject_name
-        FROM teachers_info
-        LEFT JOIN users_info ON (teachers_info.user_id = users_info.id)
-        LEFT JOIN teachers_subjects ON (teachers_info.id = teachers_subjects.teacher_id)
-        LEFT JOIN subjects ON (teachers_subjects.subject_id = subjects.id)
+        <include refid="SetFields"></include>
         WHERE subjects.id = #{subjectId}
     </select>
 
     <update id="update" parameterType="com.solvd.laba.iis.domain.TeacherInfo">
         UPDATE teachers_info
         <set>
-            <if test="user != null">
-                user_id = #{user.id}
-            </if>
+            user_id = #{user.id}
         </set>
         WHERE id = #{id}
     </update>
@@ -102,21 +51,6 @@
         WHERE id = #{id}
     </delete>
 
-    <insert id="create" parameterType="com.solvd.laba.iis.domain.TeacherInfo" useGeneratedKeys="true" keyProperty="id"
-            keyColumn="id">
-        INSERT INTO teachers_info
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="user != null">
-                user_id
-            </if>
-        </trim>
-        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
-            <if test="user != null">
-                #{user.id}
-            </if>
-        </trim>
-    </insert>
-
     <delete id="deleteSubject">
         DELETE
         FROM teachers_subjects
@@ -124,24 +58,26 @@
           AND subject_id = #{subjectId}
     </delete>
 
-    <insert id="addSubject">
-        INSERT INTO teachers_subjects
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="teacherId != null">
-                teacher_id,
-            </if>
-            <if test="subjectId != null">
-                subject_id
-            </if>
-        </trim>
-        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
-            <if test="teacherId != null">
-                #{teacherId},
-            </if>
-            <if test="subjectId != null">
-                #{subjectId}
-            </if>
-        </trim>
-    </insert>
+    <sql id="SetFields">
+        SELECT teachers_info.id    as teacher_id,
+               users_info.id       as user_id,
+               users_info.name     as user_name,
+               users_info.surname  as user_surname,
+               users_info.email    as user_email,
+               users_info.password as user_password,
+               users_info.role     as user_role,
+               subjects.id         as subject_id,
+               subjects.name       as subject_name
+        FROM teachers_info
+        LEFT JOIN users_info ON (teachers_info.user_id = users_info.id)
+        LEFT JOIN teachers_subjects ON (teachers_info.id = teachers_subjects.teacher_id)
+        LEFT JOIN subjects ON (teachers_subjects.subject_id = subjects.id)
+    </sql>
+
+    <resultMap id="TeacherResultMap" type="com.solvd.laba.iis.domain.TeacherInfo" autoMapping="false">
+        <id property="id" column="teacher_id"/>
+        <association property="user" column="user_id" javaType="com.solvd.laba.iis.domain.UserInfo" resultMap="com.solvd.laba.iis.persistence.UserRepository.UserResultMap"/>
+        <collection property="subjects" column="id" javaType="List" ofType="com.solvd.laba.iis.domain.Subject" resultMap="com.solvd.laba.iis.persistence.SubjectRepository.SubjectResultMap"/>
+    </resultMap>
 
 </mapper>

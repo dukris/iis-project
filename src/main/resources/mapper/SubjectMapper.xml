@@ -2,21 +2,19 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.solvd.laba.iis.persistence.SubjectRepository">
 
-    <resultMap id="SubjectResultMap" type="com.solvd.laba.iis.domain.Subject">
-        <id property="id" column="subject_id"/>
-        <result property="name" column="subject_name"/>
-    </resultMap>
+    <insert id="create" parameterType="com.solvd.laba.iis.domain.Subject" useGeneratedKeys="true" keyProperty="id"
+            keyColumn="id">
+        INSERT INTO subjects
+            (name)
+        VALUES (#{name})
+    </insert>
 
     <select id="findAll" resultMap="SubjectResultMap">
-        SELECT subjects.id   as subject_id,
-               subjects.name as subject_name
-        FROM subjects
+        <include refid="SetFields"></include>
     </select>
 
     <select id="findById" parameterType="java.lang.Long" resultMap="SubjectResultMap">
-        SELECT subjects.id   as subject_id,
-               subjects.name as subject_name
-        FROM subjects
+        <include refid="SetFields"></include>
         WHERE id = #{id}
     </select>
 
@@ -25,9 +23,7 @@
     </select>
 
     <select id="findByTeacher" parameterType="java.lang.Long" resultMap="SubjectResultMap">
-        SELECT subjects.id   as subject_id,
-               subjects.name as subject_name
-        FROM subjects
+        <include refid="SetFields"></include>
         LEFT JOIN teachers_subjects ON (teachers_subjects.subject_id = subjects.id)
         WHERE teachers_subjects.teacher_id = #{teacherId}
     </select>
@@ -35,9 +31,7 @@
     <update id="update" parameterType="com.solvd.laba.iis.domain.Subject">
         UPDATE subjects
         <set>
-            <if test="name != null">
-                name = #{name}
-            </if>
+            name = #{name}
         </set>
         WHERE id = #{id}
     </update>
@@ -48,19 +42,15 @@
         WHERE id = #{id}
     </delete>
 
-    <insert id="create" parameterType="com.solvd.laba.iis.domain.Subject" useGeneratedKeys="true" keyProperty="id"
-            keyColumn="id">
-        INSERT INTO subjects
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="name != null">
-                name
-            </if>
-        </trim>
-        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
-            <if test="name != null">
-                #{name}
-            </if>
-        </trim>
-    </insert>
+    <sql id="SetFields">
+        SELECT subjects.id   as subject_id,
+               subjects.name as subject_name
+        FROM subjects
+    </sql>
+
+    <resultMap id="SubjectResultMap" type="com.solvd.laba.iis.domain.Subject">
+        <id property="id" column="subject_id"/>
+        <result property="name" column="subject_name"/>
+    </resultMap>
 
 </mapper>
