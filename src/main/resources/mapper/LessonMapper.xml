@@ -1,0 +1,104 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.solvd.laba.iis.persistence.LessonRepository">
+
+    <insert id="create" parameterType="com.solvd.laba.iis.domain.Lesson" useGeneratedKeys="true" keyProperty="id"
+            keyColumn="id">
+        INSERT INTO lessons
+        (room,
+         weekday,
+         start_time,
+         end_time,
+         subject_id,
+         group_id,
+         teacher_id)
+        VALUES (#{room},
+                #{weekday},
+                #{startTime},
+                #{endTime},
+                #{subject.id},
+                #{group.id},
+                #{teacher.id})
+    </insert>
+
+    <sql id="SetFields">
+        SELECT lessons.id          as lesson_id,
+               lessons.room        as lesson_room,
+               lessons.weekday     as lesson_weekday,
+               lessons.start_time  as start_time,
+               lessons.end_time    as end_time,
+               subjects.id         as subject_id,
+               subjects.name       as subject_name,
+               groups.id           as group_id,
+               groups.number       as group_number,
+               teachers_info.id    as teacher_id,
+               users_info.id       as user_id,
+               users_info.name     as user_name,
+               users_info.surname  as user_surname,
+               users_info.email    as user_email,
+               users_info.password as user_password,
+               users_info.role     as user_role
+        FROM lessons
+                 LEFT JOIN subjects ON lessons.subject_id = subjects.id
+                 LEFT JOIN groups ON lessons.group_id = groups.id
+                 LEFT JOIN teachers_info ON lessons.teacher_id = teachers_info.id
+                 LEFT JOIN users_info ON teachers_info.user_id = users_info.id
+    </sql>
+
+    <select id="findAll" resultMap="LessonResultMap">
+        <include refid="SetFields"/>
+    </select>
+
+    <select id="findById" parameterType="java.lang.Long" resultMap="LessonResultMap">
+        <include refid="SetFields"/>
+        WHERE lessons.id = #{id}
+    </select>
+
+    <select id="findByStudentCriteria" resultMap="LessonResultMap">
+        <include refid="SetFields"/>
+        WHERE groups.id = #{groupId}
+        <if test="lessonSearchCriteria.weekday != null">
+            AND lessons.weekday = #{lessonSearchCriteria.weekday}
+        </if>
+    </select>
+
+    <select id="findByTeacherCriteria" resultMap="LessonResultMap">
+        <include refid="SetFields"/>
+        WHERE lessons.teacher_id = #{teacherId}
+        <if test="lessonSearchCriteria.weekday != null">
+            AND lessons.weekday = #{lessonSearchCriteria.weekday}
+        </if>
+    </select>
+
+    <update id="update" parameterType="com.solvd.laba.iis.domain.Lesson">
+        UPDATE lessons
+        <set>
+            room = #{room},
+            weekday = #{weekday},
+            start_time = #{startTime},
+            end_time = #{endTime},
+            subject_id = #{subject.id},
+            group_id = #{group.id},
+            teacher_id = #{teacher.id}
+        </set>
+        WHERE lessons.id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Long">
+        DELETE
+        FROM lessons
+        WHERE lessons.id = #{id}
+    </delete>
+
+    <resultMap id="LessonResultMap" type="com.solvd.laba.iis.domain.Lesson" autoMapping="false">
+        <id property="id" column="lesson_id"/>
+        <result property="room" column="lesson_room"/>
+        <result property="weekday" column="lesson_weekday"/>
+        <result property="startTime" column="lesson_start_time"/>
+        <result property="endTime" column="lesson_end_time"/>
+        <association property="subject" resultMap="com.solvd.laba.iis.persistence.SubjectRepository.SubjectResultMap"/>
+        <association property="group" resultMap="com.solvd.laba.iis.persistence.GroupRepository.GroupResultMap"/>
+        <association property="teacher" resultMap="com.solvd.laba.iis.persistence.TeacherRepository.TeacherResultMap"/>
+    </resultMap>
+
+</mapper>

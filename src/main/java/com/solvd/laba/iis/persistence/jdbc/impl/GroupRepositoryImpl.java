@@ -1,12 +1,11 @@
-package com.solvd.laba.iis.persistence.impl;
+package com.solvd.laba.iis.persistence.jdbc.impl;
 
 import com.solvd.laba.iis.domain.Group;
+import com.solvd.laba.iis.domain.criteria.GroupSearchCriteria;
 import com.solvd.laba.iis.domain.exception.ResourceMappingException;
 import com.solvd.laba.iis.persistence.GroupRepository;
-import com.solvd.laba.iis.domain.criteria.GroupSearchCriteria;
-import com.solvd.laba.iis.persistence.mapper.GroupRowMapper;
+import com.solvd.laba.iis.persistence.jdbc.mapper.GroupRowMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -14,15 +13,15 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-@Repository
+//@Repository
 @RequiredArgsConstructor
 public class GroupRepositoryImpl implements GroupRepository {
 
-    private static final String FIND_ALL_QUERY = "SELECT DISTINCT groups.id as group_id, groups.number as group_number FROM groups ";
-    private static final String IS_EXIST_QUERY = "SELECT groups.id as group_id FROM groups WHERE number = ?";
-    private static final String CREATE_QUERY = "INSERT INTO groups (number) VALUES(?)";
-    private static final String DELETE_QUERY = "DELETE FROM groups WHERE id = ?";
-    private static final String UPDATE_QUERY = "UPDATE groups SET number = ? WHERE id = ?";
+    private static final String FIND_ALL_QUERY = "SELECT DISTINCT groups.id as group_id, groups.number as group_number FROM iis.groups ";
+    private static final String IS_EXIST_QUERY = "SELECT groups.id as group_id FROM iis.groups WHERE number = ?";
+    private static final String CREATE_QUERY = "INSERT INTO iis.groups (number) VALUES (?)";
+    private static final String DELETE_QUERY = "DELETE FROM iis.groups WHERE id = ?";
+    private static final String UPDATE_QUERY = "UPDATE iis.groups SET number = ? WHERE id = ?";
 
     private final DataSource dataSource;
 

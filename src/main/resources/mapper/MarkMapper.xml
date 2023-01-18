@@ -1,0 +1,106 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.solvd.laba.iis.persistence.MarkRepository">
+
+    <insert id="create" parameterType="com.solvd.laba.iis.domain.Mark" useGeneratedKeys="true" keyProperty="id"
+            keyColumn="id">
+        INSERT INTO marks
+        (date,
+         value,
+         subject_id,
+         student_id,
+         teacher_id)
+        VALUES (#{date},
+                #{value},
+                #{subject.id},
+                #{student.id},
+                #{teacher.id})
+    </insert>
+
+    <sql id="SetFields">
+        SELECT marks.id                 as mark_id,
+               marks.date               as mark_date,
+               marks.value              as mark_value,
+               marks.student_id         as student_id,
+               students_info.year       as student_year,
+               students_info.faculty    as student_faculty,
+               students_info.speciality as student_speciality,
+               student.id               as student_user_id,
+               student.name             as student_user_name,
+               student.surname          as student_user_surname,
+               student.email            as student_user_email,
+               student.password         as student_user_password,
+               student.role             as student_user_role,
+               marks.teacher_id         as teacher_id,
+               teacher.id               as teacher_user_id,
+               teacher.name             as teacher_user_name,
+               teacher.surname          as teacher_user_surname,
+               teacher.email            as teacher_user_email,
+               teacher.password         as teacher_user_password,
+               teacher.role             as teacher_user_role,
+               groups.id                as student_group_id,
+               groups.number            as student_group_number,
+               subjects.id              as subject_id,
+               subjects.name            as subject_name
+        FROM marks
+                 LEFT JOIN subjects ON marks.subject_id = subjects.id
+                 LEFT JOIN students_info ON marks.student_id = students_info.id
+                 LEFT JOIN teachers_info ON marks.teacher_id = teachers_info.id
+                 LEFT JOIN groups ON students_info.group_id = groups.id
+                 LEFT JOIN users_info teacher on teacher.id = teachers_info.user_id
+                 LEFT JOIN users_info student on student.id = students_info.user_id
+    </sql>
+
+    <select id="findAll" resultMap="MarkResultMap">
+        <include refid="SetFields"/>
+    </select>
+
+    <select id="findById" parameterType="java.lang.Long" resultMap="MarkResultMap">
+        <include refid="SetFields"/>
+        WHERE marks.id = #{id}
+    </select>
+
+    <select id="findByCriteria" resultMap="MarkResultMap">
+        <include refid="SetFields"/>
+        WHERE marks.student_id = #{studentId}
+        <if test="markSearchCriteria.subjectId != null">
+            AND marks.subject_id = #{markSearchCriteria.subjectId}
+        </if>
+    </select>
+
+    <select id="findBySubjectAndTeacher" resultMap="MarkResultMap">
+        <include refid="SetFields"/>
+        WHERE marks.subject_id = #{subjectId}
+        AND marks.teacher_id = #{teacherId}
+    </select>
+
+    <update id="update" parameterType="com.solvd.laba.iis.domain.Mark">
+        UPDATE marks
+        <set>
+            date = #{date},
+            value = #{value},
+            subject_id = #{subject.id},
+            student_id = #{student.id},
+            teacher_id = #{teacher.id}
+        </set>
+        WHERE marks.id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Long">
+        DELETE
+        FROM marks
+        WHERE marks.id = #{id}
+    </delete>
+
+    <resultMap id="MarkResultMap" type="com.solvd.laba.iis.domain.Mark" autoMapping="false">
+        <id property="id" column="mark_id"/>
+        <result property="date" column="mark_date"/>
+        <result property="value" column="mark_value"/>
+        <association property="subject" resultMap="com.solvd.laba.iis.persistence.SubjectRepository.SubjectResultMap"/>
+        <association property="student" resultMap="com.solvd.laba.iis.persistence.StudentRepository.StudentResultMap"
+                     columnPrefix="student_"/>
+        <association property="teacher" resultMap="com.solvd.laba.iis.persistence.TeacherRepository.TeacherResultMap"
+                     columnPrefix="teacher_"/>
+    </resultMap>
+
+</mapper>

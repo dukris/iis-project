@@ -1,0 +1,94 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.solvd.laba.iis.persistence.StudentRepository">
+
+    <insert id="create" parameterType="com.solvd.laba.iis.domain.StudentInfo" useGeneratedKeys="true" keyProperty="id"
+            keyColumn="id">
+        INSERT INTO students_info
+        (year,
+         faculty,
+         speciality,
+         user_id,
+         group_id)
+        VALUES (#{admissionYear},
+                #{faculty},
+                #{speciality},
+                #{user.id},
+                #{group.id})
+    </insert>
+
+    <sql id="SetFields">
+        SELECT students_info.id         as student_id,
+               students_info.year       as student_year,
+               students_info.faculty    as student_faculty,
+               students_info.speciality as student_speciality,
+               users_info.id            as user_id,
+               users_info.name          as user_name,
+               users_info.surname       as user_surname,
+               users_info.email         as user_email,
+               users_info.password      as user_password,
+               users_info.role          as user_role,
+               groups.id                as group_id,
+               groups.number            as group_number
+        FROM students_info
+                 LEFT JOIN users_info ON students_info.user_id = users_info.id
+                 LEFT JOIN groups ON students_info.group_id = groups.id
+    </sql>
+
+    <select id="findAll" resultMap="StudentResultMap">
+        <include refid="SetFields"/>
+    </select>
+
+    <select id="findById" parameterType="java.lang.Long" resultMap="StudentResultMap">
+        <include refid="SetFields"/>
+        WHERE students_info.id = #{id}
+    </select>
+
+    <select id="findByGroup" parameterType="java.lang.Long" resultMap="StudentResultMap">
+        <include refid="SetFields"/>
+        WHERE students_info.group_id = #{groupId}
+    </select>
+
+    <select id="findByCriteria" resultMap="StudentResultMap">
+        <include refid="SetFields"/>
+        <choose>
+            <when test="studentSearchCriteria.faculty != null">
+                <where>students_info.faculty = #{studentSearchCriteria.faculty}</where>
+            </when>
+            <when test="studentSearchCriteria.speciality != null">
+                <where>students_info.speciality = #{studentSearchCriteria.speciality}</where>
+            </when>
+            <when test="studentSearchCriteria.year != null">
+                <where>students_info.year = #{studentSearchCriteria.year}</where>
+            </when>
+        </choose>
+    </select>
+
+    <update id="update" parameterType="com.solvd.laba.iis.domain.StudentInfo">
+        UPDATE students_info
+        <set>
+            year = #{admissionYear},
+            faculty = #{faculty},
+            speciality = #{speciality},
+            user_id = #{user.id},
+            group_id = #{group.id}
+        </set>
+        WHERE students_info.id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Long">
+        DELETE
+        FROM students_info
+        WHERE students_info.id = #{id}
+    </delete>
+
+    <resultMap id="StudentResultMap" type="com.solvd.laba.iis.domain.StudentInfo" autoMapping="false">
+        <id property="id" column="student_id"/>
+        <result property="admissionYear" column="student_year"/>
+        <result property="faculty" column="student_faculty"/>
+        <result property="speciality" column="student_speciality"/>
+        <association property="user" resultMap="com.solvd.laba.iis.persistence.UserRepository.UserResultMap"/>
+        <association property="group" resultMap="com.solvd.laba.iis.persistence.GroupRepository.GroupResultMap"/>
+    </resultMap>
+
+</mapper>

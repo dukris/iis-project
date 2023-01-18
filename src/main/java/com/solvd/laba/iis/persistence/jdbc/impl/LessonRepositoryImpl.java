@@ -1,12 +1,11 @@
-package com.solvd.laba.iis.persistence.impl;
+package com.solvd.laba.iis.persistence.jdbc.impl;
 
 import com.solvd.laba.iis.domain.Lesson;
+import com.solvd.laba.iis.domain.criteria.LessonSearchCriteria;
 import com.solvd.laba.iis.domain.exception.ResourceMappingException;
 import com.solvd.laba.iis.persistence.LessonRepository;
-import com.solvd.laba.iis.domain.criteria.LessonSearchCriteria;
-import com.solvd.laba.iis.persistence.mapper.LessonRowMapper;
+import com.solvd.laba.iis.persistence.jdbc.mapper.LessonRowMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -14,7 +13,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-@Repository
+//@Repository
 @RequiredArgsConstructor
 public class LessonRepositoryImpl implements LessonRepository {
 

@@ -1,18 +1,17 @@
-package com.solvd.laba.iis.persistence.impl;
+package com.solvd.laba.iis.persistence.jdbc.impl;
 
 import com.solvd.laba.iis.domain.Subject;
 import com.solvd.laba.iis.domain.exception.ResourceMappingException;
 import com.solvd.laba.iis.persistence.SubjectRepository;
-import com.solvd.laba.iis.persistence.mapper.SubjectRowMapper;
+import com.solvd.laba.iis.persistence.jdbc.mapper.SubjectRowMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
+//@Repository
 @RequiredArgsConstructor
 public class SubjectRepositoryImpl implements SubjectRepository {
 

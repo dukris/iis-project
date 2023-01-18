@@ -1,12 +1,11 @@
-package com.solvd.laba.iis.persistence.impl;
+package com.solvd.laba.iis.persistence.jdbc.impl;
 
 import com.solvd.laba.iis.domain.StudentInfo;
+import com.solvd.laba.iis.domain.criteria.StudentSearchCriteria;
 import com.solvd.laba.iis.domain.exception.ResourceMappingException;
 import com.solvd.laba.iis.persistence.StudentRepository;
-import com.solvd.laba.iis.domain.criteria.StudentSearchCriteria;
-import com.solvd.laba.iis.persistence.mapper.StudentRowMapper;
+import com.solvd.laba.iis.persistence.jdbc.mapper.StudentRowMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -14,7 +13,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-@Repository
+//@Repository
 @RequiredArgsConstructor
 public class StudentRepositoryImpl implements StudentRepository {
 

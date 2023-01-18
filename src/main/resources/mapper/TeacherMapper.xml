@@ -1,0 +1,83 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.solvd.laba.iis.persistence.TeacherRepository">
+
+    <insert id="create" parameterType="com.solvd.laba.iis.domain.TeacherInfo" useGeneratedKeys="true" keyProperty="id"
+            keyColumn="id">
+        INSERT INTO teachers_info
+            (user_id)
+        VALUES (#{user.id})
+    </insert>
+
+    <insert id="addSubject">
+        INSERT INTO teachers_subjects
+        (teacher_id,
+         subject_id)
+        VALUES (#{teacherId},
+                #{subjectId})
+    </insert>
+
+    <sql id="SetFields">
+        SELECT teachers_info.id    as teacher_id,
+               users_info.id       as user_id,
+               users_info.name     as user_name,
+               users_info.surname  as user_surname,
+               users_info.email    as user_email,
+               users_info.password as user_password,
+               users_info.role     as user_role,
+               subjects.id         as subject_id,
+               subjects.name       as subject_name
+        FROM teachers_info
+        LEFT JOIN users_info ON teachers_info.user_id = users_info.id
+        LEFT JOIN teachers_subjects ON teachers_info.id = teachers_subjects.teacher_id
+        LEFT JOIN subjects ON teachers_subjects.subject_id = subjects.id
+    </sql>
+
+    <select id="findAll" resultMap="TeacherResultMap">
+        <include refid="SetFields"/>
+    </select>
+
+    <select id="findById" parameterType="java.lang.Long" resultMap="TeacherResultMap">
+        <include refid="SetFields"/>
+        WHERE teachers_info.id = #{id}
+    </select>
+
+    <select id="findByGroup" parameterType="java.lang.Long" resultMap="TeacherResultMap">
+        <include refid="SetFields"/>
+        LEFT JOIN lessons ON (teachers_info.id = lessons.teacher_id)
+        WHERE lessons.group_id = #{groupId}
+    </select>
+
+    <select id="findBySubject" parameterType="java.lang.Long" resultMap="TeacherResultMap">
+        <include refid="SetFields"/>
+        WHERE subjects.id = #{subjectId}
+    </select>
+
+    <update id="update" parameterType="com.solvd.laba.iis.domain.TeacherInfo">
+        UPDATE teachers_info
+        <set>
+            user_id = #{user.id}
+        </set>
+        WHERE teachers_info.id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Long">
+        DELETE
+        FROM teachers_info
+        WHERE teachers_info.id = #{id}
+    </delete>
+
+    <delete id="deleteSubject">
+        DELETE
+        FROM teachers_subjects
+        WHERE teachers_subjects.teacher_id = #{teacherId}
+          AND teachers_subjects.subject_id = #{subjectId}
+    </delete>
+
+    <resultMap id="TeacherResultMap" type="com.solvd.laba.iis.domain.TeacherInfo" autoMapping="false">
+        <id property="id" column="teacher_id"/>
+        <association property="user" resultMap="com.solvd.laba.iis.persistence.UserRepository.UserResultMap"/>
+        <collection property="subjects" resultMap="com.solvd.laba.iis.persistence.SubjectRepository.SubjectResultMap"/>
+    </resultMap>
+
+</mapper>

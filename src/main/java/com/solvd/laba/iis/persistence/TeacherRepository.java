@@ -1,10 +1,13 @@
 package com.solvd.laba.iis.persistence;
 
 import com.solvd.laba.iis.domain.TeacherInfo;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Optional;
 
+@Mapper
 public interface TeacherRepository {
 
     List<TeacherInfo> findAll();
@@ -21,8 +24,8 @@ public interface TeacherRepository {
 
     void delete(Long id);
 
-    void deleteSubject(Long teacherId, Long subjectId);
+    void deleteSubject(@Param("teacherId") Long teacherId, @Param("subjectId") Long subjectId);
 
-    void addSubject(Long teacherId, Long subjectId);
+    void addSubject(@Param("teacherId") Long teacherId, @Param("subjectId") Long subjectId);
 
 }

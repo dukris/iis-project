@@ -1,12 +1,11 @@
-package com.solvd.laba.iis.persistence.impl;
+package com.solvd.laba.iis.persistence.jdbc.impl;
 
 import com.solvd.laba.iis.domain.Mark;
+import com.solvd.laba.iis.domain.criteria.MarkSearchCriteria;
 import com.solvd.laba.iis.domain.exception.ResourceMappingException;
 import com.solvd.laba.iis.persistence.MarkRepository;
-import com.solvd.laba.iis.domain.criteria.MarkSearchCriteria;
-import com.solvd.laba.iis.persistence.mapper.MarkRowMapper;
+import com.solvd.laba.iis.persistence.jdbc.mapper.MarkRowMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -14,7 +13,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-@Repository
+//@Repository
 @RequiredArgsConstructor
 public class MarkRepositoryImpl implements MarkRepository {
 

@@ -1,4 +1,4 @@
-package com.solvd.laba.iis.persistence.mapper;
+package com.solvd.laba.iis.persistence.jdbc.mapper;
 
 import com.solvd.laba.iis.domain.*;
 import com.solvd.laba.iis.domain.Group;

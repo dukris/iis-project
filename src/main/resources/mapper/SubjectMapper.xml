@@ -1,0 +1,50 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.solvd.laba.iis.persistence.SubjectRepository">
+
+    <insert id="create" parameterType="com.solvd.laba.iis.domain.Subject" useGeneratedKeys="true" keyProperty="id"
+            keyColumn="id">
+        INSERT INTO subjects
+            (name)
+        VALUES (#{name})
+    </insert>
+
+    <sql id="SetFields">
+        SELECT subjects.id   as subject_id,
+               subjects.name as subject_name
+        FROM subjects
+    </sql>
+
+    <select id="findAll" resultMap="SubjectResultMap">
+        <include refid="SetFields"/>
+    </select>
+
+    <select id="findById" parameterType="java.lang.Long" resultMap="SubjectResultMap">
+        <include refid="SetFields"/>
+        WHERE subjects.id = #{id}
+    </select>
+
+    <select id="isExist" parameterType="java.lang.Integer" resultType="java.lang.Boolean">
+        SELECT EXISTS(SELECT 1 FROM subjects WHERE subjects.name = #{name})
+    </select>
+
+    <update id="update" parameterType="com.solvd.laba.iis.domain.Subject">
+        UPDATE subjects
+        <set>
+            name = #{name}
+        </set>
+        WHERE subjects.id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Long">
+        DELETE
+        FROM subjects
+        WHERE subjects.id = #{id}
+    </delete>
+
+    <resultMap id="SubjectResultMap" type="com.solvd.laba.iis.domain.Subject">
+        <id property="id" column="subject_id"/>
+        <result property="name" column="subject_name"/>
+    </resultMap>
+
+</mapper>

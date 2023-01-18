@@ -1,18 +1,17 @@
-package com.solvd.laba.iis.persistence.impl;
+package com.solvd.laba.iis.persistence.jdbc.impl;
 
 import com.solvd.laba.iis.domain.TeacherInfo;
 import com.solvd.laba.iis.domain.exception.ResourceMappingException;
 import com.solvd.laba.iis.persistence.TeacherRepository;
-import com.solvd.laba.iis.persistence.mapper.TeacherRowMapper;
+import com.solvd.laba.iis.persistence.jdbc.mapper.TeacherRowMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
+//@Repository
 @RequiredArgsConstructor
 public class TeacherRepositoryImpl implements TeacherRepository {
 
