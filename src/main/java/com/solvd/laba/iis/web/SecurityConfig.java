@@ -61,7 +61,7 @@ public class SecurityConfig {
 
     @Bean
     public MethodSecurityExpressionHandler createExpressionHandler() {
-        var expressionHandler = new CustomMethodSecurityExpressionHandler();
+        CustomMethodSecurityExpressionHandler expressionHandler = new CustomMethodSecurityExpressionHandler();
         expressionHandler.setApplicationContext(applicationContext);
         return expressionHandler;
     }

@@ -6,14 +6,12 @@ import com.solvd.laba.iis.service.StudentService;
 import com.solvd.laba.iis.service.SubjectService;
 import com.solvd.laba.iis.service.TeacherService;
 import com.solvd.laba.iis.web.security.JwtUser;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.Setter;
 import org.springframework.security.access.expression.SecurityExpressionRoot;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionOperations;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;
 
@@ -24,7 +22,6 @@ public class CustomMethodSecurityExpressionRoot extends SecurityExpressionRoot i
     private StudentService studentService;
     private TeacherService teacherService;
     private GroupService groupService;
-    private HttpServletRequest request;
     private Object filterObject;
     private Object returnObject;
     private Object target;
@@ -34,7 +31,7 @@ public class CustomMethodSecurityExpressionRoot extends SecurityExpressionRoot i
     }
 
     public boolean hasAccessForTeacher(Long id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = super.getAuthentication();
         JwtUser jwtUser = (JwtUser) authentication.getPrincipal();
         Long userId = jwtUser.getId();
         TeacherInfo teacherInfo = teacherService.retrieveByUserId(userId);
@@ -42,7 +39,7 @@ public class CustomMethodSecurityExpressionRoot extends SecurityExpressionRoot i
     }
 
     public boolean hasAccessForStudent(Long id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = super.getAuthentication();
         JwtUser jwtUser = (JwtUser) authentication.getPrincipal();
         Long userId = jwtUser.getId();
         StudentInfo studentInfo = studentService.retrieveByUserId(userId);
@@ -50,7 +47,7 @@ public class CustomMethodSecurityExpressionRoot extends SecurityExpressionRoot i
     }
 
     public boolean hasAccessToSubject(Long teacherId, Long subjectId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = super.getAuthentication();
         JwtUser jwtUser = (JwtUser) authentication.getPrincipal();
         Long userId = jwtUser.getId();
         TeacherInfo teacherInfo = teacherService.retrieveByUserId(userId);
@@ -105,4 +102,5 @@ public class CustomMethodSecurityExpressionRoot extends SecurityExpressionRoot i
     public Object getThis() {
         return target;
     }
+
 }

@@ -46,8 +46,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             response.setAccessToken(accessToken);
             response.setRefreshToken(newRefreshToken);
             return response;
+        } else {
+            throw new AuthenticationException("JWT token is invalid");
         }
-        throw new AuthenticationException("JWT token is invalid");
     }
 
 }

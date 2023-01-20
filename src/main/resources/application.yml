@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/iis
+    url: jdbc:postgresql://localhost:5432/iis?currentSchema=iis
     username: postgres
     password: admin
   sql:
@@ -9,6 +9,8 @@ spring:
       mode: always
   jackson:
     default-property-inclusion: NON_NULL
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-root.xml
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml

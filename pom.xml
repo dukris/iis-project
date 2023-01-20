@@ -20,7 +20,9 @@
         <revision>0.0.1-SNAPSHOT</revision>
         <slf4j.version>2.0.6</slf4j.version>
         <org.mybatis.spring.boot.version>3.0.1</org.mybatis.spring.boot.version>
-        <io.jsonwebtoken.version>0.9.1</io.jsonwebtoken.version>
+        <io.jsonwebtoken.version>0.11.5</io.jsonwebtoken.version>
+        <javax.xml.bind.version>2.3.1</javax.xml.bind.version>
+        <org.liquibase.version>4.19.0</org.liquibase.version>
     </properties>
 
     <dependencies>
@@ -55,36 +57,37 @@
             <version>${org.springframework.boot.version}</version>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>io.jsonwebtoken</groupId>-->
-<!--            <artifactId>jjwt</artifactId>-->
-<!--            <version>${io.jsonwebtoken.version}</version>-->
-<!--        </dependency>-->
-
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
-            <version>0.11.5</version>
+            <version>${io.jsonwebtoken.version}</version>
         </dependency>
+
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-impl</artifactId>
-            <version>0.11.5</version>
+            <version>${io.jsonwebtoken.version}</version>
             <scope>runtime</scope>
         </dependency>
+
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-jackson</artifactId>
-            <version>0.11.5</version>
+            <version>${io.jsonwebtoken.version}</version>
             <scope>runtime</scope>
         </dependency>
 
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
-            <version>2.3.1</version>
+            <version>${javax.xml.bind.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <version>${org.liquibase.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.postgresql</groupId>

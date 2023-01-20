@@ -80,12 +80,6 @@ public class UserController {
         return jwtResponseDto;
     }
 
-//    @PostMapping("/token")
-//    public JwtResponse getNewAccessToken(@RequestBody RefreshJwtRequest request) {
-//        JwtResponse token = authenticationService.getAccessToken(request.getRefreshToken());
-//        return token;
-//    }
-
     @PostMapping("/refresh")
     public JwtResponseDto getNewRefreshToken(@RequestBody JwtRefreshRequestDto jwtRefreshRequestDto) {
         JwtRefreshRequest jwtRefreshRequest = jwtRefreshRequestMapper.dtoToEntity(jwtRefreshRequestDto);

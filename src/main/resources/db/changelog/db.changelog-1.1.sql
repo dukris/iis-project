@@ -1,7 +1,6 @@
-CREATE SCHEMA IF NOT EXISTS iis;
+--liquibase formatted sql
 
-SET SCHEMA 'iis';
-
+--changeset hanna:1
 CREATE TABLE IF NOT EXISTS users_info
 (
     id       bigserial NOT NULL,

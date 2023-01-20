@@ -19,7 +19,6 @@ public class CustomMethodSecurityExpressionHandler extends DefaultMethodSecurity
 
     @Override
     protected MethodSecurityExpressionOperations createSecurityExpressionRoot(Authentication authentication, MethodInvocation invocation) {
-
         CustomMethodSecurityExpressionRoot root = new CustomMethodSecurityExpressionRoot(authentication);
         root.setTrustResolver(this.trustResolver);
         root.setPermissionEvaluator(getPermissionEvaluator());
