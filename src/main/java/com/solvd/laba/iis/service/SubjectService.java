@@ -10,6 +10,8 @@ public interface SubjectService {
 
     Subject retrieveById(Long id);
 
+    List<Subject> retrieveByTeacher(Long teacherId);
+
     Subject create(Subject subject);
 
     Subject update(Subject subject);

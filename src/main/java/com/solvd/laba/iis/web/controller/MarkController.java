@@ -8,6 +8,7 @@ import com.solvd.laba.iis.web.dto.validation.OnUpdateGroup;
 import com.solvd.laba.iis.web.mapper.MarkMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,6 +38,7 @@ public class MarkController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAccessToMark(#markDto.teacher.id, #markDto.student.id, #markDto.subject.id)")
     public MarkDto create(@RequestBody @Validated(OnCreateMarkGroup.class) MarkDto markDto) {
         Mark mark = markMapper.dtoToEntity(markDto);
         mark = markService.create(mark);
@@ -51,6 +53,7 @@ public class MarkController {
     }
 
     @PutMapping
+    @PreAuthorize("hasAccessToMark(#markDto.teacher.id, #markDto.student.id, #markDto.subject.id)")
     public MarkDto update(@RequestBody @Validated(OnUpdateGroup.class) MarkDto markDto) {
         Mark mark = markMapper.dtoToEntity(markDto);
         mark = markService.update(mark);

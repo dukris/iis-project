@@ -30,6 +30,11 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    public List<Group> retrieveByTeacherAndSubject(Long teacherId, Long subjectId) {
+        return groupRepository.findByTeacherAndSubject(teacherId, subjectId);
+    }
+
+    @Override
     public List<Group> retrieveByCriteria(Long teacherId, GroupSearchCriteria groupSearchCriteria) {
         return groupRepository.findByCriteria(teacherId, groupSearchCriteria);
     }

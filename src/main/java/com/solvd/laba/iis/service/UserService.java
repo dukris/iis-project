@@ -10,6 +10,8 @@ public interface UserService {
 
     UserInfo retrieveById(Long id);
 
+    UserInfo retrieveByEmail(String email);
+
     UserInfo create(UserInfo userInfo);
 
     UserInfo update(UserInfo userInfo);

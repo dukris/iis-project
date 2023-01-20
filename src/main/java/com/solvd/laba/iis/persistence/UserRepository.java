@@ -13,6 +13,8 @@ public interface UserRepository {
 
     Optional<UserInfo> findById(Long id);
 
+    Optional<UserInfo> findByEmail(String email);
+
     boolean isExist(String email);
 
     void create(UserInfo userInfo);

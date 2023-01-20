@@ -11,6 +11,8 @@ public interface StudentService {
 
     StudentInfo retrieveById(Long id);
 
+    StudentInfo retrieveByUserId(Long userId);
+
     List<StudentInfo> retrieveByGroup(Long groupId);
 
     List<StudentInfo> retrieveByCriteria(StudentSearchCriteria studentSearchCriteria);

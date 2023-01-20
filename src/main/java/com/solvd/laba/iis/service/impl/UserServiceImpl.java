@@ -6,6 +6,7 @@ import com.solvd.laba.iis.domain.exception.ResourceDoesNotExistException;
 import com.solvd.laba.iis.persistence.UserRepository;
 import com.solvd.laba.iis.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +17,7 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Override
     public List<UserInfo> retrieveAll() {
@@ -29,11 +31,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserInfo retrieveByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceDoesNotExistException("User with email = " + email + " not found"));
+    }
+
+    @Override
     @Transactional
     public UserInfo create(UserInfo userInfo) {
         if (userRepository.isExist(userInfo.getEmail())) {
             throw new ResourceAlreadyExistsException("User with email = " + userInfo.getEmail() + " already exists");
         }
+        userInfo.setPassword(passwordEncoder.encode(userInfo.getPassword()));
         userRepository.create(userInfo);
         return userInfo;
     }
@@ -45,7 +54,7 @@ public class UserServiceImpl implements UserService {
         foundUser.setName(userInfo.getName());
         foundUser.setSurname(userInfo.getSurname());
         foundUser.setEmail(userInfo.getEmail());
-        foundUser.setPassword(userInfo.getPassword());
+        foundUser.setPassword(passwordEncoder.encode(userInfo.getPassword()));
         foundUser.setRole(userInfo.getRole());
         userRepository.update(userInfo);
         return userInfo;

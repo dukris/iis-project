@@ -51,6 +51,21 @@ public class GroupRepositoryImpl implements GroupRepository {
     }
 
     @Override
+    public List<Group> findByTeacherAndSubject(Long teacherId, Long subjectId) {
+        String joinQuery = "LEFT JOIN iis.lessons ON groups.id = lessons.group_id ";
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + joinQuery + "WHERE lessons.teacher_id = ? AND lessons.subject_id = ?")) {
+            statement.setLong(1, teacherId);
+            statement.setLong(2, subjectId);
+            try (ResultSet rs = statement.executeQuery()) {
+                return GroupRowMapper.mapRows(rs);
+            }
+        } catch (SQLException ex) {
+            throw new ResourceMappingException("Exception occurred while finding group by teacher's id = " + teacherId + " and subject's id = " + subjectId, ex);
+        }
+    }
+
+    @Override
     public boolean isExist(Integer number) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(IS_EXIST_QUERY)) {

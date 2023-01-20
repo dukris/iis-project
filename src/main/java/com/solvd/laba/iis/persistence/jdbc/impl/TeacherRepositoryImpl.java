@@ -58,6 +58,19 @@ public class TeacherRepositoryImpl implements TeacherRepository {
     }
 
     @Override
+    public Optional<TeacherInfo> findByUserId(Long userId) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + "WHERE teachers_info.user_id = ?")) {
+            statement.setLong(1, userId);
+            try (ResultSet rs = statement.executeQuery()) {
+                return rs.next() ? Optional.of(TeacherRowMapper.mapRow(rs)) : Optional.empty();
+            }
+        } catch (SQLException ex) {
+            throw new ResourceMappingException("Exception occurred while finding teacher by user's id = " + userId, ex);
+        }
+    }
+
+    @Override
     public List<TeacherInfo> findByGroup(Long groupId) {
         String joinQuery = "LEFT JOIN lessons ON (teachers_info.id = lessons.teacher_id) ";
         try (Connection connection = dataSource.getConnection();

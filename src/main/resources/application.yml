@@ -12,3 +12,9 @@ spring:
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml
+
+jwt:
+  secret: hfbvhfabvkhefbvhrbvvrheferhfbcenvfdvbfavjfdvlafjdbvjfdbvjfnvjkdsncjk
+  expiration:
+    access: 5
+    refresh: 30

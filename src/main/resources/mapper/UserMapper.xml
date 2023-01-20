@@ -36,6 +36,11 @@
         WHERE users_info.id = #{id}
     </select>
 
+    <select id="findByEmail" parameterType="java.lang.String" resultMap="UserResultMap">
+        <include refid="SetFields"/>
+        WHERE users_info.email = #{email}
+    </select>
+
     <select id="isExist" parameterType="java.lang.String" resultType="java.lang.Boolean">
         SELECT EXISTS(SELECT 1 FROM users_info WHERE users_info.email = #{email})
     </select>

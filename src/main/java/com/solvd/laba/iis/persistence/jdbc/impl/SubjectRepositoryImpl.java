@@ -31,7 +31,7 @@ public class SubjectRepositoryImpl implements SubjectRepository {
                 return SubjectRowMapper.mapRows(rs);
             }
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while finding all groups", ex);
+            throw new ResourceMappingException("Exception occurred while finding all subjects", ex);
         }
     }
 
@@ -45,6 +45,20 @@ public class SubjectRepositoryImpl implements SubjectRepository {
             }
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while finding subject by id = " + id, ex);
+        }
+    }
+
+    @Override
+    public List<Subject> findByTeacher(Long teacherId) {
+        String joinQuery = "LEFT JOIN lessons ON subjects.id = lessons.subject_id ";
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + joinQuery + "WHERE lessons.teacher_id = ?")) {
+            statement.setLong(1, teacherId);
+            try (ResultSet rs = statement.executeQuery()) {
+                return SubjectRowMapper.mapRows(rs);
+            }
+        } catch (SQLException ex) {
+            throw new ResourceMappingException("Exception occurred while finding subject by teacher's id = " + teacherId, ex);
         }
     }
 

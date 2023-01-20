@@ -28,6 +28,12 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
+    public TeacherInfo retrieveByUserId(Long userId) {
+        return teacherRepository.findByUserId(userId)
+                .orElseThrow(() -> new ResourceDoesNotExistException("Teacher with user's id = " + userId + " not found"));
+    }
+
+    @Override
     public List<TeacherInfo> retrieveByGroup(Long groupId) {
         return teacherRepository.findByGroup(groupId);
     }

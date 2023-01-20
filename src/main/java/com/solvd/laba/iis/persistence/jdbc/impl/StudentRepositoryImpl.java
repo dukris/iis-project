@@ -57,6 +57,19 @@ public class StudentRepositoryImpl implements StudentRepository {
     }
 
     @Override
+    public Optional<StudentInfo> findByUserId(Long userId) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + "WHERE students_info.user_id = ?")) {
+            statement.setLong(1, userId);
+            try (ResultSet rs = statement.executeQuery()) {
+                return rs.next() ? Optional.of(StudentRowMapper.mapRow(rs)) : Optional.empty();
+            }
+        } catch (SQLException ex) {
+            throw new ResourceMappingException("Exception occurred while finding student by user's id = " + userId, ex);
+        }
+    }
+
+    @Override
     public List<StudentInfo> findByCriteria(StudentSearchCriteria studentSearchCriteria) {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
