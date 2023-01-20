@@ -12,6 +12,8 @@ public interface TeacherService {
 
     TeacherInfo retrieveByUserId(Long userId);
 
+    TeacherInfo retrieveByMarkId(Long markId);
+
     List<TeacherInfo> retrieveByGroup(Long groupId);
 
     List<TeacherInfo> retrieveBySubject(Long subjectId);

@@ -1,10 +1,7 @@
 package com.solvd.laba.iis.web.security.expression;
 
 import com.solvd.laba.iis.domain.*;
-import com.solvd.laba.iis.service.GroupService;
-import com.solvd.laba.iis.service.StudentService;
-import com.solvd.laba.iis.service.SubjectService;
-import com.solvd.laba.iis.service.TeacherService;
+import com.solvd.laba.iis.service.*;
 import com.solvd.laba.iis.web.security.JwtUser;
 import lombok.Setter;
 import org.springframework.security.access.expression.SecurityExpressionRoot;
@@ -73,8 +70,28 @@ public class CustomMethodSecurityExpressionRoot extends SecurityExpressionRoot i
                 .anyMatch(student -> student.getId().equals(studentId));
     }
 
+    public boolean hasAccessToDeleteMark(Long markId) {
+        Authentication authentication = super.getAuthentication();
+        JwtUser jwtUser = (JwtUser) authentication.getPrincipal();
+        Long userId = jwtUser.getId();
+        if (isAdmin(authentication)) {
+            return true;
+        }
+        if (!isTeacher(authentication)) {
+            return false;
+        }
+        TeacherInfo authTeacher = teacherService.retrieveByUserId(userId);
+        TeacherInfo markTeacher = teacherService.retrieveByMarkId(markId);
+        return authTeacher.getId().equals(markTeacher.getId());
+    }
+
     private boolean isAdmin(Authentication authentication) {
         GrantedAuthority role = new SimpleGrantedAuthority(UserInfo.Role.ROLE_ADMIN.name());
+        return authentication.getAuthorities().contains(role);
+    }
+
+    private boolean isTeacher(Authentication authentication) {
+        GrantedAuthority role = new SimpleGrantedAuthority(UserInfo.Role.ROLE_TEACHER.name());
         return authentication.getAuthorities().contains(role);
     }
 

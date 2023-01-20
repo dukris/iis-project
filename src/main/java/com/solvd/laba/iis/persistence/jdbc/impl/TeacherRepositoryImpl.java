@@ -71,6 +71,20 @@ public class TeacherRepositoryImpl implements TeacherRepository {
     }
 
     @Override
+    public Optional<TeacherInfo> findByMarkId(Long markId) {
+        String joinQuery = "LEFT JOIN iis.marks ON marks.teacher_id = teachers_info.id ";
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + joinQuery+ "WHERE marks.id = ?")) {
+            statement.setLong(1, markId);
+            try (ResultSet rs = statement.executeQuery()) {
+                return rs.next() ? Optional.of(TeacherRowMapper.mapRow(rs)) : Optional.empty();
+            }
+        } catch (SQLException ex) {
+            throw new ResourceMappingException("Exception occurred while finding teacher by mark's id = " + markId, ex);
+        }
+    }
+
+    @Override
     public List<TeacherInfo> findByGroup(Long groupId) {
         String joinQuery = "LEFT JOIN lessons ON (teachers_info.id = lessons.teacher_id) ";
         try (Connection connection = dataSource.getConnection();

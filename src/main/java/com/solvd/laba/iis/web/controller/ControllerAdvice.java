@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -80,15 +79,6 @@ public class ControllerAdvice {
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ErrorDto handleAccessDeniedException(AccessDeniedException ex) {
-        ErrorDto errorDto = new ErrorDto();
-        errorDto.setMessage(ex.getMessage());
-        log.error(ex.getMessage(), ex);
-        return errorDto;
-    }
-
-    @ExceptionHandler(BadCredentialsException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ErrorDto handleBadCredentialsException(BadCredentialsException ex) {
         ErrorDto errorDto = new ErrorDto();
         errorDto.setMessage(ex.getMessage());
         log.error(ex.getMessage(), ex);

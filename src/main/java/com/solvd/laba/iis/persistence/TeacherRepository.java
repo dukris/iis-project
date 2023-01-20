@@ -16,6 +16,8 @@ public interface TeacherRepository {
 
     Optional<TeacherInfo> findByUserId(Long userId);
 
+    Optional<TeacherInfo> findByMarkId(Long markId);
+
     List<TeacherInfo> findByGroup(Long groupId);
 
     List<TeacherInfo> findBySubject(Long subjectId);

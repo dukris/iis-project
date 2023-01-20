@@ -48,6 +48,7 @@ public class MarkController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAccessToDeleteMark(#id)")
     public void delete(@PathVariable Long id) {
         markService.delete(id);
     }
