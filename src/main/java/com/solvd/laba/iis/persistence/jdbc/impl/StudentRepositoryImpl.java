@@ -23,8 +23,8 @@ public class StudentRepositoryImpl implements StudentRepository {
             users_info.email as user_email, users_info.password as user_password, users_info.role as user_role,
             groups.id as group_id, groups.number as group_number
             FROM students_info
-            LEFT JOIN users_info ON (students_info.user_id = users_info.id)
-            LEFT JOIN groups ON (students_info.group_id = groups.id) """;
+            LEFT JOIN users_info ON students_info.user_id = users_info.id
+            LEFT JOIN groups ON students_info.group_id = groups.id""";
     private static final String CREATE_QUERY = "INSERT INTO students_info (year, faculty, speciality, user_id, group_id) VALUES(?, ?, ?, ?, ?)";
     private static final String DELETE_QUERY = "DELETE FROM students_info WHERE id = ?";
     private static final String UPDATE_QUERY = "UPDATE students_info SET year = ?, faculty = ?, speciality = ?, user_id = ?, group_id = ? WHERE id = ?";
@@ -46,7 +46,7 @@ public class StudentRepositoryImpl implements StudentRepository {
     @Override
     public Optional<StudentInfo> findById(Long id) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + "WHERE students_info.id = ?")) {
+             PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + " WHERE students_info.id = ?")) {
             statement.setLong(1, id);
             try (ResultSet rs = statement.executeQuery()) {
                 return rs.next() ? Optional.of(StudentRowMapper.mapRow(rs)) : Optional.empty();
@@ -59,7 +59,7 @@ public class StudentRepositoryImpl implements StudentRepository {
     @Override
     public Optional<StudentInfo> findByUserId(Long userId) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + "WHERE students_info.user_id = ?")) {
+             PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + " WHERE students_info.user_id = ?")) {
             statement.setLong(1, userId);
             try (ResultSet rs = statement.executeQuery()) {
                 return rs.next() ? Optional.of(StudentRowMapper.mapRow(rs)) : Optional.empty();
@@ -83,16 +83,16 @@ public class StudentRepositoryImpl implements StudentRepository {
 
     private String updateQuery(StudentSearchCriteria studentSearchCriteria) {
         return Objects.nonNull(studentSearchCriteria.getFaculty()) ?
-                FIND_ALL_QUERY + "WHERE students_info.faculty = \'" + studentSearchCriteria.getFaculty() + "\'" :
+                FIND_ALL_QUERY + " WHERE students_info.faculty = \'" + studentSearchCriteria.getFaculty() + "\'" :
                 Objects.nonNull(studentSearchCriteria.getSpeciality()) ?
-                        FIND_ALL_QUERY + "WHERE students_info.speciality = \'" + studentSearchCriteria.getSpeciality() + "\'" :
-                        FIND_ALL_QUERY + "WHERE students_info.year = " + studentSearchCriteria.getYear();
+                        FIND_ALL_QUERY + " WHERE students_info.speciality = \'" + studentSearchCriteria.getSpeciality() + "\'" :
+                        FIND_ALL_QUERY + " WHERE students_info.year = " + studentSearchCriteria.getYear();
     }
 
     @Override
     public List<StudentInfo> findByGroup(Long groupId) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + "WHERE students_info.group_id = ?")) {
+             PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + " WHERE students_info.group_id = ?")) {
             statement.setLong(1, groupId);
             try (ResultSet rs = statement.executeQuery()) {
                 return StudentRowMapper.mapRows(rs);

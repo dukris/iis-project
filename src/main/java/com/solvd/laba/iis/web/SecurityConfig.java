@@ -22,12 +22,15 @@ import org.springframework.security.web.access.ExceptionTranslationFilter;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
+    private static final String[] PERMITTED_REQUESTS = {"/api/v1/users/login", "/api/v1/users/refresh"};
+    private static final String[] COMMON_GET_REQUESTS = {"/api/v1/lessons/**", "/api/v1/marks/**", "/api/v1/groups/**", "/api/v1/subjects/**"};
+    private static final String[] TEACHER_GET_REQUESTS = {"/api/v1/teachers/**"};
+    private static final String[] TEACHER_OTHER_REQUESTS = {"/api/v1/marks", "/api/v1/marks/*"};
+    private static final String[] STUDENT_GET_REQUESTS = {"/api/v1/students/**"};
+    private static final String[] ADMIN_REQUESTS = {"/api/v1/**"};
+
     private final JwtFilter jwtFilter;
     private final ApplicationContext applicationContext;
-    private final String[] teacherGetRequests = {"/api/v1/teachers/**"};
-    private final String[] teacherOtherRequests = {"/api/v1/marks", "/api/v1/marks/*"};
-    private final String[] studentGetRequests = {"/api/v1/students/**"};
-    private final String[] commonGetRequests = {"/api/v1/lessons/**", "/api/v1/marks/**", "/api/v1/groups/**", "/api/v1/subjects/**"};
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -48,12 +51,12 @@ public class SecurityConfig {
                 })
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/v1/users/login").permitAll()
-                .requestMatchers(HttpMethod.GET, commonGetRequests).authenticated()
-                .requestMatchers(HttpMethod.GET, teacherGetRequests).hasAnyRole("TEACHER", "ADMIN")
-                .requestMatchers(teacherOtherRequests).hasAnyRole("TEACHER", "ADMIN")
-                .requestMatchers(HttpMethod.GET, studentGetRequests).hasAnyRole("STUDENT", "ADMIN")
-                .requestMatchers("/api/v1/**").hasRole("ADMIN")
+                .requestMatchers(PERMITTED_REQUESTS).permitAll()
+                .requestMatchers(HttpMethod.GET, COMMON_GET_REQUESTS).authenticated()
+                .requestMatchers(HttpMethod.GET, TEACHER_GET_REQUESTS).hasAnyRole("TEACHER", "ADMIN")
+                .requestMatchers(TEACHER_OTHER_REQUESTS).hasAnyRole("TEACHER", "ADMIN")
+                .requestMatchers(HttpMethod.GET, STUDENT_GET_REQUESTS).hasAnyRole("STUDENT", "ADMIN")
+                .requestMatchers(ADMIN_REQUESTS).hasRole("ADMIN")
                 .and()
                 .addFilterAfter(jwtFilter, ExceptionTranslationFilter.class)
                 .build();

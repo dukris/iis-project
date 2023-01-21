@@ -6,8 +6,11 @@ import com.solvd.laba.iis.domain.security.JwtRefreshRequest;
 import com.solvd.laba.iis.domain.security.JwtRequest;
 import com.solvd.laba.iis.domain.security.JwtResponse;
 import com.solvd.laba.iis.service.AuthenticationService;
+import com.solvd.laba.iis.service.JwtService;
 import com.solvd.laba.iis.service.UserService;
-import com.solvd.laba.iis.web.security.JwtProvider;
+import com.solvd.laba.iis.web.security.JwtUser;
+import com.solvd.laba.iis.web.security.JwtUserFactory;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
@@ -17,17 +20,13 @@ import org.springframework.stereotype.Service;
 public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final UserService userService;
-    private final JwtProvider jwtProvider;
+    private final JwtService jwtService;
 
     @Override
-    public JwtResponse login(JwtRequest authRequest) {
-        UserInfo user = userService.retrieveByEmail(authRequest.getEmail());
-        if (BCrypt.checkpw(authRequest.getPassword(), user.getPassword())) {
-            String accessToken = jwtProvider.generateAccessToken(user);
-            String refreshToken = jwtProvider.generateRefreshToken(user);
-            JwtResponse response = new JwtResponse();
-            response.setAccessToken(accessToken);
-            response.setRefreshToken(refreshToken);
+    public JwtResponse login(JwtRequest jwtRequest) {
+        UserInfo user = userService.retrieveByEmail(jwtRequest.getEmail());
+        if (BCrypt.checkpw(jwtRequest.getPassword(), user.getPassword())) {
+            JwtResponse response = prepareResponse(user);
             return response;
         } else {
             throw new AuthenticationException("Incorrect password");
@@ -37,18 +36,22 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public JwtResponse refresh(JwtRefreshRequest jwtRefreshRequest) {
         String refreshToken = jwtRefreshRequest.getRefreshToken();
-        if (jwtProvider.validateToken(refreshToken)) {
-            String email = jwtProvider.getEmail(refreshToken);
-            UserInfo user = userService.retrieveByEmail(email);
-            String accessToken = jwtProvider.generateAccessToken(user);
-            String newRefreshToken = jwtProvider.generateRefreshToken(user);
-            JwtResponse response = new JwtResponse();
-            response.setAccessToken(accessToken);
-            response.setRefreshToken(newRefreshToken);
-            return response;
-        } else {
-            throw new AuthenticationException("JWT token is invalid");
-        }
+        Claims claims = jwtService.parseToken(refreshToken);
+        JwtUser jwtUser = JwtUserFactory.create(claims);
+        UserInfo user = userService.retrieveByEmail(jwtUser.getEmail());
+        JwtResponse response = prepareResponse(user);
+        return response;
+    }
+
+    private JwtResponse prepareResponse(UserInfo user) {
+        String accessToken = jwtService.generateAccessToken(user);
+        String refreshToken = jwtService.generateRefreshToken(user);
+        Long expiredMinutes = jwtService.getExpirationTime();
+        JwtResponse response = new JwtResponse();
+        response.setAccessToken(accessToken);
+        response.setRefreshToken(refreshToken);
+        response.setExpiredMinutes(expiredMinutes);
+        return response;
     }
 
 }

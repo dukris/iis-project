@@ -91,7 +91,7 @@ public class GroupRepositoryImpl implements GroupRepository {
     }
 
     private String updateQuery(Long teacherId, GroupSearchCriteria groupSearchCriteria) {
-        String joinQuery = "LEFT JOIN lessons ON (lessons.group_id = groups.id) ";
+        String joinQuery = "LEFT JOIN lessons ON lessons.group_id = groups.id ";
         return Objects.nonNull(groupSearchCriteria.getSubjectId()) ?
                 FIND_ALL_QUERY + joinQuery + "WHERE lessons.teacher_id = " + teacherId + " AND lessons.subject_id = " + groupSearchCriteria.getSubjectId() :
                 FIND_ALL_QUERY + joinQuery + "WHERE lessons.teacher_id = " + teacherId;

@@ -10,8 +10,6 @@ import java.util.Collection;
 public class JwtUser implements UserDetails {
 
     private Long id;
-    private String name;
-    private String surname;
     private String email;
     private String password;
     private Collection<? extends GrantedAuthority> grantedAuthorities;
@@ -19,6 +17,11 @@ public class JwtUser implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return grantedAuthorities;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
     }
 
     @Override

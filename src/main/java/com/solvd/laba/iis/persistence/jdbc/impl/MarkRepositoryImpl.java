@@ -28,12 +28,12 @@ public class MarkRepositoryImpl implements MarkRepository {
             groups.id as group_id, groups.number as group_number,
             subjects.id as subject_id, subjects.name as subject_name
             FROM marks
-            LEFT JOIN subjects ON (marks.subject_id = subjects.id)
-            LEFT JOIN students_info ON (marks.student_id = students_info.id)
-            LEFT JOIN teachers_info ON (marks.teacher_id = teachers_info.id)
-            LEFT JOIN groups ON (students_info.group_id = groups.id)
-            LEFT JOIN users_info teacher on  (teacher.id = teachers_info.user_id)
-            LEFT JOIN users_info student on (student.id = students_info.user_id) """;
+            LEFT JOIN subjects ON marks.subject_id = subjects.id
+            LEFT JOIN students_info ON marks.student_id = students_info.id
+            LEFT JOIN teachers_info ON marks.teacher_id = teachers_info.id
+            LEFT JOIN groups ON students_info.group_id = groups.id
+            LEFT JOIN users_info teacher on teacher.id = teachers_info.user_id
+            LEFT JOIN users_info student on student.id = students_info.user_id""";
     private static final String CREATE_QUERY = "INSERT INTO marks (date, value, student_id, teacher_id, subject_id) VALUES(?, ?, ?, ?, ?)";
     private static final String DELETE_QUERY = "DELETE FROM marks WHERE id = ?";
     private static final String UPDATE_QUERY = "UPDATE marks SET date = ?, value = ?, student_id = ?, teacher_id = ?, subject_id = ? WHERE id = ?";
@@ -55,7 +55,7 @@ public class MarkRepositoryImpl implements MarkRepository {
     @Override
     public Optional<Mark> findById(Long id) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + "WHERE marks.id = ?")) {
+             PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + " WHERE marks.id = ?")) {
             statement.setLong(1, id);
             try (ResultSet rs = statement.executeQuery()) {
                 return rs.next() ? Optional.of(MarkRowMapper.mapRow(rs)) : Optional.empty();
@@ -68,7 +68,7 @@ public class MarkRepositoryImpl implements MarkRepository {
     @Override
     public List<Mark> findBySubjectAndTeacher(Long subjectId, Long teacherId) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + "WHERE subjects.id = ? AND marks.teacher_id = ?")) {
+             PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + " WHERE subjects.id = ? AND marks.teacher_id = ?")) {
             statement.setLong(1, subjectId);
             statement.setLong(2, teacherId);
             try (ResultSet rs = statement.executeQuery()) {
@@ -93,8 +93,8 @@ public class MarkRepositoryImpl implements MarkRepository {
 
     private String updateQuery(Long studentId, MarkSearchCriteria markSearchCriteria) {
         return Objects.nonNull(markSearchCriteria.getSubjectId()) ?
-                FIND_ALL_QUERY + "WHERE marks.student_id = " + studentId + " AND marks.subject_id = " + markSearchCriteria.getSubjectId() :
-                FIND_ALL_QUERY + "WHERE marks.student_id = " + studentId;
+                FIND_ALL_QUERY + " WHERE marks.student_id = " + studentId + " AND marks.subject_id = " + markSearchCriteria.getSubjectId() :
+                FIND_ALL_QUERY + " WHERE marks.student_id = " + studentId;
     }
 
     @Override

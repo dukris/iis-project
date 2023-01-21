@@ -10,13 +10,12 @@ spring:
   jackson:
     default-property-inclusion: NON_NULL
   liquibase:
-    change-log: classpath:db/changelog/db.changelog-root.xml
+    change-log: classpath:db/db.changelog-root.yaml
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml
 
 jwt:
   secret: hfbvhfabvkhefbvhrbvvrheferhfbcenvfdvbfavjfdvlafjdbvjfdbvjfnvjkdsncjk
-  expiration:
-    access: 5
-    refresh: 30
+  access: 5
+  refresh: 30
