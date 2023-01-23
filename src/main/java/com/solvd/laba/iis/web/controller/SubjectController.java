@@ -10,6 +10,9 @@ import com.solvd.laba.iis.web.dto.validation.OnCreateGroup;
 import com.solvd.laba.iis.web.dto.validation.OnUpdateGroup;
 import com.solvd.laba.iis.web.mapper.SubjectMapper;
 import com.solvd.laba.iis.web.mapper.TeacherInfoMapper;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -20,6 +23,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/subjects")
+@Tag(name = "Subject Controller", description = "Methods for working with subjects")
 public class SubjectController {
 
     private final SubjectService subjectService;
@@ -28,6 +32,7 @@ public class SubjectController {
     private final TeacherInfoMapper teacherInfoMapper;
 
     @GetMapping
+    @Operation(summary = "Get all subjects")
     public List<SubjectDto> getAll() {
         List<Subject> subjects = subjectService.retrieveAll();
         List<SubjectDto> subjectDtos = subjectMapper.entityToDto(subjects);
@@ -35,14 +40,16 @@ public class SubjectController {
     }
 
     @GetMapping("/{id}")
-    public SubjectDto getById(@PathVariable Long id) {
+    @Operation(summary = "Get subject by id")
+    public SubjectDto getById(@PathVariable @Parameter(description = "Subject's id") Long id) {
         Subject subject = subjectService.retrieveById(id);
         SubjectDto subjectDto = subjectMapper.entityToDto(subject);
         return subjectDto;
     }
 
     @GetMapping("/{id}/teachers")
-    public List<TeacherInfoDto> getTeachers(@PathVariable Long id) {
+    @Operation(summary = "Get teachers by subject")
+    public List<TeacherInfoDto> getTeachers(@PathVariable @Parameter(description = "Subject's id") Long id) {
         List<TeacherInfo> teachers = teacherService.retrieveBySubject(id);
         List<TeacherInfoDto> teacherDtos = teacherInfoMapper.entityToDto(teachers);
         return teacherDtos;
@@ -50,7 +57,8 @@ public class SubjectController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public SubjectDto create(@RequestBody @Validated(OnCreateGroup.class) SubjectDto subjectDto) {
+    @Operation(summary = "Create new subject")
+    public SubjectDto create(@RequestBody @Validated(OnCreateGroup.class) @Parameter(description = "Information about subject") SubjectDto subjectDto) {
         Subject subject = subjectMapper.dtoToEntity(subjectDto);
         subject = subjectService.create(subject);
         subjectDto = subjectMapper.entityToDto(subject);
@@ -59,12 +67,14 @@ public class SubjectController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) {
+    @Operation(summary = "Delete subject")
+    public void delete(@PathVariable @Parameter(description = "Subject's id") Long id) {
         subjectService.delete(id);
     }
 
     @PutMapping
-    public SubjectDto update(@RequestBody @Validated(OnUpdateGroup.class) SubjectDto subjectDto) {
+    @Operation(summary = "Update information about subject")
+    public SubjectDto update(@RequestBody @Validated(OnUpdateGroup.class) @Parameter(description = "Information about subject") SubjectDto subjectDto) {
         Subject subject = subjectMapper.dtoToEntity(subjectDto);
         subject = subjectService.update(subject);
         subjectDto = subjectMapper.entityToDto(subject);
