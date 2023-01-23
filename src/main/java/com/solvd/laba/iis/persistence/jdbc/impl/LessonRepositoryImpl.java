@@ -24,10 +24,10 @@ public class LessonRepositoryImpl implements LessonRepository {
             teachers_info.id as teacher_id,
             users_info.id as user_id, users_info.name as user_name, users_info.surname as user_surname, users_info.email as user_email, users_info.password as user_password, users_info.role as user_role
             FROM lessons
-            LEFT JOIN subjects ON (lessons.subject_id = subjects.id)
-            LEFT JOIN groups ON (lessons.group_id = groups.id)
-            LEFT JOIN teachers_info ON (lessons.teacher_id = teachers_info.id)
-            LEFT JOIN users_info ON (teachers_info.user_id = users_info.id) """;
+            LEFT JOIN subjects ON lessons.subject_id = subjects.id
+            LEFT JOIN groups ON lessons.group_id = groups.id
+            LEFT JOIN teachers_info ON lessons.teacher_id = teachers_info.id
+            LEFT JOIN users_info ON teachers_info.user_id = users_info.id""";
     private static final String CREATE_QUERY = "INSERT INTO lessons (room, weekday, start_time, end_time, subject_id, group_id, teacher_id) VALUES(?, ?, ?, ?, ?, ?, ?)";
     private static final String DELETE_QUERY = "DELETE FROM lessons WHERE id = ?";
     private static final String UPDATE_QUERY = "UPDATE lessons SET room = ?, weekday = ?, start_time = ?, end_time = ?, subject_id = ?, group_id = ?, teacher_id = ? WHERE id = ?";
@@ -49,7 +49,7 @@ public class LessonRepositoryImpl implements LessonRepository {
     @Override
     public Optional<Lesson> findById(Long id) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + "WHERE lessons.id = ?")) {
+             PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + " WHERE lessons.id = ?")) {
             statement.setLong(1, id);
             try (ResultSet rs = statement.executeQuery()) {
                 return rs.next() ? Optional.of(LessonRowMapper.mapRow(rs)) : Optional.empty();
@@ -85,14 +85,14 @@ public class LessonRepositoryImpl implements LessonRepository {
 
     private String updateStudentQuery(Long groupId, LessonSearchCriteria lessonSearchCriteria) {
         return Objects.nonNull(lessonSearchCriteria.getWeekday()) ?
-                FIND_ALL_QUERY + "WHERE groups.id = " + groupId + " AND lessons.weekday = \'" + lessonSearchCriteria.getWeekday().toUpperCase() + "\'" :
-                FIND_ALL_QUERY + "WHERE groups.id = " + groupId;
+                FIND_ALL_QUERY + " WHERE groups.id = " + groupId + " AND lessons.weekday = \'" + lessonSearchCriteria.getWeekday().toUpperCase() + "\'" :
+                FIND_ALL_QUERY + " WHERE groups.id = " + groupId;
     }
 
     private String updateTeacherQuery(Long teacherId, LessonSearchCriteria lessonSearchCriteria) {
         return Objects.nonNull(lessonSearchCriteria.getWeekday()) ?
-                FIND_ALL_QUERY + "WHERE teachers_info.id = " + teacherId + " AND lessons.weekday = \'" + lessonSearchCriteria.getWeekday().toUpperCase() + "\'" :
-                FIND_ALL_QUERY + "WHERE teachers_info.id = " + teacherId;
+                FIND_ALL_QUERY + " WHERE teachers_info.id = " + teacherId + " AND lessons.weekday = \'" + lessonSearchCriteria.getWeekday().toUpperCase() + "\'" :
+                FIND_ALL_QUERY + " WHERE teachers_info.id = " + teacherId;
     }
 
     @Override

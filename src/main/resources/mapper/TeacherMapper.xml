@@ -42,6 +42,17 @@
         WHERE teachers_info.id = #{id}
     </select>
 
+    <select id="findByUserId" parameterType="java.lang.Long" resultMap="TeacherResultMap">
+        <include refid="SetFields"/>
+        WHERE teachers_info.user_id = #{userId}
+    </select>
+
+    <select id="findByMarkId" parameterType="java.lang.Long" resultMap="TeacherResultMap">
+        <include refid="SetFields"/>
+        LEFT JOIN iis.marks ON marks.teacher_id = teachers_info.id
+        WHERE marks.id = #{markId}
+    </select>
+
     <select id="findByGroup" parameterType="java.lang.Long" resultMap="TeacherResultMap">
         <include refid="SetFields"/>
         LEFT JOIN lessons ON (teachers_info.id = lessons.teacher_id)

@@ -11,6 +11,8 @@ public interface GroupService {
 
     Group retrieveById(Long id);
 
+    List<Group> retrieveByTeacherAndSubject(Long teacherId, Long subjectId);
+
     List<Group> retrieveByCriteria(Long teacherId, GroupSearchCriteria groupSearchCriteria);
 
     Group create(Group group);

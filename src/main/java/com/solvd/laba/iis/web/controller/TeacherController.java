@@ -26,6 +26,7 @@ import com.solvd.laba.iis.web.mapper.criteria.GroupSearchCriteriaMapper;
 import com.solvd.laba.iis.web.mapper.criteria.LessonSearchCriteriaMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,6 +56,7 @@ public class TeacherController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAccessForTeacher(#id)")
     public TeacherInfoDto getById(@PathVariable Long id) {
         TeacherInfo teacher = teacherService.retrieveById(id);
         TeacherInfoDto teacherDto = teacherInfoMapper.entityToDto(teacher);
@@ -62,6 +64,7 @@ public class TeacherController {
     }
 
     @GetMapping("/{id}/groups")
+    @PreAuthorize("hasAccessForTeacher(#id)")
     public List<GroupDto> getGroups(@PathVariable Long id,
                                     GroupSearchCriteriaDto groupSearchCriteriaDto) {
         GroupSearchCriteria groupSearchCriteria = groupSearchCriteriaMapper.dtoToEntity(groupSearchCriteriaDto);
@@ -71,6 +74,7 @@ public class TeacherController {
     }
 
     @GetMapping("/{id}/lessons")
+    @PreAuthorize("hasAccessForTeacher(#id)")
     public List<LessonDto> getLessons(@PathVariable Long id,
                                       LessonSearchCriteriaDto lessonSearchCriteriaDto) {
         LessonSearchCriteria lessonSearchCriteria = lessonSearchCriteriaMapper.dtoToEntity(lessonSearchCriteriaDto);
@@ -80,6 +84,7 @@ public class TeacherController {
     }
 
     @GetMapping("/{id}/subjects/{subject_id}/marks")
+    @PreAuthorize("hasAccessToSubject(#id, #subjectId)")
     public List<MarkDto> getMarks(@PathVariable Long id,
                                   @PathVariable(name = "subject_id") Long subjectId) {
         List<Mark> marks = markService.retrieveByTeacher(subjectId, id);

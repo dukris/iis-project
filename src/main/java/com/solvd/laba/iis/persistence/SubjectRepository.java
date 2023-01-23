@@ -13,6 +13,8 @@ public interface SubjectRepository {
 
     Optional<Subject> findById(Long id);
 
+    List<Subject> findByTeacher(Long teacherId);
+
     boolean isExist(String name);
 
     void create(Subject subject);

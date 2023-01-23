@@ -34,7 +34,7 @@ public class UserRepositoryImpl implements UserRepository {
                 return UserRowMapper.mapRows(rs);
             }
         } catch (SQLException ex) {
-            throw new ResourceMappingException("Exception occurred while finding all userInfos", ex);
+            throw new ResourceMappingException("Exception occurred while finding all users", ex);
         }
     }
 
@@ -48,6 +48,19 @@ public class UserRepositoryImpl implements UserRepository {
             }
         } catch (SQLException ex) {
             throw new ResourceMappingException("Exception occurred while finding user by id = " + id, ex);
+        }
+    }
+
+    @Override
+    public Optional<UserInfo> findByEmail(String email) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + " WHERE email = ?")) {
+            statement.setString(1, email);
+            try (ResultSet rs = statement.executeQuery()) {
+                return rs.next() ? Optional.of(UserRowMapper.mapRow(rs)) : Optional.empty();
+            }
+        } catch (SQLException ex) {
+            throw new ResourceMappingException("Exception occurred while finding user by email = " + email, ex);
         }
     }
 

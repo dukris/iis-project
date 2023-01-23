@@ -15,6 +15,8 @@ public interface StudentRepository {
 
     Optional<StudentInfo> findById(Long id);
 
+    Optional<StudentInfo> findByUserId(Long userId);
+
     List<StudentInfo> findByCriteria(@Param("studentSearchCriteria") StudentSearchCriteria studentSearchCriteria);
 
     List<StudentInfo> findByGroup(Long groupId);

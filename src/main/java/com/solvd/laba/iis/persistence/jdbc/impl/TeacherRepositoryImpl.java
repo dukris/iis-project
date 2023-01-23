@@ -21,9 +21,9 @@ public class TeacherRepositoryImpl implements TeacherRepository {
             users_info.email as user_email, users_info.password as user_password, users_info.role as user_role,
             subjects.id as subject_id, subjects.name as subject_name
             FROM teachers_info
-            LEFT JOIN users_info ON (teachers_info.user_id = users_info.id)
-            LEFT JOIN teachers_subjects ON (teachers_info.id = teachers_subjects.teacher_id)
-            LEFT JOIN subjects ON (teachers_subjects.subject_id = subjects.id) """;
+            LEFT JOIN users_info ON teachers_info.user_id = users_info.id
+            LEFT JOIN teachers_subjects ON teachers_info.id = teachers_subjects.teacher_id
+            LEFT JOIN subjects ON teachers_subjects.subject_id = subjects.id""";
     private static final String CREATE_QUERY = "INSERT INTO teachers_info (user_id) VALUES(?)";
     private static final String DELETE_QUERY = "DELETE FROM teachers_info WHERE id = ?";
     private static final String UPDATE_QUERY = "UPDATE teachers_info SET user_id = ? WHERE id = ?";
@@ -47,7 +47,7 @@ public class TeacherRepositoryImpl implements TeacherRepository {
     @Override
     public Optional<TeacherInfo> findById(Long id) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + "WHERE teachers_info.id = ?")) {
+             PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + " WHERE teachers_info.id = ?")) {
             statement.setLong(1, id);
             try (ResultSet rs = statement.executeQuery()) {
                 return rs.next() ? Optional.of(TeacherRowMapper.mapRow(rs)) : Optional.empty();
@@ -58,8 +58,35 @@ public class TeacherRepositoryImpl implements TeacherRepository {
     }
 
     @Override
+    public Optional<TeacherInfo> findByUserId(Long userId) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + " WHERE teachers_info.user_id = ?")) {
+            statement.setLong(1, userId);
+            try (ResultSet rs = statement.executeQuery()) {
+                return rs.next() ? Optional.of(TeacherRowMapper.mapRow(rs)) : Optional.empty();
+            }
+        } catch (SQLException ex) {
+            throw new ResourceMappingException("Exception occurred while finding teacher by user's id = " + userId, ex);
+        }
+    }
+
+    @Override
+    public Optional<TeacherInfo> findByMarkId(Long markId) {
+        String joinQuery = " LEFT JOIN iis.marks ON marks.teacher_id = teachers_info.id ";
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + joinQuery+ "WHERE marks.id = ?")) {
+            statement.setLong(1, markId);
+            try (ResultSet rs = statement.executeQuery()) {
+                return rs.next() ? Optional.of(TeacherRowMapper.mapRow(rs)) : Optional.empty();
+            }
+        } catch (SQLException ex) {
+            throw new ResourceMappingException("Exception occurred while finding teacher by mark's id = " + markId, ex);
+        }
+    }
+
+    @Override
     public List<TeacherInfo> findByGroup(Long groupId) {
-        String joinQuery = "LEFT JOIN lessons ON (teachers_info.id = lessons.teacher_id) ";
+        String joinQuery = " LEFT JOIN lessons ON teachers_info.id = lessons.teacher_id ";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + joinQuery + "WHERE lessons.group_id = ?")) {
             statement.setLong(1, groupId);
@@ -74,7 +101,7 @@ public class TeacherRepositoryImpl implements TeacherRepository {
     @Override
     public List<TeacherInfo> findBySubject(Long subjectId) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + "WHERE subjects.id = ?")) {
+             PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + " WHERE subjects.id = ?")) {
             statement.setLong(1, subjectId);
             try (ResultSet rs = statement.executeQuery()) {
                 return TeacherRowMapper.mapRowsBySubject(rs);

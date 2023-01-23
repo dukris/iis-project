@@ -1,11 +1,21 @@
 package com.solvd.laba.iis.web.controller;
 
 import com.solvd.laba.iis.domain.UserInfo;
+import com.solvd.laba.iis.domain.security.JwtRefreshRequest;
+import com.solvd.laba.iis.domain.security.JwtRequest;
+import com.solvd.laba.iis.domain.security.JwtResponse;
 import com.solvd.laba.iis.service.UserService;
 import com.solvd.laba.iis.web.dto.UserInfoDto;
+import com.solvd.laba.iis.web.dto.security.JwtRefreshRequestDto;
+import com.solvd.laba.iis.web.dto.security.JwtRequestDto;
+import com.solvd.laba.iis.web.dto.security.JwtResponseDto;
 import com.solvd.laba.iis.web.dto.validation.OnCreateGroup;
 import com.solvd.laba.iis.web.dto.validation.OnUpdateGroup;
 import com.solvd.laba.iis.web.mapper.UserInfoMapper;
+import com.solvd.laba.iis.web.mapper.security.JwtRefreshRequestMapper;
+import com.solvd.laba.iis.web.mapper.security.JwtRequestMapper;
+import com.solvd.laba.iis.web.mapper.security.JwtResponseMapper;
+import com.solvd.laba.iis.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -19,7 +29,11 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final AuthenticationService authenticationService;
     private final UserInfoMapper userInfoMapper;
+    private final JwtRequestMapper jwtRequestMapper;
+    private final JwtResponseMapper jwtResponseMapper;
+    private final JwtRefreshRequestMapper jwtRefreshRequestMapper;
 
     @GetMapping
     public List<UserInfoDto> getAll() {
@@ -56,6 +70,22 @@ public class UserController {
         userInfo = userService.update(userInfo);
         userInfoDto = userInfoMapper.entityToDto(userInfo);
         return userInfoDto;
+    }
+
+    @PostMapping("/login")
+    public JwtResponseDto login(@RequestBody JwtRequestDto jwtRequestDto) {
+        JwtRequest jwtRequest = jwtRequestMapper.dtoToEntity(jwtRequestDto);
+        JwtResponse jwtResponse = authenticationService.login(jwtRequest);
+        JwtResponseDto jwtResponseDto = jwtResponseMapper.entityToDto(jwtResponse);
+        return jwtResponseDto;
+    }
+
+    @PostMapping("/refresh")
+    public JwtResponseDto getNewRefreshToken(@RequestBody JwtRefreshRequestDto jwtRefreshRequestDto) {
+        JwtRefreshRequest jwtRefreshRequest = jwtRefreshRequestMapper.dtoToEntity(jwtRefreshRequestDto);
+        JwtResponse jwtResponse = authenticationService.refresh(jwtRefreshRequest);
+        JwtResponseDto jwtResponseDto = jwtResponseMapper.entityToDto(jwtResponse);
+        return jwtResponseDto;
     }
 
 }

@@ -1,12 +1,14 @@
 package com.solvd.laba.iis.web.controller;
 
+import com.solvd.laba.iis.domain.exception.AuthenticationException;
 import com.solvd.laba.iis.domain.exception.ResourceAlreadyExistsException;
-import com.solvd.laba.iis.domain.exception.ResourceMappingException;
 import com.solvd.laba.iis.domain.exception.ResourceDoesNotExistException;
+import com.solvd.laba.iis.domain.exception.ResourceMappingException;
 import com.solvd.laba.iis.web.dto.ErrorDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -59,6 +61,24 @@ public class ControllerAdvice {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorDto handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
+        ErrorDto errorDto = new ErrorDto();
+        errorDto.setMessage(ex.getMessage());
+        log.error(ex.getMessage(), ex);
+        return errorDto;
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorDto handleJwtAuthenticationException(AuthenticationException ex) {
+        ErrorDto errorDto = new ErrorDto();
+        errorDto.setMessage(ex.getMessage());
+        log.error(ex.getMessage(), ex);
+        return errorDto;
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorDto handleAccessDeniedException(AccessDeniedException ex) {
         ErrorDto errorDto = new ErrorDto();
         errorDto.setMessage(ex.getMessage());
         log.error(ex.getMessage(), ex);

@@ -23,6 +23,12 @@
         WHERE groups.id = #{id}
     </select>
 
+    <select id="findByTeacherAndSubject" resultMap="GroupResultMap">
+        <include refid="SetFields"/>
+        LEFT JOIN iis.lessons ON groups.id = lessons.group_id
+        WHERE lessons.teacher_id = #{teacherId} AND lessons.subject_id = #{subjectId}
+    </select>
+
     <select id="isExist" parameterType="java.lang.Integer" resultType="java.lang.Boolean">
         SELECT EXISTS(SELECT 1 FROM groups WHERE groups.number = #{number})
     </select>

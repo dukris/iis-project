@@ -44,6 +44,11 @@
         WHERE students_info.id = #{id}
     </select>
 
+    <select id="findByUserId" parameterType="java.lang.Long" resultMap="StudentResultMap">
+        <include refid="SetFields"/>
+        WHERE students_info.user_id = #{userId}
+    </select>
+
     <select id="findByGroup" parameterType="java.lang.Long" resultMap="StudentResultMap">
         <include refid="SetFields"/>
         WHERE students_info.group_id = #{groupId}

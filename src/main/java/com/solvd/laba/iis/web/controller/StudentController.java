@@ -18,6 +18,7 @@ import com.solvd.laba.iis.web.mapper.criteria.MarkSearchCriteriaMapper;
 import com.solvd.laba.iis.web.mapper.criteria.StudentSearchCriteriaMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,6 +44,7 @@ public class StudentController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAccessForStudent(#id)")
     public StudentInfoDto getById(@PathVariable Long id) {
         StudentInfo student = studentService.retrieveById(id);
         StudentInfoDto studentDto = studentInfoMapper.entityToDto(student);
@@ -58,6 +60,7 @@ public class StudentController {
     }
 
     @GetMapping("/{id}/marks")
+    @PreAuthorize("hasAccessForStudent(#id)")
     public List<MarkDto> getMarks(@PathVariable Long id,
                                   MarkSearchCriteriaDto markSearchCriteriaDto) {
         MarkSearchCriteria markSearchCriteria = markSearchCriteriaMapper.dtoToEntity(markSearchCriteriaDto);

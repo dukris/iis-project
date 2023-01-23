@@ -15,6 +15,8 @@ public interface GroupRepository {
 
     Optional<Group> findById(Long id);
 
+    List<Group> findByTeacherAndSubject(@Param("teacherId")Long teacherId, @Param("subjectId") Long subjectId);
+
     boolean isExist(Integer number);
 
     List<Group> findByCriteria(@Param("teacherId") Long teacherId, @Param("groupSearchCriteria") GroupSearchCriteria groupSearchCriteria);

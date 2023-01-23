@@ -29,6 +29,11 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
+    public List<Subject> retrieveByTeacher(Long teacherId) {
+        return subjectRepository.findByTeacher(teacherId);
+    }
+
+    @Override
     @Transactional
     public Subject create(Subject subject) {
         if (subjectRepository.isExist(subject.getName())) {

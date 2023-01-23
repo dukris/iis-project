@@ -29,6 +29,12 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    public StudentInfo retrieveByUserId(Long userId) {
+        return studentRepository.findByUserId(userId)
+                .orElseThrow(() -> new ResourceDoesNotExistException("Student with user's id = " + userId + " not found"));
+    }
+
+    @Override
     public List<StudentInfo> retrieveByGroup(Long groupId) {
         return studentRepository.findByGroup(groupId);
     }

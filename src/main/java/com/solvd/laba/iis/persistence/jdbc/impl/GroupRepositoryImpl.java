@@ -17,11 +17,11 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class GroupRepositoryImpl implements GroupRepository {
 
-    private static final String FIND_ALL_QUERY = "SELECT DISTINCT groups.id as group_id, groups.number as group_number FROM iis.groups ";
-    private static final String IS_EXIST_QUERY = "SELECT groups.id as group_id FROM iis.groups WHERE number = ?";
-    private static final String CREATE_QUERY = "INSERT INTO iis.groups (number) VALUES (?)";
-    private static final String DELETE_QUERY = "DELETE FROM iis.groups WHERE id = ?";
-    private static final String UPDATE_QUERY = "UPDATE iis.groups SET number = ? WHERE id = ?";
+    private static final String FIND_ALL_QUERY = "SELECT DISTINCT groups.id as group_id, groups.number as group_number FROM groups ";
+    private static final String IS_EXIST_QUERY = "SELECT groups.id as group_id FROM groups WHERE number = ?";
+    private static final String CREATE_QUERY = "INSERT INTO groups (number) VALUES (?)";
+    private static final String DELETE_QUERY = "DELETE FROM groups WHERE id = ?";
+    private static final String UPDATE_QUERY = "UPDATE groups SET number = ? WHERE id = ?";
 
     private final DataSource dataSource;
 
@@ -51,6 +51,21 @@ public class GroupRepositoryImpl implements GroupRepository {
     }
 
     @Override
+    public List<Group> findByTeacherAndSubject(Long teacherId, Long subjectId) {
+        String joinQuery = "LEFT JOIN lessons ON groups.id = lessons.group_id ";
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(FIND_ALL_QUERY + joinQuery + "WHERE lessons.teacher_id = ? AND lessons.subject_id = ?")) {
+            statement.setLong(1, teacherId);
+            statement.setLong(2, subjectId);
+            try (ResultSet rs = statement.executeQuery()) {
+                return GroupRowMapper.mapRows(rs);
+            }
+        } catch (SQLException ex) {
+            throw new ResourceMappingException("Exception occurred while finding group by teacher's id = " + teacherId + " and subject's id = " + subjectId, ex);
+        }
+    }
+
+    @Override
     public boolean isExist(Integer number) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(IS_EXIST_QUERY)) {
@@ -76,7 +91,7 @@ public class GroupRepositoryImpl implements GroupRepository {
     }
 
     private String updateQuery(Long teacherId, GroupSearchCriteria groupSearchCriteria) {
-        String joinQuery = "LEFT JOIN lessons ON (lessons.group_id = groups.id) ";
+        String joinQuery = "LEFT JOIN lessons ON lessons.group_id = groups.id ";
         return Objects.nonNull(groupSearchCriteria.getSubjectId()) ?
                 FIND_ALL_QUERY + joinQuery + "WHERE lessons.teacher_id = " + teacherId + " AND lessons.subject_id = " + groupSearchCriteria.getSubjectId() :
                 FIND_ALL_QUERY + joinQuery + "WHERE lessons.teacher_id = " + teacherId;
