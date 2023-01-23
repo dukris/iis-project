@@ -22,7 +22,7 @@ import org.springframework.security.web.access.ExceptionTranslationFilter;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
-    private static final String[] PERMITTED_REQUESTS = {"/api/v1/users/login", "/api/v1/users/refresh", "/api/v1/swagger-ui.html", "/api/v1/swagger-ui/*", "/api/v1/swagger-ui/**"};
+    private static final String[] PERMITTED_REQUESTS = {"/api/v1/users/login", "/api/v1/users/refresh"};
     private static final String[] COMMON_GET_REQUESTS = {"/api/v1/lessons/**", "/api/v1/marks/**", "/api/v1/groups/**", "/api/v1/subjects/**"};
     private static final String[] TEACHER_GET_REQUESTS = {"/api/v1/teachers/**"};
     private static final String[] TEACHER_OTHER_REQUESTS = {"/api/v1/marks", "/api/v1/marks/*"};
@@ -51,7 +51,7 @@ public class SecurityConfig {
                 })
                 .and()
                 .authorizeHttpRequests()
-//                .requestMatchers(PERMITTED_REQUESTS).permitAll()
+                .requestMatchers(PERMITTED_REQUESTS).permitAll()
                 .requestMatchers(HttpMethod.GET, COMMON_GET_REQUESTS).authenticated()
                 .requestMatchers(HttpMethod.GET, TEACHER_GET_REQUESTS).hasAnyRole("TEACHER", "ADMIN")
                 .requestMatchers(TEACHER_OTHER_REQUESTS).hasAnyRole("TEACHER", "ADMIN")

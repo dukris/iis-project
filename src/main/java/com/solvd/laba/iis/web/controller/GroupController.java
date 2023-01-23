@@ -51,16 +51,14 @@ public class GroupController {
     @Operation(summary = "Get all groups")
     public List<GroupDto> getAll() {
         List<Group> groups = groupService.retrieveAll();
-        List<GroupDto> groupDtos = groupMapper.entityToDto(groups);
-        return groupDtos;
+        return groupMapper.entityToDto(groups);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get group by id")
     public GroupDto getById(@PathVariable @Parameter(description = "Group's id") Long id) {
         Group group = groupService.retrieveById(id);
-        GroupDto groupDto = groupMapper.entityToDto(group);
-        return groupDto;
+        return groupMapper.entityToDto(group);
     }
 
     @GetMapping("/{id}/lessons")
@@ -69,24 +67,21 @@ public class GroupController {
                                       @Parameter(description = "Criteria for searching lessons") LessonSearchCriteriaDto lessonSearchCriteriaDto) {
         LessonSearchCriteria lessonSearchCriteria = lessonSearchCriteriaMapper.dtoToEntity(lessonSearchCriteriaDto);
         List<Lesson> lessons = lessonService.retrieveByStudentCriteria(id, lessonSearchCriteria);
-        List<LessonDto> lessonDtos = lessonMapper.entityToDto(lessons);
-        return lessonDtos;
+        return lessonMapper.entityToDto(lessons);
     }
 
     @GetMapping("/{id}/students")
     @Operation(summary = "Get students by group")
     public List<StudentInfoDto> getStudents(@PathVariable @Parameter(description = "Group's id") Long id) {
         List<StudentInfo> students = studentService.retrieveByGroup(id);
-        List<StudentInfoDto> studentDtos = studentInfoMapper.entityToDto(students);
-        return studentDtos;
+        return studentInfoMapper.entityToDto(students);
     }
 
     @GetMapping("/{id}/teachers")
     @Operation(summary = "Get teachers by group")
     public List<TeacherInfoDto> getTeachers(@PathVariable @Parameter(description = "Group's id") Long id) {
         List<TeacherInfo> teachers = teacherService.retrieveByGroup(id);
-        List<TeacherInfoDto> teacherDtos = teacherInfoMapper.entityToDto(teachers);
-        return teacherDtos;
+        return teacherInfoMapper.entityToDto(teachers);
     }
 
     @PostMapping

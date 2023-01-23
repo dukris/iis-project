@@ -44,8 +44,7 @@ public class StudentController {
     @Operation(summary = "Get all students")
     public List<StudentInfoDto> getAll() {
         List<StudentInfo> students = studentService.retrieveAll();
-        List<StudentInfoDto> studentDtos = studentInfoMapper.entityToDto(students);
-        return studentDtos;
+        return studentInfoMapper.entityToDto(students);
     }
 
     @GetMapping("/{id}")
@@ -53,8 +52,7 @@ public class StudentController {
     @Operation(summary = "Get student by id")
     public StudentInfoDto getById(@PathVariable @Parameter(description = "Student's id") Long id) {
         StudentInfo student = studentService.retrieveById(id);
-        StudentInfoDto studentDto = studentInfoMapper.entityToDto(student);
-        return studentDto;
+        return studentInfoMapper.entityToDto(student);
     }
 
     @GetMapping("/search")
@@ -62,8 +60,7 @@ public class StudentController {
     public List<StudentInfoDto> getByCriteria(@Parameter(description = "Criteria for searching students") StudentSearchCriteriaDto studentSearchCriteriaDto) {
         StudentSearchCriteria studentSearchCriteria = studentSearchCriteriaMapper.dtoToEntity(studentSearchCriteriaDto);
         List<StudentInfo> students = studentService.retrieveByCriteria(studentSearchCriteria);
-        List<StudentInfoDto> studentDtos = studentInfoMapper.entityToDto(students);
-        return studentDtos;
+        return studentInfoMapper.entityToDto(students);
     }
 
     @GetMapping("/{id}/marks")
@@ -73,8 +70,7 @@ public class StudentController {
                                   @Parameter(description = "Criteria for searching marks") MarkSearchCriteriaDto markSearchCriteriaDto) {
         MarkSearchCriteria markSearchCriteria = markSearchCriteriaMapper.dtoToEntity(markSearchCriteriaDto);
         List<Mark> marks = markService.retrieveByCriteria(id, markSearchCriteria);
-        List<MarkDto> markDtos = markMapper.entityToDto(marks);
-        return markDtos;
+        return markMapper.entityToDto(marks);
     }
 
     @PostMapping

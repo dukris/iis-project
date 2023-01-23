@@ -43,16 +43,14 @@ public class UserController {
     @Operation(summary = "Get all users")
     public List<UserInfoDto> getAll() {
         List<UserInfo> users = userService.retrieveAll();
-        List<UserInfoDto> userDtos = userInfoMapper.entityToDto(users);
-        return userDtos;
+        return userInfoMapper.entityToDto(users);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get user by id")
     public UserInfoDto getById(@PathVariable @Parameter(description = "User's id") Long id) {
         UserInfo user = userService.retrieveById(id);
-        UserInfoDto userDto = userInfoMapper.entityToDto(user);
-        return userDto;
+        return userInfoMapper.entityToDto(user);
     }
 
     @PostMapping
@@ -68,7 +66,7 @@ public class UserController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Delete user")
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable @Parameter(description = "User's id") Long id) {
         userService.delete(id);
     }
 
@@ -86,8 +84,7 @@ public class UserController {
     public JwtResponseDto login(@RequestBody @Parameter(description = "JWT Request") JwtRequestDto jwtRequestDto) {
         JwtRequest jwtRequest = jwtRequestMapper.dtoToEntity(jwtRequestDto);
         JwtResponse jwtResponse = authenticationService.login(jwtRequest);
-        JwtResponseDto jwtResponseDto = jwtResponseMapper.entityToDto(jwtResponse);
-        return jwtResponseDto;
+        return jwtResponseMapper.entityToDto(jwtResponse);
     }
 
     @PostMapping("/refresh")
@@ -95,8 +92,7 @@ public class UserController {
     public JwtResponseDto refresh(@RequestBody @Parameter(description = "JWT Refresh request") JwtRefreshRequestDto jwtRefreshRequestDto) {
         JwtRefreshRequest jwtRefreshRequest = jwtRefreshRequestMapper.dtoToEntity(jwtRefreshRequestDto);
         JwtResponse jwtResponse = authenticationService.refresh(jwtRefreshRequest);
-        JwtResponseDto jwtResponseDto = jwtResponseMapper.entityToDto(jwtResponse);
-        return jwtResponseDto;
+        return jwtResponseMapper.entityToDto(jwtResponse);
     }
 
 }

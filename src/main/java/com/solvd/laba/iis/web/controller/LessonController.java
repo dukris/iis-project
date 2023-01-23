@@ -29,16 +29,14 @@ public class LessonController {
     @Operation(summary = "Get all lessons")
     public List<LessonDto> getAll() {
         List<Lesson> lessons = lessonService.retrieveAll();
-        List<LessonDto> lessonDtos = lessonMapper.entityToDto(lessons);
-        return lessonDtos;
+        return lessonMapper.entityToDto(lessons);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get lesson by id")
     public LessonDto getById(@PathVariable @Parameter(description = "Lesson's id") Long id) {
         Lesson lesson = lessonService.retrieveById(id);
-        LessonDto lessonDto = lessonMapper.entityToDto(lesson);
-        return lessonDto;
+        return lessonMapper.entityToDto(lesson);
     }
 
     @PostMapping

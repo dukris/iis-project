@@ -40,14 +40,13 @@ public class JwtServiceImpl implements JwtService {
         LocalDateTime now = LocalDateTime.now();
         Instant accessExpirationInstant = now.plusMinutes(jwtProperties.getAccess()).atZone(ZoneId.systemDefault()).toInstant();
         Date accessExpiration = Date.from(accessExpirationInstant);
-        String token = Jwts.builder()
+        return Jwts.builder()
                 .setSubject(user.getEmail())
                 .setExpiration(accessExpiration)
                 .signWith(secret)
                 .claim("id", user.getId())
                 .claim("role", user.getRole())
                 .compact();
-        return token;
     }
 
     @Override
@@ -55,12 +54,11 @@ public class JwtServiceImpl implements JwtService {
         LocalDateTime now = LocalDateTime.now();
         Instant refreshExpirationInstant = now.plusDays(jwtProperties.getRefresh()).atZone(ZoneId.systemDefault()).toInstant();
         Date refreshExpiration = Date.from(refreshExpirationInstant);
-        String token = Jwts.builder()
+        return Jwts.builder()
                 .setSubject(user.getEmail())
                 .setExpiration(refreshExpiration)
                 .signWith(secret)
                 .compact();
-        return token;
     }
 
     @Override
@@ -80,8 +78,7 @@ public class JwtServiceImpl implements JwtService {
     @Override
     public Authentication getAuthenticationForUser(JwtUser jwtUser) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(jwtUser.getEmail());
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
-        return authenticationToken;
+        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
 }

@@ -19,7 +19,3 @@ jwt:
   secret: hfbvhfabvkhefbvhrbvvrheferhfbcenvfdvbfavjfdvlafjdbvjfdbvjfnvjkdsncjk
   access: 5
   refresh: 30
-
-#springdoc:
-#  swagger-ui:
-#    path: /swagger-ui.html
