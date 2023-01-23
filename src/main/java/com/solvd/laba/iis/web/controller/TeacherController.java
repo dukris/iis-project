@@ -51,16 +51,14 @@ public class TeacherController {
     @GetMapping
     public List<TeacherInfoDto> getAll() {
         List<TeacherInfo> teachers = teacherService.retrieveAll();
-        List<TeacherInfoDto> teacherDtos = teacherInfoMapper.entityToDto(teachers);
-        return teacherDtos;
+        return teacherInfoMapper.entityToDto(teachers);
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAccessForTeacher(#id)")
     public TeacherInfoDto getById(@PathVariable Long id) {
         TeacherInfo teacher = teacherService.retrieveById(id);
-        TeacherInfoDto teacherDto = teacherInfoMapper.entityToDto(teacher);
-        return teacherDto;
+        return teacherInfoMapper.entityToDto(teacher);
     }
 
     @GetMapping("/{id}/groups")
@@ -69,8 +67,7 @@ public class TeacherController {
                                     GroupSearchCriteriaDto groupSearchCriteriaDto) {
         GroupSearchCriteria groupSearchCriteria = groupSearchCriteriaMapper.dtoToEntity(groupSearchCriteriaDto);
         List<Group> groups = groupService.retrieveByCriteria(id, groupSearchCriteria);
-        List<GroupDto> groupDtos = groupMapper.entityToDto(groups);
-        return groupDtos;
+        return groupMapper.entityToDto(groups);
     }
 
     @GetMapping("/{id}/lessons")
@@ -79,17 +76,15 @@ public class TeacherController {
                                       LessonSearchCriteriaDto lessonSearchCriteriaDto) {
         LessonSearchCriteria lessonSearchCriteria = lessonSearchCriteriaMapper.dtoToEntity(lessonSearchCriteriaDto);
         List<Lesson> lessons = lessonService.retrieveByTeacherCriteria(id, lessonSearchCriteria);
-        List<LessonDto> lessonDtos = lessonMapper.entityToDto(lessons);
-        return lessonDtos;
+        return lessonMapper.entityToDto(lessons);
     }
 
-    @GetMapping("/{id}/subjects/{subject_id}/marks")
+    @GetMapping("/{id}/subjects/{subjectId}/marks")
     @PreAuthorize("hasAccessToSubject(#id, #subjectId)")
     public List<MarkDto> getMarks(@PathVariable Long id,
-                                  @PathVariable(name = "subject_id") Long subjectId) {
+                                  @PathVariable Long subjectId) {
         List<Mark> marks = markService.retrieveByTeacher(subjectId, id);
-        List<MarkDto> markDtos = markMapper.entityToDto(marks);
-        return markDtos;
+        return markMapper.entityToDto(marks);
     }
 
     @PostMapping
@@ -118,14 +113,14 @@ public class TeacherController {
     @PostMapping("/{id}/subjects")
     @ResponseStatus(HttpStatus.CREATED)
     public void addSubject(@PathVariable Long id,
-                           @RequestParam(name = "subject_id") Long subjectId) {
+                           @RequestParam Long subjectId) {
         teacherService.addSubjectForTeacher(id, subjectId);
     }
 
-    @DeleteMapping("/{id}/subjects/{subject_id}")
+    @DeleteMapping("/{id}/subjects/{subjectId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteSubject(@PathVariable Long id,
-                              @PathVariable(name = "subject_id") Long subjectId) {
+                              @PathVariable Long subjectId) {
         teacherService.deleteSubjectForTeacher(id, subjectId);
     }
 

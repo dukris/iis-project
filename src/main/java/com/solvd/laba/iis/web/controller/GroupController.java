@@ -46,15 +46,13 @@ public class GroupController {
     @GetMapping
     public List<GroupDto> getAll() {
         List<Group> groups = groupService.retrieveAll();
-        List<GroupDto> groupDtos = groupMapper.entityToDto(groups);
-        return groupDtos;
+        return groupMapper.entityToDto(groups);
     }
 
     @GetMapping("/{id}")
     public GroupDto getById(@PathVariable Long id) {
         Group group = groupService.retrieveById(id);
-        GroupDto groupDto = groupMapper.entityToDto(group);
-        return groupDto;
+        return groupMapper.entityToDto(group);
     }
 
     @GetMapping("/{id}/lessons")
@@ -62,22 +60,19 @@ public class GroupController {
                                       LessonSearchCriteriaDto lessonSearchCriteriaDto) {
         LessonSearchCriteria lessonSearchCriteria = lessonSearchCriteriaMapper.dtoToEntity(lessonSearchCriteriaDto);
         List<Lesson> lessons = lessonService.retrieveByStudentCriteria(id, lessonSearchCriteria);
-        List<LessonDto> lessonDtos = lessonMapper.entityToDto(lessons);
-        return lessonDtos;
+        return lessonMapper.entityToDto(lessons);
     }
 
     @GetMapping("/{id}/students")
     public List<StudentInfoDto> getStudents(@PathVariable Long id) {
         List<StudentInfo> students = studentService.retrieveByGroup(id);
-        List<StudentInfoDto> studentDtos = studentInfoMapper.entityToDto(students);
-        return studentDtos;
+        return studentInfoMapper.entityToDto(students);
     }
 
     @GetMapping("/{id}/teachers")
     public List<TeacherInfoDto> getTeachers(@PathVariable Long id) {
         List<TeacherInfo> teachers = teacherService.retrieveByGroup(id);
-        List<TeacherInfoDto> teacherDtos = teacherInfoMapper.entityToDto(teachers);
-        return teacherDtos;
+        return teacherInfoMapper.entityToDto(teachers);
     }
 
     @PostMapping

@@ -24,15 +24,13 @@ public class LessonController {
     @GetMapping
     public List<LessonDto> getAll() {
         List<Lesson> lessons = lessonService.retrieveAll();
-        List<LessonDto> lessonDtos = lessonMapper.entityToDto(lessons);
-        return lessonDtos;
+        return lessonMapper.entityToDto(lessons);
     }
 
     @GetMapping("/{id}")
     public LessonDto getById(@PathVariable Long id) {
         Lesson lesson = lessonService.retrieveById(id);
-        LessonDto lessonDto = lessonMapper.entityToDto(lesson);
-        return lessonDto;
+        return lessonMapper.entityToDto(lesson);
     }
 
     @PostMapping

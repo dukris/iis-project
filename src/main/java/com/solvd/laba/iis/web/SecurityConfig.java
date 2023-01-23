@@ -57,6 +57,7 @@ public class SecurityConfig {
                 .requestMatchers(TEACHER_OTHER_REQUESTS).hasAnyRole("TEACHER", "ADMIN")
                 .requestMatchers(HttpMethod.GET, STUDENT_GET_REQUESTS).hasAnyRole("STUDENT", "ADMIN")
                 .requestMatchers(ADMIN_REQUESTS).hasRole("ADMIN")
+                .anyRequest().permitAll()
                 .and()
                 .addFilterAfter(jwtFilter, ExceptionTranslationFilter.class)
                 .build();

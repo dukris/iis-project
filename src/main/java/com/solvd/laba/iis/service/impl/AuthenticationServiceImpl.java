@@ -26,8 +26,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public JwtResponse login(JwtRequest jwtRequest) {
         UserInfo user = userService.retrieveByEmail(jwtRequest.getEmail());
         if (BCrypt.checkpw(jwtRequest.getPassword(), user.getPassword())) {
-            JwtResponse response = prepareResponse(user);
-            return response;
+            return prepareResponse(user);
         } else {
             throw new AuthenticationException("Incorrect password");
         }
@@ -39,8 +38,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         Claims claims = jwtService.parseToken(refreshToken);
         JwtUser jwtUser = JwtUserFactory.create(claims);
         UserInfo user = userService.retrieveByEmail(jwtUser.getEmail());
-        JwtResponse response = prepareResponse(user);
-        return response;
+        return prepareResponse(user);
     }
 
     private JwtResponse prepareResponse(UserInfo user) {

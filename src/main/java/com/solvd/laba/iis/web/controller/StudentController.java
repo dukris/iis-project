@@ -39,24 +39,21 @@ public class StudentController {
     @GetMapping
     public List<StudentInfoDto> getAll() {
         List<StudentInfo> students = studentService.retrieveAll();
-        List<StudentInfoDto> studentDtos = studentInfoMapper.entityToDto(students);
-        return studentDtos;
+        return studentInfoMapper.entityToDto(students);
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAccessForStudent(#id)")
     public StudentInfoDto getById(@PathVariable Long id) {
         StudentInfo student = studentService.retrieveById(id);
-        StudentInfoDto studentDto = studentInfoMapper.entityToDto(student);
-        return studentDto;
+        return studentInfoMapper.entityToDto(student);
     }
 
     @GetMapping("/search")
     public List<StudentInfoDto> getByCriteria(StudentSearchCriteriaDto studentSearchCriteriaDto) {
         StudentSearchCriteria studentSearchCriteria = studentSearchCriteriaMapper.dtoToEntity(studentSearchCriteriaDto);
         List<StudentInfo> students = studentService.retrieveByCriteria(studentSearchCriteria);
-        List<StudentInfoDto> studentDtos = studentInfoMapper.entityToDto(students);
-        return studentDtos;
+        return studentInfoMapper.entityToDto(students);
     }
 
     @GetMapping("/{id}/marks")
@@ -65,8 +62,7 @@ public class StudentController {
                                   MarkSearchCriteriaDto markSearchCriteriaDto) {
         MarkSearchCriteria markSearchCriteria = markSearchCriteriaMapper.dtoToEntity(markSearchCriteriaDto);
         List<Mark> marks = markService.retrieveByCriteria(id, markSearchCriteria);
-        List<MarkDto> markDtos = markMapper.entityToDto(marks);
-        return markDtos;
+        return markMapper.entityToDto(marks);
     }
 
     @PostMapping

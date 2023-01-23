@@ -30,22 +30,19 @@ public class SubjectController {
     @GetMapping
     public List<SubjectDto> getAll() {
         List<Subject> subjects = subjectService.retrieveAll();
-        List<SubjectDto> subjectDtos = subjectMapper.entityToDto(subjects);
-        return subjectDtos;
+        return subjectMapper.entityToDto(subjects);
     }
 
     @GetMapping("/{id}")
     public SubjectDto getById(@PathVariable Long id) {
         Subject subject = subjectService.retrieveById(id);
-        SubjectDto subjectDto = subjectMapper.entityToDto(subject);
-        return subjectDto;
+        return subjectMapper.entityToDto(subject);
     }
 
     @GetMapping("/{id}/teachers")
     public List<TeacherInfoDto> getTeachers(@PathVariable Long id) {
         List<TeacherInfo> teachers = teacherService.retrieveBySubject(id);
-        List<TeacherInfoDto> teacherDtos = teacherInfoMapper.entityToDto(teachers);
-        return teacherDtos;
+        return teacherInfoMapper.entityToDto(teachers);
     }
 
     @PostMapping

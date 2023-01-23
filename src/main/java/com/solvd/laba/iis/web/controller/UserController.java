@@ -38,15 +38,13 @@ public class UserController {
     @GetMapping
     public List<UserInfoDto> getAll() {
         List<UserInfo> users = userService.retrieveAll();
-        List<UserInfoDto> userDtos = userInfoMapper.entityToDto(users);
-        return userDtos;
+        return userInfoMapper.entityToDto(users);
     }
 
     @GetMapping("/{id}")
     public UserInfoDto getById(@PathVariable Long id) {
         UserInfo user = userService.retrieveById(id);
-        UserInfoDto userDto = userInfoMapper.entityToDto(user);
-        return userDto;
+        return userInfoMapper.entityToDto(user);
     }
 
     @PostMapping
@@ -76,16 +74,14 @@ public class UserController {
     public JwtResponseDto login(@RequestBody JwtRequestDto jwtRequestDto) {
         JwtRequest jwtRequest = jwtRequestMapper.dtoToEntity(jwtRequestDto);
         JwtResponse jwtResponse = authenticationService.login(jwtRequest);
-        JwtResponseDto jwtResponseDto = jwtResponseMapper.entityToDto(jwtResponse);
-        return jwtResponseDto;
+        return jwtResponseMapper.entityToDto(jwtResponse);
     }
 
     @PostMapping("/refresh")
-    public JwtResponseDto getNewRefreshToken(@RequestBody JwtRefreshRequestDto jwtRefreshRequestDto) {
+    public JwtResponseDto refresh(@RequestBody JwtRefreshRequestDto jwtRefreshRequestDto) {
         JwtRefreshRequest jwtRefreshRequest = jwtRefreshRequestMapper.dtoToEntity(jwtRefreshRequestDto);
         JwtResponse jwtResponse = authenticationService.refresh(jwtRefreshRequest);
-        JwtResponseDto jwtResponseDto = jwtResponseMapper.entityToDto(jwtResponse);
-        return jwtResponseDto;
+        return jwtResponseMapper.entityToDto(jwtResponse);
     }
 
 }

@@ -25,15 +25,13 @@ public class MarkController {
     @GetMapping()
     public List<MarkDto> getAll() {
         List<Mark> marks = markService.retrieveAll();
-        List<MarkDto> markDtos = markMapper.entityToDto(marks);
-        return markDtos;
+        return markMapper.entityToDto(marks);
     }
 
     @GetMapping("/{id}")
     public MarkDto getById(@PathVariable Long id) {
         Mark mark = markService.retrieveById(id);
-        MarkDto markDto = markMapper.entityToDto(mark);
-        return markDto;
+        return markMapper.entityToDto(mark);
     }
 
     @PostMapping
