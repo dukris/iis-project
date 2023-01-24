@@ -24,6 +24,9 @@ import com.solvd.laba.iis.web.mapper.MarkMapper;
 import com.solvd.laba.iis.web.mapper.TeacherInfoMapper;
 import com.solvd.laba.iis.web.mapper.criteria.GroupSearchCriteriaMapper;
 import com.solvd.laba.iis.web.mapper.criteria.LessonSearchCriteriaMapper;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -35,6 +38,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/teachers")
+@Tag(name = "Teacher Controller", description = "Methods for working with teachers")
 public class TeacherController {
 
     private final TeacherService teacherService;
@@ -49,6 +53,7 @@ public class TeacherController {
     private final MarkMapper markMapper;
 
     @GetMapping
+    @Operation(summary = "Get all teachers")
     public List<TeacherInfoDto> getAll() {
         List<TeacherInfo> teachers = teacherService.retrieveAll();
         return teacherInfoMapper.entityToDto(teachers);
@@ -56,15 +61,17 @@ public class TeacherController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAccessForTeacher(#id)")
-    public TeacherInfoDto getById(@PathVariable Long id) {
+    @Operation(summary = "Get teacher by id")
+    public TeacherInfoDto getById(@PathVariable @Parameter(description = "Teacher's id") Long id) {
         TeacherInfo teacher = teacherService.retrieveById(id);
         return teacherInfoMapper.entityToDto(teacher);
     }
 
     @GetMapping("/{id}/groups")
     @PreAuthorize("hasAccessForTeacher(#id)")
-    public List<GroupDto> getGroups(@PathVariable Long id,
-                                    GroupSearchCriteriaDto groupSearchCriteriaDto) {
+    @Operation(summary = "Get groups for teacher")
+    public List<GroupDto> getGroups(@PathVariable @Parameter(description = "Teacher's id") Long id,
+                                    @Parameter(description = "Criteria for searching groups") GroupSearchCriteriaDto groupSearchCriteriaDto) {
         GroupSearchCriteria groupSearchCriteria = groupSearchCriteriaMapper.dtoToEntity(groupSearchCriteriaDto);
         List<Group> groups = groupService.retrieveByCriteria(id, groupSearchCriteria);
         return groupMapper.entityToDto(groups);
@@ -72,8 +79,9 @@ public class TeacherController {
 
     @GetMapping("/{id}/lessons")
     @PreAuthorize("hasAccessForTeacher(#id)")
-    public List<LessonDto> getLessons(@PathVariable Long id,
-                                      LessonSearchCriteriaDto lessonSearchCriteriaDto) {
+    @Operation(summary = "Get lessons for teacher")
+    public List<LessonDto> getLessons(@PathVariable @Parameter(description = "Teacher's id") Long id,
+                                      @Parameter(description = "Criteria for searching lessons") LessonSearchCriteriaDto lessonSearchCriteriaDto) {
         LessonSearchCriteria lessonSearchCriteria = lessonSearchCriteriaMapper.dtoToEntity(lessonSearchCriteriaDto);
         List<Lesson> lessons = lessonService.retrieveByTeacherCriteria(id, lessonSearchCriteria);
         return lessonMapper.entityToDto(lessons);
@@ -81,46 +89,50 @@ public class TeacherController {
 
     @GetMapping("/{id}/subjects/{subjectId}/marks")
     @PreAuthorize("hasAccessToSubject(#id, #subjectId)")
-    public List<MarkDto> getMarks(@PathVariable Long id,
-                                  @PathVariable Long subjectId) {
+    @Operation(summary = "Get marks for teacher")
+    public List<MarkDto> getMarks(@PathVariable @Parameter(description = "Teacher's id") Long id,
+                                  @PathVariable @Parameter(description = "Subject's id") Long subjectId) {
         List<Mark> marks = markService.retrieveByTeacher(subjectId, id);
         return markMapper.entityToDto(marks);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public TeacherInfoDto create(@RequestBody @Validated(OnCreateTeacherGroup.class) TeacherInfoDto teacherInfoDto) {
+    @Operation(summary = "Create new teacher")
+    public TeacherInfoDto create(@RequestBody @Validated(OnCreateTeacherGroup.class) @Parameter(description = "Information about teacher") TeacherInfoDto teacherInfoDto) {
         TeacherInfo teacherInfo = teacherInfoMapper.dtoToEntity(teacherInfoDto);
         teacherInfo = teacherService.create(teacherInfo);
-        teacherInfoDto = teacherInfoMapper.entityToDto(teacherInfo);
-        return teacherInfoDto;
+        return teacherInfoMapper.entityToDto(teacherInfo);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) {
+    @Operation(summary = "Delete teacher")
+    public void delete(@PathVariable @Parameter(description = "Teacher's id") Long id) {
         teacherService.delete(id);
     }
 
     @PutMapping
-    public TeacherInfoDto update(@RequestBody @Validated(OnUpdateGroup.class) TeacherInfoDto teacherInfoDto) {
+    @Operation(summary = "Update information about teacher")
+    public TeacherInfoDto update(@RequestBody @Validated(OnUpdateGroup.class) @Parameter(description = "Information about teacher") TeacherInfoDto teacherInfoDto) {
         TeacherInfo teacherInfo = teacherInfoMapper.dtoToEntity(teacherInfoDto);
         teacherInfo = teacherService.update(teacherInfo);
-        teacherInfoDto = teacherInfoMapper.entityToDto(teacherInfo);
-        return teacherInfoDto;
+        return teacherInfoMapper.entityToDto(teacherInfo);
     }
 
     @PostMapping("/{id}/subjects")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addSubject(@PathVariable Long id,
-                           @RequestParam Long subjectId) {
+    @Operation(summary = "Add subject to teacher")
+    public void addSubject(@PathVariable @Parameter(description = "Teacher's id") Long id,
+                           @RequestParam @Parameter(description = "Subject's id") Long subjectId) {
         teacherService.addSubjectForTeacher(id, subjectId);
     }
 
     @DeleteMapping("/{id}/subjects/{subjectId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteSubject(@PathVariable Long id,
-                              @PathVariable Long subjectId) {
+    @Operation(summary = "Delete subject")
+    public void deleteSubject(@PathVariable @Parameter(description = "Teacher's id") Long id,
+                              @PathVariable @Parameter(description = "Subject's id") Long subjectId) {
         teacherService.deleteSubjectForTeacher(id, subjectId);
     }
 
