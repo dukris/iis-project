@@ -102,8 +102,7 @@ public class TeacherController {
     public TeacherInfoDto create(@RequestBody @Validated(OnCreateTeacherGroup.class) @Parameter(description = "Information about teacher") TeacherInfoDto teacherInfoDto) {
         TeacherInfo teacherInfo = teacherInfoMapper.dtoToEntity(teacherInfoDto);
         teacherInfo = teacherService.create(teacherInfo);
-        teacherInfoDto = teacherInfoMapper.entityToDto(teacherInfo);
-        return teacherInfoDto;
+        return teacherInfoMapper.entityToDto(teacherInfo);
     }
 
     @DeleteMapping("/{id}")
@@ -118,8 +117,7 @@ public class TeacherController {
     public TeacherInfoDto update(@RequestBody @Validated(OnUpdateGroup.class) @Parameter(description = "Information about teacher") TeacherInfoDto teacherInfoDto) {
         TeacherInfo teacherInfo = teacherInfoMapper.dtoToEntity(teacherInfoDto);
         teacherInfo = teacherService.update(teacherInfo);
-        teacherInfoDto = teacherInfoMapper.entityToDto(teacherInfo);
-        return teacherInfoDto;
+        return teacherInfoMapper.entityToDto(teacherInfo);
     }
 
     @PostMapping("/{id}/subjects")

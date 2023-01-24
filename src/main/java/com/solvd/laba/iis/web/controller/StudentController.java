@@ -79,8 +79,7 @@ public class StudentController {
     public StudentInfoDto create(@RequestBody @Validated(OnCreateStudentGroup.class) @Parameter(description = "Information about student") StudentInfoDto studentInfoDto) {
         StudentInfo studentInfo = studentInfoMapper.dtoToEntity(studentInfoDto);
         studentInfo = studentService.create(studentInfo);
-        studentInfoDto = studentInfoMapper.entityToDto(studentInfo);
-        return studentInfoDto;
+        return studentInfoMapper.entityToDto(studentInfo);
     }
 
     @DeleteMapping("/{id}")
@@ -95,8 +94,7 @@ public class StudentController {
     public StudentInfoDto update(@RequestBody @Validated(OnUpdateGroup.class) @Parameter(description = "Information about student") StudentInfoDto studentInfoDto) {
         StudentInfo studentInfo = studentInfoMapper.dtoToEntity(studentInfoDto);
         studentInfo = studentService.update(studentInfo);
-        studentInfoDto = studentInfoMapper.entityToDto(studentInfo);
-        return studentInfoDto;
+        return studentInfoMapper.entityToDto(studentInfo);
     }
 
 }

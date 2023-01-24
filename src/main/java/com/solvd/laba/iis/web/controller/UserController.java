@@ -59,8 +59,7 @@ public class UserController {
     public UserInfoDto create(@RequestBody @Validated(OnCreateGroup.class) @Parameter(description = "Information about user") UserInfoDto userInfoDto) {
         UserInfo userInfo = userInfoMapper.dtoToEntity(userInfoDto);
         userInfo = userService.create(userInfo);
-        userInfoDto = userInfoMapper.entityToDto(userInfo);
-        return userInfoDto;
+        return userInfoMapper.entityToDto(userInfo);
     }
 
     @DeleteMapping("/{id}")
@@ -75,8 +74,7 @@ public class UserController {
     public UserInfoDto update(@RequestBody @Validated(OnUpdateGroup.class) @Parameter(description = "Information about user") UserInfoDto userInfoDto) {
         UserInfo userInfo = userInfoMapper.dtoToEntity(userInfoDto);
         userInfo = userService.update(userInfo);
-        userInfoDto = userInfoMapper.entityToDto(userInfo);
-        return userInfoDto;
+        return userInfoMapper.entityToDto(userInfo);
     }
 
     @PostMapping("/login")

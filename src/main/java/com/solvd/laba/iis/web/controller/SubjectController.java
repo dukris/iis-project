@@ -58,8 +58,7 @@ public class SubjectController {
     public SubjectDto create(@RequestBody @Validated(OnCreateGroup.class) @Parameter(description = "Information about subject") SubjectDto subjectDto) {
         Subject subject = subjectMapper.dtoToEntity(subjectDto);
         subject = subjectService.create(subject);
-        subjectDto = subjectMapper.entityToDto(subject);
-        return subjectDto;
+        return subjectMapper.entityToDto(subject);
     }
 
     @DeleteMapping("/{id}")
@@ -74,8 +73,7 @@ public class SubjectController {
     public SubjectDto update(@RequestBody @Validated(OnUpdateGroup.class) @Parameter(description = "Information about subject") SubjectDto subjectDto) {
         Subject subject = subjectMapper.dtoToEntity(subjectDto);
         subject = subjectService.update(subject);
-        subjectDto = subjectMapper.entityToDto(subject);
-        return subjectDto;
+        return subjectMapper.entityToDto(subject);
     }
 
 }

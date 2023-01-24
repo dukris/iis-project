@@ -48,7 +48,7 @@ public class WebConfig {
 
     @Bean
     public OpenAPI openAPI() {
-        final String securitySchemeName = "bearerAuth";
+        String securitySchemeName = "bearerAuth";
         return new OpenAPI()
                 .addSecurityItem(new SecurityRequirement()
                         .addList(securitySchemeName))

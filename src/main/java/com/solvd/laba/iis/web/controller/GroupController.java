@@ -90,8 +90,7 @@ public class GroupController {
     public GroupDto create(@RequestBody @Validated(OnCreateGroup.class) @Parameter(description = "Information about group") GroupDto groupDto) {
         Group group = groupMapper.dtoToEntity(groupDto);
         group = groupService.create(group);
-        groupDto = groupMapper.entityToDto(group);
-        return groupDto;
+        return groupMapper.entityToDto(group);
     }
 
     @DeleteMapping("/{id}")
@@ -106,8 +105,7 @@ public class GroupController {
     public GroupDto update(@RequestBody @Validated(OnUpdateGroup.class) @Parameter(description = "Information about group") GroupDto groupDto) {
         Group group = groupMapper.dtoToEntity(groupDto);
         group = groupService.update(group);
-        groupDto = groupMapper.entityToDto(group);
-        return groupDto;
+        return groupMapper.entityToDto(group);
     }
 
 }

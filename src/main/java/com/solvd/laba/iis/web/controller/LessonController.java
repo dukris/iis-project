@@ -45,8 +45,7 @@ public class LessonController {
     public LessonDto create(@RequestBody @Validated(OnCreateLessonGroup.class) @Parameter(description = "Information about lesson") LessonDto lessonDto) {
         Lesson lesson = lessonMapper.dtoToEntity(lessonDto);
         lesson = lessonService.create(lesson);
-        lessonDto = lessonMapper.entityToDto(lesson);
-        return lessonDto;
+        return lessonMapper.entityToDto(lesson);
     }
 
     @DeleteMapping("/{id}")
@@ -61,8 +60,7 @@ public class LessonController {
     public LessonDto update(@RequestBody @Validated(OnUpdateGroup.class) @Parameter(description = "Information about lesson") LessonDto lessonDto) {
         Lesson lesson = lessonMapper.dtoToEntity(lessonDto);
         lesson = lessonService.update(lesson);
-        lessonDto = lessonMapper.entityToDto(lesson);
-        return lessonDto;
+        return lessonMapper.entityToDto(lesson);
     }
 
 }

@@ -47,8 +47,7 @@ public class MarkController {
     public MarkDto create(@RequestBody @Validated(OnCreateMarkGroup.class) @Parameter(description = "Information about mark") MarkDto markDto) {
         Mark mark = markMapper.dtoToEntity(markDto);
         mark = markService.create(mark);
-        markDto = markMapper.entityToDto(mark);
-        return markDto;
+        return markMapper.entityToDto(mark);
     }
 
     @DeleteMapping("/{id}")
@@ -65,8 +64,7 @@ public class MarkController {
     public MarkDto update(@RequestBody @Validated(OnUpdateGroup.class) @Parameter(description = "Information about mark") MarkDto markDto) {
         Mark mark = markMapper.dtoToEntity(markDto);
         mark = markService.update(mark);
-        markDto = markMapper.entityToDto(mark);
-        return markDto;
+        return markMapper.entityToDto(mark);
     }
 
 }
