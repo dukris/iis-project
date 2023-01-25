@@ -52,36 +52,40 @@ public class MarkServiceTest {
 
     @Test
     public void verifyRetrieveByIdThrowsResourceDoesNotExistExceptionTest() {
-        when(markRepository.findById(1L)).thenReturn(Optional.empty());
-        assertThrows(ResourceDoesNotExistException.class, () -> markService.retrieveById(1L));
-        verify(markRepository, times(1)).findById(1L);
+        Long markId = 1L;
+        when(markRepository.findById(markId)).thenReturn(Optional.empty());
+        assertThrows(ResourceDoesNotExistException.class, () -> markService.retrieveById(markId));
+        verify(markRepository, times(1)).findById(markId);
     }
 
     @Test
     public void verifyRetrieveByStudentCriteriaTest() {
         List<Mark> expectedMarks = createMarks();
-        when(markRepository.findByCriteria(1L, new MarkSearchCriteria())).thenReturn(expectedMarks);
-        List<Mark> marks = markService.retrieveByCriteria(1L, new MarkSearchCriteria());
+        Long studentId = 1L;
+        when(markRepository.findByCriteria(studentId, new MarkSearchCriteria())).thenReturn(expectedMarks);
+        List<Mark> marks = markService.retrieveByCriteria(studentId, new MarkSearchCriteria());
         assertEquals(expectedMarks, marks, "Objects are not equal");
-        verify(markRepository, times(1)).findByCriteria(1L, new MarkSearchCriteria());
+        verify(markRepository, times(1)).findByCriteria(studentId, new MarkSearchCriteria());
     }
 
     @Test
     public void verifyRetrieveByStudentAndSubjectCriteriaTest() {
         List<Mark> expectedMarks = createMarks();
-        when(markRepository.findByCriteria(1L, new MarkSearchCriteria(1L))).thenReturn(expectedMarks);
-        List<Mark> marks = markService.retrieveByCriteria(1L, new MarkSearchCriteria(1L));
+        Long studentId = 1L, subjectId = 1L;
+        when(markRepository.findByCriteria(studentId, new MarkSearchCriteria(subjectId))).thenReturn(expectedMarks);
+        List<Mark> marks = markService.retrieveByCriteria(studentId, new MarkSearchCriteria(subjectId));
         assertEquals(expectedMarks, marks, "Objects are not equal");
-        verify(markRepository, times(1)).findByCriteria(1L, new MarkSearchCriteria(1L));
+        verify(markRepository, times(1)).findByCriteria(studentId, new MarkSearchCriteria(subjectId));
     }
 
     @Test
     public void verifyRetrieveByTeacherTest() {
         List<Mark> expectedMarks = createMarks();
-        when(markRepository.findBySubjectAndTeacher(1L, 1L)).thenReturn(expectedMarks);
-        List<Mark> marks = markService.retrieveByTeacher(1L, 1L);
+        Long teacherId = 1L, subjectId = 1L;
+        when(markRepository.findBySubjectAndTeacher(subjectId, teacherId)).thenReturn(expectedMarks);
+        List<Mark> marks = markService.retrieveByTeacher(subjectId, teacherId);
         assertEquals(expectedMarks, marks, "Objects are not equal");
-        verify(markRepository, times(1)).findBySubjectAndTeacher(1L, 1L);
+        verify(markRepository, times(1)).findBySubjectAndTeacher(subjectId, teacherId);
     }
 
     @Test
@@ -104,8 +108,9 @@ public class MarkServiceTest {
 
     @Test
     public void verifyDeleteTest() {
-        markService.delete(1L);
-        verify(markRepository, times(1)).delete(1L);
+        Long markId = 1L;
+        markService.delete(markId);
+        verify(markRepository, times(1)).delete(markId);
     }
 
     private Mark createMark() {

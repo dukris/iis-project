@@ -52,45 +52,50 @@ public class LessonServiceTest {
 
     @Test
     public void verifyRetrieveByIdThrowsResourceDoesNotExistExceptionTest() {
-        when(lessonRepository.findById(1L)).thenReturn(Optional.empty());
-        assertThrows(ResourceDoesNotExistException.class, () -> lessonService.retrieveById(1L));
-        verify(lessonRepository, times(1)).findById(1L);
+        Long lessonId = 1L;
+        when(lessonRepository.findById(lessonId)).thenReturn(Optional.empty());
+        assertThrows(ResourceDoesNotExistException.class, () -> lessonService.retrieveById(lessonId));
+        verify(lessonRepository, times(1)).findById(lessonId);
     }
 
     @Test
     public void verifyRetrieveByStudentCriteriaTest() {
         List<Lesson> expectedLessons = createLessons();
-        when(lessonRepository.findByStudentCriteria(1L, new LessonSearchCriteria())).thenReturn(expectedLessons);
-        List<Lesson> lessons = lessonService.retrieveByStudentCriteria(1L, new LessonSearchCriteria());
+        Long groupId = 1L;
+        when(lessonRepository.findByStudentCriteria(groupId, new LessonSearchCriteria())).thenReturn(expectedLessons);
+        List<Lesson> lessons = lessonService.retrieveByStudentCriteria(groupId, new LessonSearchCriteria());
         assertEquals(expectedLessons, lessons, "Objects are not equal");
-        verify(lessonRepository, times(1)).findByStudentCriteria(1L, new LessonSearchCriteria());
+        verify(lessonRepository, times(1)).findByStudentCriteria(groupId, new LessonSearchCriteria());
     }
 
     @Test
     public void verifyRetrieveByStudentAndDayCriteriaTest() {
         List<Lesson> expectedLessons = createLessons();
-        when(lessonRepository.findByStudentCriteria(1L, new LessonSearchCriteria(Lesson.Weekday.SATURDAY.name()))).thenReturn(expectedLessons);
-        List<Lesson> lessons = lessonService.retrieveByStudentCriteria(1L, new LessonSearchCriteria(Lesson.Weekday.SATURDAY.name()));
+        Long groupId = 1L;
+        when(lessonRepository.findByStudentCriteria(groupId, new LessonSearchCriteria(Lesson.Weekday.SATURDAY.name()))).thenReturn(expectedLessons);
+        List<Lesson> lessons = lessonService.retrieveByStudentCriteria(groupId, new LessonSearchCriteria(Lesson.Weekday.SATURDAY.name()));
         assertEquals(expectedLessons, lessons, "Objects are not equal");
-        verify(lessonRepository, times(1)).findByStudentCriteria(1L, new LessonSearchCriteria(Lesson.Weekday.SATURDAY.name()));
+        verify(lessonRepository, times(1)).findByStudentCriteria(groupId, new LessonSearchCriteria(Lesson.Weekday.SATURDAY.name()));
     }
 
     @Test
     public void verifyRetrieveByTeacherCriteriaTest() {
         List<Lesson> expectedLessons = createLessons();
-        when(lessonRepository.findByTeacherCriteria(1L, new LessonSearchCriteria())).thenReturn(expectedLessons);
-        List<Lesson> lessons = lessonService.retrieveByTeacherCriteria(1L, new LessonSearchCriteria());
+        Long teacherId = 1L;
+        when(lessonRepository.findByTeacherCriteria(teacherId, new LessonSearchCriteria())).thenReturn(expectedLessons);
+        List<Lesson> lessons = lessonService.retrieveByTeacherCriteria(teacherId, new LessonSearchCriteria());
         assertEquals(expectedLessons, lessons, "Objects are not equal");
-        verify(lessonRepository, times(1)).findByTeacherCriteria(1L, new LessonSearchCriteria());
+        verify(lessonRepository, times(1)).findByTeacherCriteria(teacherId, new LessonSearchCriteria());
     }
 
     @Test
     public void verifyRetrieveByTeacherAndDayCriteriaTest() {
         List<Lesson> expectedLessons = createLessons();
-        when(lessonRepository.findByTeacherCriteria(1L, new LessonSearchCriteria(Lesson.Weekday.SATURDAY.name()))).thenReturn(expectedLessons);
-        List<Lesson> lessons = lessonService.retrieveByTeacherCriteria(1L, new LessonSearchCriteria(Lesson.Weekday.SATURDAY.name()));
+        Long teacherId = 1L;
+        when(lessonRepository.findByTeacherCriteria(teacherId, new LessonSearchCriteria(Lesson.Weekday.SATURDAY.name()))).thenReturn(expectedLessons);
+        List<Lesson> lessons = lessonService.retrieveByTeacherCriteria(teacherId, new LessonSearchCriteria(Lesson.Weekday.SATURDAY.name()));
         assertEquals(expectedLessons, lessons, "Objects are not equal");
-        verify(lessonRepository, times(1)).findByTeacherCriteria(1L, new LessonSearchCriteria(Lesson.Weekday.SATURDAY.name()));
+        verify(lessonRepository, times(1)).findByTeacherCriteria(teacherId, new LessonSearchCriteria(Lesson.Weekday.SATURDAY.name()));
     }
 
     @Test
@@ -113,8 +118,9 @@ public class LessonServiceTest {
 
     @Test
     public void verifyDeleteTest() {
-        lessonService.delete(1L);
-        verify(lessonRepository, times(1)).delete(1L);
+        Long lessonId = 1L;
+        lessonService.delete(lessonId);
+        verify(lessonRepository, times(1)).delete(lessonId);
     }
 
     private Lesson createLesson() {

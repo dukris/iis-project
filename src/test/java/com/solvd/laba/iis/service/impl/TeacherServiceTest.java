@@ -49,59 +49,66 @@ public class TeacherServiceTest {
 
     @Test
     public void verifyRetrieveByIdThrowsResourceDoesNotExistExceptionTest() {
-        when(teacherRepository.findById(1L)).thenReturn(Optional.empty());
-        assertThrows(ResourceDoesNotExistException.class, () -> teacherService.retrieveById(1L));
-        verify(teacherRepository, times(1)).findById(1L);
+        Long teacherId = 1L;
+        when(teacherRepository.findById(teacherId)).thenReturn(Optional.empty());
+        assertThrows(ResourceDoesNotExistException.class, () -> teacherService.retrieveById(teacherId));
+        verify(teacherRepository, times(1)).findById(teacherId);
     }
 
     @Test
     public void verifyRetrieveByUserIdSuccessTest() {
         TeacherInfo expectedTeacher = createTeacher();
-        when(teacherRepository.findByUserId(1L)).thenReturn(Optional.of(expectedTeacher));
-        TeacherInfo teacher = teacherService.retrieveByUserId(1L);
+        Long userId = 1L;
+        when(teacherRepository.findByUserId(userId)).thenReturn(Optional.of(expectedTeacher));
+        TeacherInfo teacher = teacherService.retrieveByUserId(userId);
         assertEquals(expectedTeacher, teacher, "Objects are not equal");
-        verify(teacherRepository, times(1)).findByUserId(1L);
+        verify(teacherRepository, times(1)).findByUserId(userId);
     }
 
     @Test
     public void verifyRetrieveByUserIdThrowsResourceDoesNotExistExceptionTest() {
-        when(teacherRepository.findByUserId(1L)).thenReturn(Optional.empty());
-        assertThrows(ResourceDoesNotExistException.class, () -> teacherService.retrieveByUserId(1L));
-        verify(teacherRepository, times(1)).findByUserId(1L);
+        Long userId = 1L;
+        when(teacherRepository.findByUserId(userId)).thenReturn(Optional.empty());
+        assertThrows(ResourceDoesNotExistException.class, () -> teacherService.retrieveByUserId(userId));
+        verify(teacherRepository, times(1)).findByUserId(userId);
     }
 
     @Test
     public void verifyRetrieveByMarkIdSuccessTest() {
         TeacherInfo expectedTeacher = createTeacher();
-        when(teacherRepository.findByMarkId(1L)).thenReturn(Optional.of(expectedTeacher));
-        TeacherInfo teacher = teacherService.retrieveByMarkId(1L);
+        Long markId = 1L;
+        when(teacherRepository.findByMarkId(markId)).thenReturn(Optional.of(expectedTeacher));
+        TeacherInfo teacher = teacherService.retrieveByMarkId(markId);
         assertEquals(expectedTeacher, teacher, "Objects are not equal");
-        verify(teacherRepository, times(1)).findByMarkId(1L);
+        verify(teacherRepository, times(1)).findByMarkId(markId);
     }
 
     @Test
     public void verifyRetrieveByMarkIdThrowsResourceDoesNotExistExceptionTest() {
-        when(teacherRepository.findByMarkId(1L)).thenReturn(Optional.empty());
-        assertThrows(ResourceDoesNotExistException.class, () -> teacherService.retrieveByMarkId(1L));
-        verify(teacherRepository, times(1)).findByMarkId(1L);
+        Long markId = 1L;
+        when(teacherRepository.findByMarkId(markId)).thenReturn(Optional.empty());
+        assertThrows(ResourceDoesNotExistException.class, () -> teacherService.retrieveByMarkId(markId));
+        verify(teacherRepository, times(1)).findByMarkId(markId);
     }
 
     @Test
     public void verifyRetrieveByGroupTest() {
         List<TeacherInfo> expectedTeachers = createTeachers();
-        when(teacherRepository.findByGroup(1L)).thenReturn(expectedTeachers);
-        List<TeacherInfo> teachers = teacherService.retrieveByGroup(1L);
+        Long groupId = 1L;
+        when(teacherRepository.findByGroup(groupId)).thenReturn(expectedTeachers);
+        List<TeacherInfo> teachers = teacherService.retrieveByGroup(groupId);
         assertEquals(expectedTeachers, teachers, "Objects are not equal");
-        verify(teacherRepository, times(1)).findByGroup(1L);
+        verify(teacherRepository, times(1)).findByGroup(groupId);
     }
 
     @Test
     public void verifyRetrieveBySubjectTest() {
         List<TeacherInfo> expectedTeachers = createTeachers();
-        when(teacherRepository.findBySubject(1L)).thenReturn(expectedTeachers);
-        List<TeacherInfo> teachers = teacherService.retrieveBySubject(1L);
+        Long subjectId = 1L;
+        when(teacherRepository.findBySubject(subjectId)).thenReturn(expectedTeachers);
+        List<TeacherInfo> teachers = teacherService.retrieveBySubject(subjectId);
         assertEquals(expectedTeachers, teachers, "Objects are not equal");
-        verify(teacherRepository, times(1)).findBySubject(1L);
+        verify(teacherRepository, times(1)).findBySubject(subjectId);
     }
 
     @Test
@@ -124,20 +131,23 @@ public class TeacherServiceTest {
 
     @Test
     public void verifyDeleteTest() {
-        teacherService.delete(1L);
-        verify(teacherRepository, times(1)).delete(1L);
+        Long teacherId = 1L;
+        teacherService.delete(teacherId);
+        verify(teacherRepository, times(1)).delete(teacherId);
     }
 
     @Test
     public void verifyDeleteSubjectForTeacherTest() {
-        teacherService.deleteSubjectForTeacher(1L, 1L);
-        verify(teacherRepository, times(1)).deleteSubject(1L, 1L);
+        Long subjectId = 1L, teacherId = 1L;
+        teacherService.deleteSubjectForTeacher(teacherId, subjectId);
+        verify(teacherRepository, times(1)).deleteSubject(teacherId, subjectId);
     }
 
     @Test
     public void verifyAddSubjectForTeacherTest() {
-        teacherService.addSubjectForTeacher(1L, 1L);
-        verify(teacherRepository, times(1)).addSubject(1L, 1L);
+        Long subjectId = 1L, teacherId = 1L;
+        teacherService.addSubjectForTeacher(teacherId, subjectId);
+        verify(teacherRepository, times(1)).addSubject(teacherId, subjectId);
     }
 
     private TeacherInfo createTeacher() {

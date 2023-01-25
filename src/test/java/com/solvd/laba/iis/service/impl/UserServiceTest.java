@@ -52,9 +52,10 @@ public class UserServiceTest {
 
     @Test
     public void verifyRetrieveByIdThrowsResourceDoesNotExistExceptionTest() {
-        when(userRepository.findById(1L)).thenReturn(Optional.empty());
-        assertThrows(ResourceDoesNotExistException.class, () -> userService.retrieveById(1L));
-        verify(userRepository, times(1)).findById(1L);
+        Long userId = 1L;
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+        assertThrows(ResourceDoesNotExistException.class, () -> userService.retrieveById(userId));
+        verify(userRepository, times(1)).findById(userId);
     }
 
     @Test
@@ -115,7 +116,8 @@ public class UserServiceTest {
 
     @Test
     public void verifyDeleteTest() {
-        userService.delete(1L);
+        Long userId = 1L;
+        userService.delete(userId);
         verify(userRepository, times(1)).delete(1L);
     }
 

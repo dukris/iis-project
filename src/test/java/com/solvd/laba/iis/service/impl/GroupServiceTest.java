@@ -49,36 +49,40 @@ public class GroupServiceTest {
 
     @Test
     public void verifyRetrieveByIdThrowsResourceDoesNotExistExceptionTest() {
-        when(groupRepository.findById(1L)).thenReturn(Optional.empty());
-        assertThrows(ResourceDoesNotExistException.class, () -> groupService.retrieveById(1L));
-        verify(groupRepository, times(1)).findById(1L);
+        Long groupId = 1L;
+        when(groupRepository.findById(groupId)).thenReturn(Optional.empty());
+        assertThrows(ResourceDoesNotExistException.class, () -> groupService.retrieveById(groupId));
+        verify(groupRepository, times(1)).findById(groupId);
     }
 
     @Test
     public void verifyRetrieveByTeacherAndSubjectTest() {
         List<Group> expectedGroups = createGroups();
-        when(groupRepository.findByTeacherAndSubject(1L, 1L)).thenReturn(expectedGroups);
-        List<Group> groups = groupService.retrieveByTeacherAndSubject(1L, 1L);
+        Long teacherId = 1L, subjectId = 1L;
+        when(groupRepository.findByTeacherAndSubject(teacherId, subjectId)).thenReturn(expectedGroups);
+        List<Group> groups = groupService.retrieveByTeacherAndSubject(teacherId, subjectId);
         assertEquals(expectedGroups, groups, "Objects are not equal");
-        verify(groupRepository, times(1)).findByTeacherAndSubject(1L, 1L);
+        verify(groupRepository, times(1)).findByTeacherAndSubject(teacherId, subjectId);
     }
 
     @Test
     public void verifyRetrieveByTeacherCriteriaTest() {
         List<Group> expectedGroups = createGroups();
-        when(groupRepository.findByCriteria(1L, new GroupSearchCriteria())).thenReturn(expectedGroups);
-        List<Group> groups = groupService.retrieveByCriteria(1L, new GroupSearchCriteria());
+        Long teacherId = 1L;
+        when(groupRepository.findByCriteria(teacherId, new GroupSearchCriteria())).thenReturn(expectedGroups);
+        List<Group> groups = groupService.retrieveByCriteria(teacherId, new GroupSearchCriteria());
         assertEquals(expectedGroups, groups, "Objects are not equal");
-        verify(groupRepository, times(1)).findByCriteria(1L, new GroupSearchCriteria());
+        verify(groupRepository, times(1)).findByCriteria(teacherId, new GroupSearchCriteria());
     }
 
     @Test
     public void retrieveByTeacherAndSubjectCriteriaTest() {
         List<Group> expectedGroups = createGroups();
-        when(groupRepository.findByCriteria(1L, new GroupSearchCriteria(1L))).thenReturn(expectedGroups);
-        List<Group> groups = groupService.retrieveByCriteria(1L, new GroupSearchCriteria(1L));
+        Long teacherId = 1L, subjectId = 1L;
+        when(groupRepository.findByCriteria(teacherId, new GroupSearchCriteria(subjectId))).thenReturn(expectedGroups);
+        List<Group> groups = groupService.retrieveByCriteria(teacherId, new GroupSearchCriteria(subjectId));
         assertEquals(expectedGroups, groups, "Objects are not equal");
-        verify(groupRepository, times(1)).findByCriteria(1L, new GroupSearchCriteria(1L));
+        verify(groupRepository, times(1)).findByCriteria(teacherId, new GroupSearchCriteria(subjectId));
     }
 
     @Test
@@ -121,8 +125,9 @@ public class GroupServiceTest {
 
     @Test
     public void verifyDeleteTest() {
-        groupService.delete(1L);
-        verify(groupRepository, times(1)).delete(1L);
+        Long groupId = 1L;
+        groupService.delete(groupId);
+        verify(groupRepository, times(1)).delete(groupId);
     }
 
     private Group createGroup() {

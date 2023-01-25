@@ -50,34 +50,38 @@ public class StudentServiceTest {
 
     @Test
     public void verifyRetrieveByIdThrowsResourceDoesNotExistExceptionTest() {
-        when(studentRepository.findById(1L)).thenReturn(Optional.empty());
-        assertThrows(ResourceDoesNotExistException.class, () -> studentService.retrieveById(1L));
-        verify(studentRepository, times(1)).findById(1L);
+        Long studentId = 1L;
+        when(studentRepository.findById(studentId)).thenReturn(Optional.empty());
+        assertThrows(ResourceDoesNotExistException.class, () -> studentService.retrieveById(studentId));
+        verify(studentRepository, times(1)).findById(studentId);
     }
 
     @Test
     public void verifyRetrieveByUserIdSuccessTest() {
         StudentInfo expectedStudent = createStudent();
-        when(studentRepository.findByUserId(1L)).thenReturn(Optional.of(expectedStudent));
-        StudentInfo student = studentService.retrieveByUserId(1L);
+        Long userId = 1L;
+        when(studentRepository.findByUserId(userId)).thenReturn(Optional.of(expectedStudent));
+        StudentInfo student = studentService.retrieveByUserId(userId);
         assertEquals(expectedStudent, student, "Objects are not equal");
-        verify(studentRepository, times(1)).findByUserId(1L);
+        verify(studentRepository, times(1)).findByUserId(userId);
     }
 
     @Test
     public void verifyRetrieveByUserIdThrowsResourceDoesNotExistExceptionTest() {
-        when(studentRepository.findByUserId(1L)).thenReturn(Optional.empty());
-        assertThrows(ResourceDoesNotExistException.class, () -> studentService.retrieveByUserId(1L));
-        verify(studentRepository, times(1)).findByUserId(1L);
+        Long userId = 1L;
+        when(studentRepository.findByUserId(userId)).thenReturn(Optional.empty());
+        assertThrows(ResourceDoesNotExistException.class, () -> studentService.retrieveByUserId(userId));
+        verify(studentRepository, times(1)).findByUserId(userId);
     }
 
     @Test
     public void verifyRetrieveByGroupTest() {
         List<StudentInfo> expectedStudents = createStudents();
-        when(studentRepository.findByGroup(1L)).thenReturn(expectedStudents);
-        List<StudentInfo> students = studentService.retrieveByGroup(1L);
+        Long groupId = 1L;
+        when(studentRepository.findByGroup(groupId)).thenReturn(expectedStudents);
+        List<StudentInfo> students = studentService.retrieveByGroup(groupId);
         assertEquals(expectedStudents, students, "Objects are not equal");
-        verify(studentRepository, times(1)).findByGroup(1L);
+        verify(studentRepository, times(1)).findByGroup(groupId);
     }
 
     @Test
@@ -136,8 +140,9 @@ public class StudentServiceTest {
 
     @Test
     public void verifyDeleteTest() {
-        studentService.delete(1L);
-        verify(studentRepository, times(1)).delete(1L);
+        Long studentId = 1L;
+        studentService.delete(studentId);
+        verify(studentRepository, times(1)).delete(studentId);
     }
 
     private StudentInfo createStudent() {

@@ -48,18 +48,20 @@ public class SubjectServiceTest {
 
     @Test
     public void verifyRetrieveByIdThrowsResourceDoesNotExistExceptionTest() {
-        when(subjectRepository.findById(1L)).thenReturn(Optional.empty());
-        assertThrows(ResourceDoesNotExistException.class, () -> subjectService.retrieveById(1L));
-        verify(subjectRepository, times(1)).findById(1L);
+        Long subjectId = 1L;
+        when(subjectRepository.findById(subjectId)).thenReturn(Optional.empty());
+        assertThrows(ResourceDoesNotExistException.class, () -> subjectService.retrieveById(subjectId));
+        verify(subjectRepository, times(1)).findById(subjectId);
     }
 
     @Test
     public void verifyRetrieveByTeacherTest() {
         List<Subject> expectedSubjects = createSubjects();
-        when(subjectRepository.findByTeacher(1L)).thenReturn(expectedSubjects);
-        List<Subject> subjects = subjectService.retrieveByTeacher(1L);
+        Long teacherId = 1L;
+        when(subjectRepository.findByTeacher(teacherId)).thenReturn(expectedSubjects);
+        List<Subject> subjects = subjectService.retrieveByTeacher(teacherId);
         assertEquals(expectedSubjects, subjects, "Objects are not equal");
-        verify(subjectRepository, times(1)).findByTeacher(1L);
+        verify(subjectRepository, times(1)).findByTeacher(teacherId);
     }
 
     @Test
@@ -102,8 +104,9 @@ public class SubjectServiceTest {
 
     @Test
     public void verifyDeleteTest() {
-        subjectService.delete(1L);
-        verify(subjectRepository, times(1)).delete(1L);
+        Long subjectId = 1L;
+        subjectService.delete(subjectId);
+        verify(subjectRepository, times(1)).delete(subjectId);
     }
 
     private Subject createSubject() {
