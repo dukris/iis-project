@@ -52,10 +52,9 @@ public class MarkServiceTest {
 
     @Test
     public void verifyRetrieveByIdThrowsResourceDoesNotExistExceptionTest() {
-        Mark expectedMark = createMark();
-        when(markRepository.findById(expectedMark.getId())).thenReturn(Optional.empty());
-        assertThrows(ResourceDoesNotExistException.class, () -> markService.retrieveById(expectedMark.getId()));
-        verify(markRepository, times(1)).findById(expectedMark.getId());
+        when(markRepository.findById(1L)).thenReturn(Optional.empty());
+        assertThrows(ResourceDoesNotExistException.class, () -> markService.retrieveById(1L));
+        verify(markRepository, times(1)).findById(1L);
     }
 
     @Test

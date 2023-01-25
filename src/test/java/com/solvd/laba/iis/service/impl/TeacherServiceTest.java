@@ -49,10 +49,9 @@ public class TeacherServiceTest {
 
     @Test
     public void verifyRetrieveByIdThrowsResourceDoesNotExistExceptionTest() {
-        TeacherInfo expectedTeacher = createTeacher();
-        when(teacherRepository.findById(expectedTeacher.getId())).thenReturn(Optional.empty());
-        assertThrows(ResourceDoesNotExistException.class, () -> teacherService.retrieveById(expectedTeacher.getId()));
-        verify(teacherRepository, times(1)).findById(expectedTeacher.getId());
+        when(teacherRepository.findById(1L)).thenReturn(Optional.empty());
+        assertThrows(ResourceDoesNotExistException.class, () -> teacherService.retrieveById(1L));
+        verify(teacherRepository, times(1)).findById(1L);
     }
 
     @Test
@@ -131,16 +130,14 @@ public class TeacherServiceTest {
 
     @Test
     public void verifyDeleteSubjectForTeacherTest() {
-        TeacherInfo expectedTeacher = createTeacher();
-        teacherService.deleteSubjectForTeacher(expectedTeacher.getId(), 1L);
-        verify(teacherRepository, times(1)).deleteSubject(expectedTeacher.getId(), 1L);
+        teacherService.deleteSubjectForTeacher(1L, 1L);
+        verify(teacherRepository, times(1)).deleteSubject(1L, 1L);
     }
 
     @Test
     public void verifyAddSubjectForTeacherTest() {
-        TeacherInfo expectedTeacher = createTeacher();
-        teacherService.addSubjectForTeacher(expectedTeacher.getId(), 1L);
-        verify(teacherRepository, times(1)).addSubject(expectedTeacher.getId(), 1L);
+        teacherService.addSubjectForTeacher(1L, 1L);
+        verify(teacherRepository, times(1)).addSubject(1L, 1L);
     }
 
     private TeacherInfo createTeacher() {

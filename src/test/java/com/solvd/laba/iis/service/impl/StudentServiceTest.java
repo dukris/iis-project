@@ -50,10 +50,9 @@ public class StudentServiceTest {
 
     @Test
     public void verifyRetrieveByIdThrowsResourceDoesNotExistExceptionTest() {
-        StudentInfo expectedStudent = createStudent();
-        when(studentRepository.findById(expectedStudent.getId())).thenReturn(Optional.empty());
-        assertThrows(ResourceDoesNotExistException.class, () -> studentService.retrieveById(expectedStudent.getId()));
-        verify(studentRepository, times(1)).findById(expectedStudent.getId());
+        when(studentRepository.findById(1L)).thenReturn(Optional.empty());
+        assertThrows(ResourceDoesNotExistException.class, () -> studentService.retrieveById(1L));
+        verify(studentRepository, times(1)).findById(1L);
     }
 
     @Test

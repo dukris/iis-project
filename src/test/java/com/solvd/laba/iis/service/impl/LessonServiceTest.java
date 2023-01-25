@@ -52,10 +52,9 @@ public class LessonServiceTest {
 
     @Test
     public void verifyRetrieveByIdThrowsResourceDoesNotExistExceptionTest() {
-        Lesson expectedLesson = createLesson();
-        when(lessonRepository.findById(expectedLesson.getId())).thenReturn(Optional.empty());
-        assertThrows(ResourceDoesNotExistException.class, () -> lessonService.retrieveById(expectedLesson.getId()));
-        verify(lessonRepository, times(1)).findById(expectedLesson.getId());
+        when(lessonRepository.findById(1L)).thenReturn(Optional.empty());
+        assertThrows(ResourceDoesNotExistException.class, () -> lessonService.retrieveById(1L));
+        verify(lessonRepository, times(1)).findById(1L);
     }
 
     @Test

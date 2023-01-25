@@ -48,10 +48,9 @@ public class SubjectServiceTest {
 
     @Test
     public void verifyRetrieveByIdThrowsResourceDoesNotExistExceptionTest() {
-        Subject expectedSubject = createSubject();
-        when(subjectRepository.findById(expectedSubject.getId())).thenReturn(Optional.empty());
-        assertThrows(ResourceDoesNotExistException.class, () -> subjectService.retrieveById(expectedSubject.getId()));
-        verify(subjectRepository, times(1)).findById(expectedSubject.getId());
+        when(subjectRepository.findById(1L)).thenReturn(Optional.empty());
+        assertThrows(ResourceDoesNotExistException.class, () -> subjectService.retrieveById(1L));
+        verify(subjectRepository, times(1)).findById(1L);
     }
 
     @Test

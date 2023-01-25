@@ -52,10 +52,9 @@ public class UserServiceTest {
 
     @Test
     public void verifyRetrieveByIdThrowsResourceDoesNotExistExceptionTest() {
-        UserInfo expectedUser = createUser();
-        when(userRepository.findById(expectedUser.getId())).thenReturn(Optional.empty());
-        assertThrows(ResourceDoesNotExistException.class, () -> userService.retrieveById(expectedUser.getId()));
-        verify(userRepository, times(1)).findById(expectedUser.getId());
+        when(userRepository.findById(1L)).thenReturn(Optional.empty());
+        assertThrows(ResourceDoesNotExistException.class, () -> userService.retrieveById(1L));
+        verify(userRepository, times(1)).findById(1L);
     }
 
     @Test
@@ -69,10 +68,9 @@ public class UserServiceTest {
 
     @Test
     public void verifyRetrieveByEmailThrowsResourceDoesNotExistExceptionTest() {
-        UserInfo expectedUser = createUser();
-        when(userRepository.findByEmail(expectedUser.getEmail())).thenReturn(Optional.empty());
-        assertThrows(ResourceDoesNotExistException.class, () -> userService.retrieveByEmail(expectedUser.getEmail()));
-        verify(userRepository, times(1)).findByEmail(expectedUser.getEmail());
+        when(userRepository.findByEmail("email")).thenReturn(Optional.empty());
+        assertThrows(ResourceDoesNotExistException.class, () -> userService.retrieveByEmail("email"));
+        verify(userRepository, times(1)).findByEmail("email");
     }
 
     @Test

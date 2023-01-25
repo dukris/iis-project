@@ -49,10 +49,9 @@ public class GroupServiceTest {
 
     @Test
     public void verifyRetrieveByIdThrowsResourceDoesNotExistExceptionTest() {
-        Group expectedGroup = createGroup();
-        when(groupRepository.findById(expectedGroup.getId())).thenReturn(Optional.empty());
-        assertThrows(ResourceDoesNotExistException.class, () -> groupService.retrieveById(expectedGroup.getId()));
-        verify(groupRepository, times(1)).findById(expectedGroup.getId());
+        when(groupRepository.findById(1L)).thenReturn(Optional.empty());
+        assertThrows(ResourceDoesNotExistException.class, () -> groupService.retrieveById(1L));
+        verify(groupRepository, times(1)).findById(1L);
     }
 
     @Test
