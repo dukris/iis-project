@@ -1,7 +1,7 @@
 package com.solvd.laba.iis.service.impl;
 
 import com.solvd.laba.iis.domain.Subject;
-import com.solvd.laba.iis.domain.exception.ResourceAlreadyExistsException;
+import com.solvd.laba.iis.domain.exception.ResourceAlreadyExistException;
 import com.solvd.laba.iis.domain.exception.ResourceDoesNotExistException;
 import com.solvd.laba.iis.persistence.SubjectRepository;
 import com.solvd.laba.iis.service.SubjectService;
@@ -37,7 +37,7 @@ public class SubjectServiceImpl implements SubjectService {
     @Transactional
     public Subject create(Subject subject) {
         if (subjectRepository.isExist(subject.getName())) {
-            throw new ResourceAlreadyExistsException("Subject with name = " + subject.getName() + " already exists");
+            throw new ResourceAlreadyExistException("Subject with name = " + subject.getName() + " already exists");
         }
         subjectRepository.create(subject);
         return subject;
