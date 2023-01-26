@@ -114,8 +114,15 @@ public class TeacherServiceTest {
     @Test
     public void verifyCreateTest() {
         TeacherInfo expectedTeacher = createTeacher();
-        TeacherInfo teacher = teacherService.create(expectedTeacher);
-        assertThat(teacher).isNotNull();
+        TeacherInfo teacher = createTeacher();
+        teacher.setId(null);
+        doAnswer(invocation -> {
+            TeacherInfo receivedTeacher = invocation.getArgument(0);
+            receivedTeacher.setId(1L);
+            return null;
+        }).when(teacherRepository).create(teacher);
+        teacher = teacherService.create(teacher);
+        assertEquals(expectedTeacher, teacher, "Objects are not equal");
         verify(teacherRepository, times(1)).create(expectedTeacher);
     }
 

@@ -123,8 +123,15 @@ public class StudentServiceTest {
     @Test
     public void verifyCreateTest() {
         StudentInfo expectedStudent = createStudent();
-        StudentInfo student = studentService.create(expectedStudent);
-        assertThat(student).isNotNull();
+        StudentInfo student = createStudent();
+        student.setId(null);
+        doAnswer(invocation -> {
+            StudentInfo receivedStudent = invocation.getArgument(0);
+            receivedStudent.setId(1L);
+            return null;
+        }).when(studentRepository).create(student);
+        student = studentService.create(student);
+        assertEquals(expectedStudent, student, "Objects are not equal");
         verify(studentRepository, times(1)).create(expectedStudent);
     }
 

@@ -1,9 +1,6 @@
 package com.solvd.laba.iis.service.impl;
 
-import com.solvd.laba.iis.domain.Mark;
-import com.solvd.laba.iis.domain.StudentInfo;
-import com.solvd.laba.iis.domain.Subject;
-import com.solvd.laba.iis.domain.TeacherInfo;
+import com.solvd.laba.iis.domain.*;
 import com.solvd.laba.iis.domain.criteria.MarkSearchCriteria;
 import com.solvd.laba.iis.domain.exception.ResourceDoesNotExistException;
 import com.solvd.laba.iis.persistence.MarkRepository;
@@ -91,8 +88,15 @@ public class MarkServiceTest {
     @Test
     public void verifyCreateTest() {
         Mark expectedMark = createMark();
-        Mark mark = markService.create(expectedMark);
-        assertThat(mark).isNotNull();
+        Mark mark = createMark();
+        mark.setId(null);
+        doAnswer(invocation -> {
+            Mark receivedMark = invocation.getArgument(0);
+            receivedMark.setId(1L);
+            return null;
+        }).when(markRepository).create(mark);
+        mark = markService.create(mark);
+        assertEquals(expectedMark, mark, "Objects are not equal");
         verify(markRepository, times(1)).create(expectedMark);
     }
 

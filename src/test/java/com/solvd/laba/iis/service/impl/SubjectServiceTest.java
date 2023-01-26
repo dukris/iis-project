@@ -67,9 +67,16 @@ public class SubjectServiceTest {
     @Test
     public void verifyCreateSuccessTest() {
         Subject expectedSubject = createSubject();
+        Subject subject = createSubject();
+        subject.setId(null);
         when(subjectRepository.isExist(expectedSubject.getName())).thenReturn(false);
-        Subject subject = subjectService.create(expectedSubject);
-        assertThat(subject).isNotNull();
+        doAnswer(invocation -> {
+            Subject receivedSubject = invocation.getArgument(0);
+            receivedSubject.setId(1L);
+            return null;
+        }).when(subjectRepository).create(subject);
+        subject = subjectService.create(subject);
+        assertEquals(expectedSubject, subject, "Objects are not equal");
         verify(subjectRepository, times(1)).isExist(expectedSubject.getName());
         verify(subjectRepository, times(1)).create(expectedSubject);
     }
