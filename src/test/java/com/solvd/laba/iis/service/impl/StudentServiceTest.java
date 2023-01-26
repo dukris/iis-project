@@ -16,7 +16,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -137,12 +136,14 @@ public class StudentServiceTest {
 
     @Test
     public void verifyUpdateTest() {
-        StudentInfo expectedStudent = createStudent();
-        when(studentRepository.findById(expectedStudent.getId())).thenReturn(Optional.of(expectedStudent));
-        StudentInfo student = studentService.update(expectedStudent);
-        assertThat(student).isNotNull();
-        verify(studentRepository, times(1)).findById(expectedStudent.getId());
-        verify(studentRepository, times(1)).update(expectedStudent);
+        StudentInfo oldStudent = createStudent();
+        StudentInfo newStudent = createStudent();
+        newStudent.setAdmissionYear(2020);
+        when(studentRepository.findById(newStudent.getId())).thenReturn(Optional.of(oldStudent));
+        StudentInfo student = studentService.update(newStudent);
+        assertEquals(newStudent, student, "Objects are not equal");
+        verify(studentRepository, times(1)).findById(newStudent.getId());
+        verify(studentRepository, times(1)).update(newStudent);
     }
 
     @Test

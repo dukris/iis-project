@@ -18,7 +18,6 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -115,12 +114,14 @@ public class LessonServiceTest {
 
     @Test
     public void verifyUpdateTest() {
-        Lesson expectedLesson = createLesson();
-        when(lessonRepository.findById(expectedLesson.getId())).thenReturn(Optional.of(expectedLesson));
-        Lesson lesson = lessonService.update(expectedLesson);
-        assertThat(lesson).isNotNull();
-        verify(lessonRepository, times(1)).findById(expectedLesson.getId());
-        verify(lessonRepository, times(1)).update(expectedLesson);
+        Lesson oldLesson = createLesson();
+        Lesson newLesson = createLesson();
+        newLesson.setWeekday(Lesson.Weekday.MONDAY);
+        when(lessonRepository.findById(newLesson.getId())).thenReturn(Optional.of(oldLesson));
+        Lesson lesson = lessonService.update(newLesson);
+        assertEquals(newLesson, lesson, "Objects are not equal");
+        verify(lessonRepository, times(1)).findById(newLesson.getId());
+        verify(lessonRepository, times(1)).update(newLesson);
     }
 
     @Test

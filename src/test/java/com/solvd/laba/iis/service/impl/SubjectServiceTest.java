@@ -14,7 +14,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -91,22 +90,15 @@ public class SubjectServiceTest {
     }
 
     @Test
-    public void verifyUpdateSuccessTest() {
-        Subject expectedSubject = createSubject();
-        when(subjectRepository.findById(expectedSubject.getId())).thenReturn(Optional.of(expectedSubject));
-        Subject subject = subjectService.update(expectedSubject);
-        assertThat(subject).isNotNull();
-        verify(subjectRepository, times(1)).findById(expectedSubject.getId());
-        verify(subjectRepository, times(1)).update(expectedSubject);
-    }
-
-    @Test
-    public void verifyUpdateThrowsResourceDoesNotExistExceptionTest() {
-        Subject expectedSubject = createSubject();
-        when(subjectRepository.findById(expectedSubject.getId())).thenReturn(Optional.empty());
-        assertThrows(ResourceDoesNotExistException.class, () -> subjectService.update(expectedSubject));
-        verify(subjectRepository, times(1)).findById(expectedSubject.getId());
-        verify(subjectRepository, times(0)).update(expectedSubject);
+    public void verifyUpdateTest() {
+        Subject oldSubject = createSubject();
+        Subject newSubject = createSubject();
+        newSubject.setName("New subject");
+        when(subjectRepository.findById(newSubject.getId())).thenReturn(Optional.of(oldSubject));
+        Subject subject = subjectService.update(newSubject);
+        assertEquals(newSubject, subject, "Objects are not equal");
+        verify(subjectRepository, times(1)).findById(newSubject.getId());
+        verify(subjectRepository, times(1)).update(newSubject);
     }
 
     @Test

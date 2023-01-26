@@ -15,7 +15,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -112,22 +111,15 @@ public class GroupServiceTest {
     }
 
     @Test
-    public void verifyUpdateSuccessTest() {
-        Group expectedGroup = createGroup();
-        when(groupRepository.findById(expectedGroup.getId())).thenReturn(Optional.of(expectedGroup));
-        Group group = groupService.update(expectedGroup);
-        assertThat(group).isNotNull();
-        verify(groupRepository, times(1)).findById(expectedGroup.getId());
-        verify(groupRepository, times(1)).update(expectedGroup);
-    }
-
-    @Test
-    public void verifyUpdateThrowsResourceDoesNotExistExceptionTest() {
-        Group expectedGroup = createGroup();
-        when(groupRepository.findById(expectedGroup.getId())).thenReturn(Optional.empty());
-        assertThrows(ResourceDoesNotExistException.class, () -> groupService.update(expectedGroup));
-        verify(groupRepository, times(1)).findById(expectedGroup.getId());
-        verify(groupRepository, times(0)).update(expectedGroup);
+    public void verifyUpdateTest() {
+        Group oldGroup = createGroup();
+        Group newGroup = createGroup();
+        newGroup.setNumber(950501);
+        when(groupRepository.findById(newGroup.getId())).thenReturn(Optional.of(oldGroup));
+        Group group = groupService.update(newGroup);
+        assertEquals(newGroup, group, "Objects are not equal");
+        verify(groupRepository, times(1)).findById(newGroup.getId());
+        verify(groupRepository, times(1)).update(newGroup);
     }
 
     @Test

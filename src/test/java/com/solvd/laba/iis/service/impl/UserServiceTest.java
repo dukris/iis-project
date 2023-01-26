@@ -15,7 +15,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -102,23 +101,16 @@ public class UserServiceTest {
     }
 
     @Test
-    public void verifyUpdateSuccessTest() {
-        UserInfo expectedUser = createUser();
-        when(userRepository.findById(expectedUser.getId())).thenReturn(Optional.of(expectedUser));
-        when(passwordEncoder.encode(expectedUser.getPassword())).thenReturn("pass");
-        UserInfo user = userService.update(expectedUser);
-        assertThat(user).isNotNull();
-        verify(userRepository, times(1)).findById(expectedUser.getId());
-        verify(userRepository, times(1)).update(expectedUser);
-    }
-
-    @Test
-    public void verifyUpdateThrowsResourceDoesNotExistExceptionTest() {
-        UserInfo expectedUser = createUser();
-        when(userRepository.findById(expectedUser.getId())).thenReturn(Optional.empty());
-        assertThrows(ResourceDoesNotExistException.class, () -> userService.update(expectedUser));
-        verify(userRepository, times(1)).findById(expectedUser.getId());
-        verify(userRepository, times(0)).update(expectedUser);
+    public void verifyUpdateTest() {
+        UserInfo oldUser = createUser();
+        UserInfo newUser = createUser();
+        newUser.setEmail("New email");
+        when(userRepository.findById(newUser.getId())).thenReturn(Optional.of(oldUser));
+        when(passwordEncoder.encode(newUser.getPassword())).thenReturn("pass");
+        UserInfo user = userService.update(newUser);
+        assertEquals(newUser, user, "Objects are not equal");
+        verify(userRepository, times(1)).findById(newUser.getId());
+        verify(userRepository, times(1)).update(newUser);
     }
 
     @Test

@@ -1,6 +1,9 @@
 package com.solvd.laba.iis.service.impl;
 
-import com.solvd.laba.iis.domain.*;
+import com.solvd.laba.iis.domain.Mark;
+import com.solvd.laba.iis.domain.StudentInfo;
+import com.solvd.laba.iis.domain.Subject;
+import com.solvd.laba.iis.domain.TeacherInfo;
 import com.solvd.laba.iis.domain.criteria.MarkSearchCriteria;
 import com.solvd.laba.iis.domain.exception.ResourceDoesNotExistException;
 import com.solvd.laba.iis.persistence.MarkRepository;
@@ -15,7 +18,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -102,12 +104,14 @@ public class MarkServiceTest {
 
     @Test
     public void verifyUpdateTest() {
-        Mark expectedMark = createMark();
-        when(markRepository.findById(expectedMark.getId())).thenReturn(Optional.of(expectedMark));
-        Mark mark = markService.update(expectedMark);
-        assertThat(mark).isNotNull();
-        verify(markRepository, times(1)).findById(expectedMark.getId());
-        verify(markRepository, times(1)).update(expectedMark);
+        Mark oldMark = createMark();
+        Mark newMark = createMark();
+        newMark.setValue(2);
+        when(markRepository.findById(newMark.getId())).thenReturn(Optional.of(oldMark));
+        Mark mark = markService.update(newMark);
+        assertEquals(newMark, mark, "Objects are not equal");
+        verify(markRepository, times(1)).findById(newMark.getId());
+        verify(markRepository, times(1)).update(newMark);
     }
 
     @Test
