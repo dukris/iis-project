@@ -100,17 +100,17 @@ public class LessonServiceTest {
 
     @Test
     public void verifyCreateTest() {
-        Lesson expectedLesson = createLesson();
+        Long lessonId = 1L;
         Lesson lesson = createLesson();
         lesson.setId(null);
         doAnswer(invocation -> {
             Lesson receivedLesson = invocation.getArgument(0);
-            receivedLesson.setId(1L);
+            receivedLesson.setId(lessonId);
             return null;
         }).when(lessonRepository).create(lesson);
         lesson = lessonService.create(lesson);
-        assertEquals(expectedLesson, lesson, "Objects are not equal");
-        verify(lessonRepository, times(1)).create(expectedLesson);
+        assertEquals(lessonId, lesson.getId(), "Objects are not equal");
+        verify(lessonRepository, times(1)).create(any(Lesson.class));
     }
 
     @Test

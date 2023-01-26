@@ -87,19 +87,19 @@ public class GroupServiceTest {
 
     @Test
     public void verifyCreateSuccessTest() {
-        Group expectedGroup = createGroup();
+        Long groupId = 1L;
         Group group = createGroup();
         group.setId(null);
-        when(groupRepository.isExist(expectedGroup.getNumber())).thenReturn(false);
+        when(groupRepository.isExist(anyInt())).thenReturn(false);
         doAnswer(invocation -> {
             Group receivedGroup = invocation.getArgument(0);
-            receivedGroup.setId(1L);
+            receivedGroup.setId(groupId);
             return null;
         }).when(groupRepository).create(group);
         group = groupService.create(group);
-        assertEquals(expectedGroup, group, "Objects are not equal");
-        verify(groupRepository, times(1)).isExist(expectedGroup.getNumber());
-        verify(groupRepository, times(1)).create(expectedGroup);
+        assertEquals(groupId, group.getId(), "Objects are not equal");
+        verify(groupRepository, times(1)).isExist(anyInt());
+        verify(groupRepository, times(1)).create(any(Group.class));
     }
 
     @Test

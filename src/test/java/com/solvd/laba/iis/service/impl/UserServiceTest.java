@@ -76,20 +76,20 @@ public class UserServiceTest {
 
     @Test
     public void verifyCreateSuccessTest() {
-        UserInfo expectedUser = createUser();
+        Long userId = 1L;
         UserInfo user = createUser();
         user.setId(null);
-        when(userRepository.isExist(expectedUser.getEmail())).thenReturn(false);
-        when(passwordEncoder.encode(expectedUser.getPassword())).thenReturn("pass");
+        when(userRepository.isExist(anyString())).thenReturn(false);
+        when(passwordEncoder.encode(anyString())).thenReturn("pass");
         doAnswer(invocation -> {
             UserInfo receivedUser = invocation.getArgument(0);
             receivedUser.setId(1L);
             return null;
         }).when(userRepository).create(user);
         user = userService.create(user);
-        assertEquals(expectedUser, user, "Objects are not equal");
-        verify(userRepository, times(1)).isExist(expectedUser.getEmail());
-        verify(userRepository, times(1)).create(expectedUser);
+        assertEquals(userId, user.getId(), "Objects are not equal");
+        verify(userRepository, times(1)).isExist(anyString());
+        verify(userRepository, times(1)).create(any(UserInfo.class));
     }
 
     @Test

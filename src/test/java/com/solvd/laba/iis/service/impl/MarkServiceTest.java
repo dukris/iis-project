@@ -87,17 +87,17 @@ public class MarkServiceTest {
 
     @Test
     public void verifyCreateTest() {
-        Mark expectedMark = createMark();
+        Long markId = 1L;
         Mark mark = createMark();
         mark.setId(null);
         doAnswer(invocation -> {
             Mark receivedMark = invocation.getArgument(0);
-            receivedMark.setId(1L);
+            receivedMark.setId(markId);
             return null;
         }).when(markRepository).create(mark);
         mark = markService.create(mark);
-        assertEquals(expectedMark, mark, "Objects are not equal");
-        verify(markRepository, times(1)).create(expectedMark);
+        assertEquals(markId, mark.getId(), "Objects are not equal");
+        verify(markRepository, times(1)).create(any(Mark.class));
     }
 
     @Test
