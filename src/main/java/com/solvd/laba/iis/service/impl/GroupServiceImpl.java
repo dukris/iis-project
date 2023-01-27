@@ -1,7 +1,7 @@
 package com.solvd.laba.iis.service.impl;
 
 import com.solvd.laba.iis.domain.Group;
-import com.solvd.laba.iis.domain.exception.ResourceAlreadyExistsException;
+import com.solvd.laba.iis.domain.exception.ResourceAlreadyExistException;
 import com.solvd.laba.iis.domain.exception.ResourceDoesNotExistException;
 import com.solvd.laba.iis.persistence.GroupRepository;
 import com.solvd.laba.iis.domain.criteria.GroupSearchCriteria;
@@ -43,7 +43,7 @@ public class GroupServiceImpl implements GroupService {
     @Transactional
     public Group create(Group group) {
         if (groupRepository.isExist(group.getNumber())) {
-            throw new ResourceAlreadyExistsException("Group with number = " + group.getNumber() + " already exists");
+            throw new ResourceAlreadyExistException("Group with number = " + group.getNumber() + " already exists");
         }
         groupRepository.create(group);
         return group;

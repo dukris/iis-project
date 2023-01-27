@@ -5,6 +5,8 @@ import lombok.*;
 import java.time.LocalTime;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Lesson {
 
     private Long id;

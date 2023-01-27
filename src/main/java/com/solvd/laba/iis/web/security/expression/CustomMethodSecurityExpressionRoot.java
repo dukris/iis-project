@@ -1,7 +1,10 @@
 package com.solvd.laba.iis.web.security.expression;
 
 import com.solvd.laba.iis.domain.*;
-import com.solvd.laba.iis.service.*;
+import com.solvd.laba.iis.service.GroupService;
+import com.solvd.laba.iis.service.StudentService;
+import com.solvd.laba.iis.service.SubjectService;
+import com.solvd.laba.iis.service.TeacherService;
 import com.solvd.laba.iis.web.security.JwtUser;
 import lombok.Setter;
 import org.springframework.security.access.expression.SecurityExpressionRoot;

@@ -1,7 +1,7 @@
 package com.solvd.laba.iis.web.controller;
 
 import com.solvd.laba.iis.domain.exception.AuthenticationException;
-import com.solvd.laba.iis.domain.exception.ResourceAlreadyExistsException;
+import com.solvd.laba.iis.domain.exception.ResourceAlreadyExistException;
 import com.solvd.laba.iis.domain.exception.ResourceDoesNotExistException;
 import com.solvd.laba.iis.domain.exception.ResourceMappingException;
 import com.solvd.laba.iis.web.dto.ErrorDto;
@@ -39,9 +39,9 @@ public class ControllerAdvice {
         return errorDto;
     }
 
-    @ExceptionHandler(ResourceAlreadyExistsException.class)
+    @ExceptionHandler(ResourceAlreadyExistException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorDto handleResourceAlreadyExistsException(ResourceAlreadyExistsException ex) {
+    public ErrorDto handleResourceAlreadyExistsException(ResourceAlreadyExistException ex) {
         ErrorDto errorDto = new ErrorDto();
         errorDto.setMessage(ex.getMessage());
         log.error(ex.getMessage(), ex);
