@@ -27,6 +27,7 @@
         <org.mockito.version>5.0.0</org.mockito.version>
         <org.jacoco.version>0.8.8</org.jacoco.version>
         <maven-surefire-plugin.version>3.0.0-M8</maven-surefire-plugin.version>
+        <start-class>com.solvd.laba.iis.IisApplication</start-class>
     </properties>
 
     <dependencies>
@@ -233,6 +234,22 @@
                                 </rule>
                             </rules>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.solvd.laba.iis.IisApplication</mainClass>
+                    <layout>JAR</layout>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>

@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/iis?currentSchema=iis
+    url: jdbc:postgresql://postgres:5432/postgres?currentSchema=iis
     username: postgres
     password: admin
   sql:
