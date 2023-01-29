@@ -9,10 +9,12 @@ services:
     ports:
       - 5435:5432
     environment:
-      - POSTGRES_PASSWORD=admin
-      - POSTGRES_USER=postgres
+      - POSTGRES_USER=${DATASOURCE_USERNAME}
+      - POSTGRES_PASSWORD=${DATASOURCE_PASSWORD}
       - POSTGRES_DB=postgres
-      - POSTGRES_SCHEMA=iis
+    volumes:
+      - .:/usr/src/app
+      - ./src/main/resources/db/init.sql:/docker-entrypoint-initdb.d/init.sql
   app:
     build:
       context: .
@@ -24,6 +26,13 @@ services:
     depends_on:
       - postgres
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/postgres?currentSchema=iis
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=admin
+      - SPRING_DATASOURCE_URL=${DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${DATASOURCE_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data/
+#    env_file:
+#      - .env
+
+volumes:
+  pgdata:
