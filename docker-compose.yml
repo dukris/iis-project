@@ -13,7 +13,7 @@ services:
       - POSTGRES_PASSWORD=${DATASOURCE_PASSWORD}
       - POSTGRES_DB=postgres
     volumes:
-      - .:/usr/src/app
+      - pgdata:/var/lib/postgresql/data/
       - ./src/main/resources/db/init.sql:/docker-entrypoint-initdb.d/init.sql
   app:
     build:
@@ -31,8 +31,6 @@ services:
       - SPRING_DATASOURCE_PASSWORD=${DATASOURCE_PASSWORD}
     volumes:
       - pgdata:/var/lib/postgresql/data/
-#    env_file:
-#      - .env
 
 volumes:
   pgdata:
