@@ -12,12 +12,12 @@ spring:
   liquibase:
     change-log: classpath:db/db.changelog-root.yaml
   config:
-    import: optional:file:.env
+    import: optional:file:.env[.properties]
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml
 
 jwt:
-  secret: ${JWT_SECRET}
+  secret: hfbvhfabvkhefbvhrbvvrheferhfbcenvfdvbfavjfdvlafjdbvjfdbvjfnvjkdsncjk
   access: 5
   refresh: 30
