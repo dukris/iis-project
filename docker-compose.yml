@@ -3,30 +3,23 @@ version: "3"
 services:
   postgres:
     image: postgres:15
-    expose:
-      - 5432
     ports:
       - 5435:5432
     environment:
       - POSTGRES_USER=${DATASOURCE_USERNAME}
       - POSTGRES_PASSWORD=${DATASOURCE_PASSWORD}
-      - POSTGRES_DB=postgres
     volumes:
       - pgdata:/var/lib/postgresql/data/
       - ./src/main/resources/db/init.sql:/docker-entrypoint-initdb.d/init.sql
   app:
     build: .
     container_name: iis
-    expose:
-      - 8080
     ports:
       - 8080:8080
     depends_on:
       - postgres
-    environment:
-      - SPRING_DATASOURCE_URL=${DATASOURCE_URL}
-      - SPRING_DATASOURCE_USERNAME=${DATASOURCE_USERNAME}
-      - SPRING_DATASOURCE_PASSWORD=${DATASOURCE_PASSWORD}
+    env_file:
+      - ./.env
     volumes:
       - pgdata:/var/lib/postgresql/data/
 

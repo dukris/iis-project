@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: ${DATASOURCE_URL}
+    url: ${DATASOURCE_URL}?currentSchema=${DATASOURCE_SCHEMA}
     username: ${DATASOURCE_USERNAME}
     password: ${DATASOURCE_PASSWORD}
   sql:
@@ -11,13 +11,11 @@ spring:
     default-property-inclusion: NON_NULL
   liquibase:
     change-log: classpath:db/db.changelog-root.yaml
-  config:
-    import: optional:file:.env[.properties]
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml
 
 jwt:
-  secret: hfbvhfabvkhefbvhrbvvrheferhfbcenvfdvbfavjfdvlafjdbvjfdbvjfnvjkdsncjk
+  secret: ${JWT_SECRET}
   access: 5
   refresh: 30
