@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS users_info
 
 CREATE TABLE IF NOT EXISTS teachers_info
 (
-    id      bigint NOT NULL,
+    id      bigserial NOT NULL,
     user_id bigint NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users_info (id) ON UPDATE CASCADE ON DELETE CASCADE

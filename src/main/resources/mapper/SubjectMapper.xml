@@ -30,7 +30,7 @@
         WHERE lessons.teacher_id = #{teacherId}
     </select>
 
-    <select id="isExist" parameterType="java.lang.Integer" resultType="java.lang.Boolean">
+    <select id="isExist" parameterType="java.lang.String" resultType="java.lang.Boolean">
         SELECT EXISTS(SELECT 1 FROM subjects WHERE subjects.name = #{name})
     </select>
 

@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/iis?currentSchema=iis
-    username: postgres
-    password: admin
+    url: ${DATASOURCE_URL}?currentSchema=${DATASOURCE_SCHEMA}
+    username: ${DATASOURCE_USERNAME}
+    password: ${DATASOURCE_PASSWORD}
   sql:
     init:
       mode: always
@@ -16,6 +16,6 @@ mybatis:
   mapper-locations: classpath:mapper/*.xml
 
 jwt:
-  secret: hfbvhfabvkhefbvhrbvvrheferhfbcenvfdvbfavjfdvlafjdbvjfdbvjfnvjkdsncjk
+  secret: ${JWT_SECRET}
   access: 5
   refresh: 30

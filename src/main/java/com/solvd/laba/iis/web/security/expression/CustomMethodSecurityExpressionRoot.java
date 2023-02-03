@@ -50,10 +50,10 @@ public class CustomMethodSecurityExpressionRoot extends SecurityExpressionRoot i
         Authentication authentication = super.getAuthentication();
         JwtUser jwtUser = (JwtUser) authentication.getPrincipal();
         Long userId = jwtUser.getId();
-        TeacherInfo teacherInfo = teacherService.retrieveByUserId(userId);
         if (isAdmin(authentication)) {
             return true;
         }
+        TeacherInfo teacherInfo = teacherService.retrieveByUserId(userId);
         if (!teacherId.equals(teacherInfo.getId())) {
             return false;
         }
