@@ -1,2 +1,2 @@
-# iis-project
+# Iis-project
 Schedule project for students and teachers
