@@ -1,6 +1,11 @@
+FROM maven:3.9-eclipse-temurin-19 AS build
+WORKDIR usr/src/app
+COPY src /src
+COPY pom.xml /
+RUN mvn -f /pom.xml -DskipTests clean package
+
 FROM eclipse-temurin:19
 WORKDIR usr/src/app
-ARG JAR_FILE=target/iis-0.0.1-SNAPSHOT.jar
-COPY ${JAR_FILE} app.jar
+COPY --from=build /target/*.jar app.jar
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]

@@ -2,6 +2,7 @@ version: "3"
 
 services:
   postgres:
+    container_name: postgres
     image: postgres:15-alpine
     ports:
       - 5435:5432
@@ -13,7 +14,7 @@ services:
       - ./src/main/resources/db/init.sql:/docker-entrypoint-initdb.d/init.sql
   app:
     build: .
-    container_name: iis
+    container_name: app
     ports:
       - 8080:8080
     depends_on:
