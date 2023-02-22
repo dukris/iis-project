@@ -4,7 +4,7 @@ services:
   postgres:
     image: postgres:15-alpine
     container_name: postgres
-    platform: linux/x86_64/v8
+    platform: linux/arm64/v8
     ports:
       - 5435:5432
     networks:
@@ -18,7 +18,7 @@ services:
   app:
     build: .
     container_name: iis
-    platform: linux/x86_64/v8
+    platform: linux/arm64/v8
     ports:
       - 8080:8080
     networks:

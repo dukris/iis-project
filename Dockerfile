@@ -4,7 +4,7 @@ COPY src /src
 COPY pom.xml /
 RUN mvn -f /pom.xml -DskipTests clean package
 
-FROM --platform=linux/x86_64/v8 eclipse-temurin:19
+FROM --platform=linux/arm64/v8 eclipse-temurin:19
 WORKDIR usr/src/app
 COPY --from=build /target/*.jar app.jar
 EXPOSE 8080
