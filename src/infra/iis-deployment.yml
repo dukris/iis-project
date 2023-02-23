@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: iis
-          image: hizmailovich/iis@sha256:8ba8bee31b126a9bc661db9b42d1c49320d429376b37a3617dabea999cac28bb
+          image: hizmailovich/iis:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
