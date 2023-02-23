@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iis
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: iis
+  template:
+    metadata:
+      labels:
+        app: iis
+    spec:
+      containers:
+        - name: iis
+          image: hizmailovich/iis:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: pg-secrets
+                  key: POSTGRES_USER
+            - name: DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pg-secrets
+                  key: POSTGRES_PASSWORD
+            - name: DATASOURCE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: pg-secrets
+                  key: POSTGRES_URL
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: iis-secrets
+                  key: JWT_SECRET
