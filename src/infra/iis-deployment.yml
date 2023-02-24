@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: iis
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: iis
@@ -29,11 +29,11 @@ spec:
                 secretKeyRef:
                   name: pg-secrets
                   key: POSTGRES_PASSWORD
-            - name: DATASOURCE_URL
+            - name: DATASOURCE_HOST
               valueFrom:
-                secretKeyRef:
-                  name: pg-secrets
-                  key: POSTGRES_URL
+                configMapKeyRef:
+                  name: iis-configmap
+                  key: DATASOURCE_HOST
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:
