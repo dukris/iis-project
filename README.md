@@ -1,7 +1,7 @@
 # "Schedule App"
-Schedule project for students and teachers
+Schedule project for students and teachers. Teachers can grade students.
 
-##Glossary
+## Glossary
 1. UserInfo - information about user.
 2. TeacherInfo - information about teacher.
 3. StudentInfo - information about student.
@@ -10,5 +10,5 @@ Schedule project for students and teachers
 6. Mark - information about student's mark: value, date and so on.
 7. Subject - name of subject.
 
-##Endpoints
+## Endpoints
 See swagger documentation: ```/swagger-ui```
