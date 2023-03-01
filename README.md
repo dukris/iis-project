@@ -12,3 +12,6 @@ Schedule project for students and teachers. Teachers can grade students.
 
 ## Endpoints
 See swagger documentation: ```/swagger-ui```
+
+## Run
+To start containers: ```docker-compose up```
