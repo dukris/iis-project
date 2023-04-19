@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: istio
+  name: istio-ingress
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /api/v1/movies
+            pathType: Prefix
+            backend:
+              service:
+                name: movie
+                port:
+                  number: 8081
